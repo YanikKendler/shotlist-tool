@@ -1,0 +1,133 @@
+@startuml
+skinparam linetype ortho
+
+entity User {
+  * id : Long
+  --
+  * username : string
+  * email : string
+}
+
+entity Shotlist {
+  * id : Long
+  * user : User
+  * template: ShotlistTemplate
+  --
+  * name : string
+  * created_at : LocalDateTime
+}
+
+User ||--o{ Shotlist
+
+entity ShotlistTemplate {
+    * id : Long
+    * user : User
+    --
+    * name : string
+    * created_at : LocalDateTime
+}
+
+User ||--o{ ShotlistTemplate
+Shotlist }o--|| ShotlistTemplate
+
+abstract ShotAttributeTemplateBase {
+    * id : Long
+    * template : ShotlistTemplate
+    * position : int
+    --
+    * name : string
+}
+
+ShotlistTemplate ||--o{ ShotAttributeTemplateBase
+
+entity ShotSelectAttributeTemplate {
+    * id : Long
+    --
+    * name : string
+}
+
+entity ShotSelectAttributeOption {
+    * id : Long
+    * selectAttribute : ShotSelectAttributeTemplate
+    --
+    * name : string
+}
+
+ShotSelectAttributeTemplate ||--o{ ShotSelectAttributeOption
+
+entity ShotTextAttributeTemplate {
+    * id : Long
+    --
+    * name : string
+}
+
+ShotAttributeTemplateBase <|-down- ShotSelectAttributeTemplate
+ShotAttributeTemplateBase <|-down- ShotTextAttributeTemplate
+
+abstract ShotAttributeBase {
+    * id : Long
+    * template : ShotlistTemplate
+    --
+}
+
+entity ShotSelectAttribute {
+    * value: ShotSelectAttributeOption
+    --
+}
+
+entity ShotTextAttribute {
+    --
+    * value : string
+}
+
+ShotAttributeBase <|-down- ShotSelectAttribute
+ShotAttributeBase <|-down- ShotTextAttribute
+
+ShotSelectAttribute }o--|| ShotSelectAttributeTemplate
+ShotSelectAttribute }o--|| ShotSelectAttributeOption
+ShotTextAttribute }o--|| ShotTextAttributeTemplate
+
+
+entity SceneAttributeTemplate {
+    * id : Long
+    * shotlistTemplate : ShotlistTemplate
+    * position : int
+    --
+    * name : string
+}
+
+
+entity Scene {
+    * id : Long
+    * shotlist : Shotlist
+    --
+    * name : string
+}
+
+ShotlistTemplate ||--o{ SceneAttributeTemplate
+
+entity SceneAttribute {
+    * id : Long
+    * scene : Scene
+    * template : SceneAttributeTemplate
+    --
+    * value : string
+}
+
+Scene ||--o{ SceneAttribute
+
+SceneAttribute }o--|| SceneAttributeTemplate
+
+entity Shot {
+    * id : Long
+    * scene : Scene
+    --
+    * name : string
+}
+
+Scene ||--o{ Shot
+
+Shot ||--o{ ShotAttributeBase
+Shotlist ||--o{ Scene
+
+@enduml
