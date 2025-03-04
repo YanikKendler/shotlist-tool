@@ -12,6 +12,7 @@ entity Shotlist {
   * id : Long
   * user : User
   * template: ShotlistTemplate
+  * scenes: Set<Scene>
   --
   * name : string
   * description : string
@@ -27,6 +28,8 @@ User ||--o{ Shotlist
 entity ShotlistTemplate {
     * id : Long
     * user : User
+    * sceneAttributes: Set<SceneAttributeTemplate>
+    * shotAttributes: Set<ShotAttributeTemplateBase>
     --
     * name : string
     * description : string
@@ -156,6 +159,8 @@ ShotAttributeBase <|-down- ShotTextAttribute
 entity Scene {
     * id : Long
     * shotlist : Shotlist
+    * attributes: Set<SceneAttribute>
+    * shots: Set<Shot>
     --
     * number : int
 }
