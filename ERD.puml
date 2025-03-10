@@ -48,26 +48,38 @@ abstract ShotAttributeTemplateBase {
 
 ShotlistTemplate ||--o{ ShotAttributeTemplateBase
 
-entity ShotSelectAttributeTemplate {
+entity ShotSingleSelectAttributeTemplate {
+    * options : Set<ShotSelectAttributeOptionTemplate>
+    --
+}
+
+entity ShotMultiSelectAttributeTemplate {
     * options : Set<ShotSelectAttributeOptionTemplate>
     --
 }
 
 entity ShotSelectAttributeOptionTemplate {
     * id : Long
-    * selectAttribute : ShotSelectAttributeTemplate
     --
     * name : string
+    * position: int
 }
 
-ShotSelectAttributeTemplate ||--o{ ShotSelectAttributeOptionTemplate
+ShotSingleSelectAttributeTemplate ||--o{ ShotSelectAttributeOptionTemplate
+ShotMultiSelectAttributeTemplate ||--o{ ShotSelectAttributeOptionTemplate
 
 entity ShotTextAttributeTemplate {
     --
 }
 
-ShotAttributeTemplateBase <|-down- ShotSelectAttributeTemplate
+entity ShotCheckboxAttributeTemplate {
+    --
+}
+
+ShotAttributeTemplateBase <|-down- ShotSingleSelectAttributeTemplate
+ShotAttributeTemplateBase <|-down- ShotMultiSelectAttributeTemplate
 ShotAttributeTemplateBase <|-down- ShotTextAttributeTemplate
+ShotAttributeTemplateBase <|-down- ShotCheckboxAttributeTemplate
 
 entity SceneAttributeTemplate {
     * id : Long
@@ -93,26 +105,38 @@ abstract ShotAttributeDefinitionBase {
 
 Shotlist ||--o{ ShotAttributeDefinitionBase
 
-entity ShotSelectAttributeDefinition {
+entity ShotSingleSelectAttributeDefinition {
+    * options : Set<ShotSelectAttributeOptionDefinition>
+    --
+}
+
+entity ShotMultiSelectAttributeDefinition {
     * options : Set<ShotSelectAttributeOptionDefinition>
     --
 }
 
 entity ShotSelectAttributeOptionDefinition {
     * id : Long
-    * selectAttribute : ShotSelectAttributeDefinition
     --
     * name : string
+    * position: int
 }
 
-ShotSelectAttributeDefinition ||--o{ ShotSelectAttributeOptionDefinition
+ShotSingleSelectAttributeDefinition ||--o{ ShotSelectAttributeOptionDefinition
+ShotMultiSelectAttributeDefinition ||--o{ ShotSelectAttributeOptionDefinition
 
 entity ShotTextAttributeDefinition {
     --
 }
 
-ShotAttributeDefinitionBase <|-down- ShotSelectAttributeDefinition
+entity ShotCheckboxAttributeDefinition {
+    --
+}
+
+ShotAttributeDefinitionBase <|-down- ShotSingleSelectAttributeDefinition
+ShotAttributeDefinitionBase <|-down- ShotMultiSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotTextAttributeDefinition
+ShotAttributeDefinitionBase <|-down- ShotCheckboxAttributeDefinition
 
 entity SceneAttributeDefinition {
     * id : Long
@@ -134,18 +158,25 @@ abstract ShotAttributeBase {
     --
 }
 
-entity ShotSelectAttribute {
-    * id : Long
+entity ShotSingleSelectAttribute {
     * value: ShotSelectAttributeOptionDefinition
-    * definition : ShotSelectAttributeDefinition
+    * definition : ShotSingleSelectAttributeDefinition
     --
 }
 
-ShotSelectAttribute }o--|| ShotSelectAttributeOptionDefinition
-ShotSelectAttribute }o--|| ShotSelectAttributeDefinition
+ShotSingleSelectAttribute }o--|| ShotSelectAttributeOptionDefinition
+ShotSingleSelectAttribute }o--|| ShotSingleSelectAttributeDefinition
+
+entity ShotMultiSelectAttribute {
+    * value: List<ShotSelectAttributeOptionDefinition>
+    * definition : ShotMultiSelectAttributeDefinition
+    --
+}
+
+ShotMultiSelectAttribute }o--o{ ShotSelectAttributeOptionDefinition
+ShotMultiSelectAttribute }o--|| ShotMultiSelectAttributeDefinition
 
 entity ShotTextAttribute {
-    * id : Long
     * definition : ShotTextAttributeDefinition
     --
     * value : string
@@ -153,8 +184,18 @@ entity ShotTextAttribute {
 
 ShotTextAttribute }o--|| ShotTextAttributeDefinition
 
-ShotAttributeBase <|-down- ShotSelectAttribute
+entity ShotCheckboxAttribute {
+    * definition : ShotCheckboxAttributeDefinition
+    --
+    * value : boolean
+}
+
+ShotCheckboxAttribute }o--|| ShotCheckboxAttributeDefinition
+
+ShotAttributeBase <|-down- ShotSingleSelectAttribute
+ShotAttributeBase <|-down- ShotMultiSelectAttribute
 ShotAttributeBase <|-down- ShotTextAttribute
+ShotAttributeBase <|-down- ShotCheckboxAttribute
 
 entity Scene {
     * id : Long
@@ -181,13 +222,29 @@ entity Shot {
     * scene : Scene
     * attributes: Set<ShotAttributeBase>
     --
-    * name : string
+    * number: int
+    * isSubshot: boolean
 }
 
 Scene ||--o{ Shot
 
 Shot ||--o{ ShotAttributeBase
 Shotlist ||--o{ Scene
+
+/'
+    NOTES
+'/
+
+entity ShotNote {
+    * id : Long
+    * shot : Shot
+    * user : User
+    --
+    * text : string
+    * created_at : LocalDateTime
+}
+
+Shot ||--o{ ShotNote
 
 /'
     SHARED USERS
