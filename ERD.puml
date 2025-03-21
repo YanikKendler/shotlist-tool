@@ -72,14 +72,9 @@ entity ShotTextAttributeTemplate {
     --
 }
 
-entity ShotCheckboxAttributeTemplate {
-    --
-}
-
 ShotAttributeTemplateBase <|-down- ShotSingleSelectAttributeTemplate
 ShotAttributeTemplateBase <|-down- ShotMultiSelectAttributeTemplate
 ShotAttributeTemplateBase <|-down- ShotTextAttributeTemplate
-ShotAttributeTemplateBase <|-down- ShotCheckboxAttributeTemplate
 
 entity SceneAttributeTemplate {
     * id : Long
@@ -129,14 +124,10 @@ entity ShotTextAttributeDefinition {
     --
 }
 
-entity ShotCheckboxAttributeDefinition {
-    --
-}
 
 ShotAttributeDefinitionBase <|-down- ShotSingleSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotMultiSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotTextAttributeDefinition
-ShotAttributeDefinitionBase <|-down- ShotCheckboxAttributeDefinition
 
 entity SceneAttributeDefinition {
     * id : Long
@@ -184,18 +175,9 @@ entity ShotTextAttribute {
 
 ShotTextAttribute }o--|| ShotTextAttributeDefinition
 
-entity ShotCheckboxAttribute {
-    * definition : ShotCheckboxAttributeDefinition
-    --
-    * value : boolean
-}
-
-ShotCheckboxAttribute }o--|| ShotCheckboxAttributeDefinition
-
 ShotAttributeBase <|-down- ShotSingleSelectAttribute
 ShotAttributeBase <|-down- ShotMultiSelectAttribute
 ShotAttributeBase <|-down- ShotTextAttribute
-ShotAttributeBase <|-down- ShotCheckboxAttribute
 
 entity Scene {
     * id : Long
