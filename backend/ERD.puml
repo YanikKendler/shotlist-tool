@@ -76,7 +76,7 @@ ShotAttributeTemplateBase <|-down- ShotSingleSelectAttributeTemplate
 ShotAttributeTemplateBase <|-down- ShotMultiSelectAttributeTemplate
 ShotAttributeTemplateBase <|-down- ShotTextAttributeTemplate
 
-entity SceneAttributeTemplate {
+abstract SceneAttributeTemplateBase {
     * id : Long
     * shotlistTemplate : ShotlistTemplate
     --
@@ -84,10 +84,144 @@ entity SceneAttributeTemplate {
     * position : int
 }
 
-ShotlistTemplate ||--o{ SceneAttributeTemplate
+ShotlistTemplate ||--o{ SceneAttributeTemplateBase
+
+entity SceneSingleSelectAttributeTemplate {
+    * options : Set<SceneSelectAttributeOptionTemplate>
+    --
+}
+
+entity SceneMultiSelectAttributeTemplate {
+    * options : Set<SceneSelectAttributeOptionTemplate>
+    --
+}
+
+entity SceneSelectAttributeOptionTemplate {
+    * id : Long
+    --
+    * name : string
+    * position: int
+}
+
+SceneSingleSelectAttributeTemplate ||--o{ SceneSelectAttributeOptionTemplate
+SceneMultiSelectAttributeTemplate ||--o{ SceneSelectAttributeOptionTemplate
+
+entity SceneTextAttributeTemplate {
+    --
+}
+
+SceneAttributeTemplateBase <|-down- SceneSingleSelectAttributeTemplate
+SceneAttributeTemplateBase <|-down- SceneMultiSelectAttributeTemplate
+SceneAttributeTemplateBase <|-down- SceneTextAttributeTemplate
+
 
 /'
-    DEFINITIONS
+    SCENE ATTRIBUTE DEFINITIONS
+'/
+
+abstract SceneAttributeDefinitionBase {
+    * id : Long
+    * shotlist : Shotlist
+    --
+    * name : string
+    * position : int
+}
+
+Shotlist ||--o{ SceneAttributeDefinitionBase
+
+entity SceneSingleSelectAttributeDefinition {
+    * options : Set<SceneSelectAttributeOptionDefinition>
+    --
+}
+
+entity SceneMultiSelectAttributeDefinition {
+    * options : Set<SceneSelectAttributeOptionDefinition>
+    --
+}
+
+entity SceneSelectAttributeOptionDefinition {
+    * id : Long
+    --
+    * name : string
+    * position: int
+}
+
+SceneSingleSelectAttributeDefinition ||--o{ SceneSelectAttributeOptionDefinition
+SceneMultiSelectAttributeDefinition ||--o{ SceneSelectAttributeOptionDefinition
+
+entity SceneTextAttributeDefinition {
+    --
+}
+
+SceneAttributeDefinitionBase <|-down- SceneSingleSelectAttributeDefinition
+SceneAttributeDefinitionBase <|-down- SceneMultiSelectAttributeDefinition
+SceneAttributeDefinitionBase <|-down- SceneTextAttributeDefinition
+
+entity SceneAttributeDefinition {
+    * id : Long
+    * shotlist : Shotlist
+    --
+    * name : string
+    * position : int
+}
+
+Shotlist ||--o{ SceneAttributeDefinition
+
+/'
+    SCENES
+'/
+
+entity Scene {
+    * id : Long
+    * shotlist : Shotlist
+    * attributes: Set<SceneAttributeBase>
+    * shots: Set<Shot>
+    --
+    * number : int
+}
+
+Shotlist ||--o{ Scene
+
+abstract SceneAttributeBase {
+    * id : Long
+    * shot : Shot
+    --
+}
+
+Scene ||--o{ SceneAttributeBase
+
+entity SceneSingleSelectAttribute {
+    * value: ShotSelectAttributeOptionDefinition
+    * definition : ShotSingleSelectAttributeDefinition
+    --
+}
+
+SceneSingleSelectAttribute }o--|| SceneSelectAttributeOptionDefinition
+SceneSingleSelectAttribute }o--|| SceneSingleSelectAttributeDefinition
+
+entity SceneMultiSelectAttribute {
+    * value: List<SceneSelectAttributeOptionDefinition>
+    * definition : SceneMultiSelectAttributeDefinition
+    --
+}
+
+SceneMultiSelectAttribute }o--o{ SceneSelectAttributeOptionDefinition
+SceneMultiSelectAttribute }o--|| SceneMultiSelectAttributeDefinition
+
+entity SceneTextAttribute {
+    * definition : SceneTextAttributeDefinition
+    --
+    * value : string
+}
+
+SceneTextAttribute }o--|| SceneTextAttributeDefinition
+
+SceneAttributeBase <|-down- SceneSingleSelectAttribute
+SceneAttributeBase <|-down- SceneMultiSelectAttribute
+SceneAttributeBase <|-down- SceneTextAttribute
+
+/'
+    SHOT ATTRIBUTES DEFINITIONS
 '/
 
 abstract ShotAttributeDefinitionBase {
@@ -124,7 +258,6 @@ entity ShotTextAttributeDefinition {
     --
 }
 
-
 ShotAttributeDefinitionBase <|-down- ShotSingleSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotMultiSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotTextAttributeDefinition
@@ -140,14 +273,27 @@ entity SceneAttributeDefinition {
 Shotlist ||--o{ SceneAttributeDefinition
 
 /'
-    SCENES ANS SHOTS
+    SHOTS
 '/
+
+entity Shot {
+    * id : Long
+    * scene : Scene
+    * attributes: Set<ShotAttributeBase>
+    --
+    * number: int
+    * isSubshot: boolean
+}
+
+Scene ||--o{ Shot
 
 abstract ShotAttributeBase {
     * id : Long
     * shot : Shot
     --
 }
+
+Shot ||--o{ ShotAttributeBase
 
 entity ShotSingleSelectAttribute {
     * value: ShotSelectAttributeOptionDefinition
@@ -178,40 +324,6 @@ ShotTextAttribute }o--|| ShotTextAttributeDefinition
 ShotAttributeBase <|-down- ShotSingleSelectAttribute
 ShotAttributeBase <|-down- ShotMultiSelectAttribute
 ShotAttributeBase <|-down- ShotTextAttribute
-
-entity Scene {
-    * id : Long
-    * shotlist : Shotlist
-    * attributes: Set<SceneAttribute>
-    * shots: Set<Shot>
-    --
-    * number : int
-}
-
-entity SceneAttribute {
-    * id : Long
-    * scene : Scene
-    * definition : SceneAttributeDefinition
-    --
-    * value : string
-}
-
-Scene ||--o{ SceneAttribute
-SceneAttribute }o--|| SceneAttributeDefinition
-
-entity Shot {
-    * id : Long
-    * scene : Scene
-    * attributes: Set<ShotAttributeBase>
-    --
-    * number: int
-    * isSubshot: boolean
-}
-
-Scene ||--o{ Shot
-
-Shot ||--o{ ShotAttributeBase
-Shotlist ||--o{ Scene
 
 /'
     NOTES
