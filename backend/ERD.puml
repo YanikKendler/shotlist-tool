@@ -15,8 +15,7 @@ entity Shotlist {
   * scenes: Set<Scene>
   --
   * name : string
-  * description : string
-  * created_at : LocalDateTime
+  * createdAt : LocalDateTime
 }
 
 User ||--o{ Shotlist
@@ -25,28 +24,28 @@ User ||--o{ Shotlist
     TEMPLATE
 '/
 
-entity ShotlistTemplate {
+entity Template {
     * id : Long
     * user : User
-    * sceneAttributes: Set<SceneAttributeTemplate>
+    * sceneAttributes: Set<SceneAttributeTemplateBase>
     * shotAttributes: Set<ShotAttributeTemplateBase>
     --
     * name : string
     * description : string
-    * created_at : LocalDateTime
+    * createdAt : LocalDateTime
 }
 
-User ||--o{ ShotlistTemplate
+User ||--o{ Template
 
 abstract ShotAttributeTemplateBase {
     * id : Long
-    * shotlistTemplate : ShotlistTemplate
+    * template : Template
     --
     * name : string
     * position : int
 }
 
-ShotlistTemplate ||--o{ ShotAttributeTemplateBase
+Template ||--o{ ShotAttributeTemplateBase
 
 entity ShotSingleSelectAttributeTemplate {
     * options : Set<ShotSelectAttributeOptionTemplate>
@@ -78,13 +77,13 @@ ShotAttributeTemplateBase <|-down- ShotTextAttributeTemplate
 
 abstract SceneAttributeTemplateBase {
     * id : Long
-    * shotlistTemplate : ShotlistTemplate
+    * template : Template
     --
     * name : string
     * position : int
 }
 
-ShotlistTemplate ||--o{ SceneAttributeTemplateBase
+Template ||--o{ SceneAttributeTemplateBase
 
 entity SceneSingleSelectAttributeTemplate {
     * options : Set<SceneSelectAttributeOptionTemplate>
@@ -157,16 +156,6 @@ SceneAttributeDefinitionBase <|-down- SceneSingleSelectAttributeDefinition
 SceneAttributeDefinitionBase <|-down- SceneMultiSelectAttributeDefinition
 SceneAttributeDefinitionBase <|-down- SceneTextAttributeDefinition
 
-entity SceneAttributeDefinition {
-    * id : Long
-    * shotlist : Shotlist
-    --
-    * name : string
-    * position : int
-}
-
-Shotlist ||--o{ SceneAttributeDefinition
-
 /'
     SCENES
 '/
@@ -178,6 +167,7 @@ entity Scene {
     * shots: Set<Shot>
     --
     * number : int
+    * createdAt : LocalDateTime
 }
 
 Shotlist ||--o{ Scene
@@ -262,16 +252,6 @@ ShotAttributeDefinitionBase <|-down- ShotSingleSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotMultiSelectAttributeDefinition
 ShotAttributeDefinitionBase <|-down- ShotTextAttributeDefinition
 
-entity SceneAttributeDefinition {
-    * id : Long
-    * shotlist : Shotlist
-    --
-    * name : string
-    * position : int
-}
-
-Shotlist ||--o{ SceneAttributeDefinition
-
 /'
     SHOTS
 '/
@@ -283,6 +263,7 @@ entity Shot {
     --
     * number: int
     * isSubshot: boolean
+    * createdAt : LocalDateTime
 }
 
 Scene ||--o{ Shot
@@ -335,7 +316,7 @@ entity ShotNote {
     * user : User
     --
     * text : string
-    * created_at : LocalDateTime
+    * createdAt : LocalDateTime
 }
 
 Shot ||--o{ ShotNote
@@ -349,15 +330,15 @@ entity Collaborator {
     * user : User
     * shotlist : Shotlist
     --
-    * role : Role
+    * role : CollaboratorRole
 }
 
-enum Role {
+enum CollaboratorRole {
   EDITOR
   VIEWER
 }
 
-Collaborator }o--|| Role
+Collaborator }o--|| CollaboratorRole
 Collaborator }o--|| Shotlist
 Collaborator }o-right-|| User
 
