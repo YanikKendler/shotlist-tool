@@ -8,4 +8,11 @@ import jakarta.persistence.*;
 public class SceneSelectAttributeOptionDefinition extends PanacheEntity {
     public String name;
     public int position;
+
+    public SceneSelectAttributeOptionDefinition() { }
+
+    public SceneSelectAttributeOptionDefinition(String name, int position) {
+        this.name = name;
+        this.position = position;
+    }
 }

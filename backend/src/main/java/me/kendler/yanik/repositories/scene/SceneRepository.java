@@ -1,9 +1,9 @@
 package me.kendler.yanik.repositories.scene;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import me.kendler.yanik.dto.CreateSceneDTO;
 import me.kendler.yanik.dto.CreateShotlistDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
@@ -12,19 +12,18 @@ import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.ShotlistRepository;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 
+import java.util.UUID;
+
 @ApplicationScoped
-public class SceneRepository implements PanacheRepository<Scene> {
+public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotlistRepository shotlistRepository;
 
-    @Inject
-    TemplateRepository templateRepository;
+    public Scene create(String shotlistId) {
+        Shotlist shotlist = shotlistRepository.findById(shotlistId);
 
-    public Scene create(CreateSceneDTO createDTO){
-        Shotlist shotlist = shotlistRepository.findById(createDTO.shotlistId());
-
-        Scene scene = new Scene(shotlist, createDTO.name(), shotlist.);
-        persist(shotlist);
+        Scene scene = new Scene(shotlist);
+        persist(scene);
 
         return scene;
     }

@@ -21,7 +21,6 @@ public class Template extends PanacheEntityBase {
     @OneToMany(mappedBy = "template")
     public Set<ShotAttributeTemplateBase> shotAttributes;
     public String name;
-    public String description;
     public LocalDateTime createdAt;
 
     public Template() {

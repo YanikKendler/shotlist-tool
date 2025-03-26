@@ -11,4 +11,10 @@ import me.kendler.yanik.model.shot.Shot;
 public abstract class ShotAttributeBase extends PanacheEntity {
     @ManyToOne
     public Shot shot;
+
+    public ShotAttributeBase() { }
+
+    public ShotAttributeBase(Shot shot) {
+        this.shot = shot;
+    }
 }

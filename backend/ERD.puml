@@ -33,7 +33,6 @@ entity Template {
     * shotAttributes: Set<ShotAttributeTemplateBase>
     --
     * name : string
-    * description : string
     * createdAt : LocalDateTime
 }
 

@@ -3,6 +3,7 @@ package me.kendler.yanik.model.scene;
 import java.time.LocalDateTime;
 import java.util.*;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
@@ -10,7 +11,10 @@ import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.Shotlist;
 
 @Entity
-public class Scene extends PanacheEntity {
+public class Scene extends PanacheEntityBase {
+    @Id
+    @GeneratedValue
+    public UUID id;
     @ManyToOne
     public Shotlist shotlist;
     @OneToMany(mappedBy = "scene")
@@ -24,16 +28,16 @@ public class Scene extends PanacheEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Scene(Shotlist shotlist, Set<SceneAttributeDefinitionBase> attributeDefinitions, int number) {
+    public Scene(Shotlist shotlist) {
+        this();
         this.shotlist = shotlist;
-        this.number = number;
+        this.number = shotlist.scenes.size();
 
-        for (SceneAttributeDefinitionBase attributeDefinition : attributeDefinitions) {
-            SceneAttributeBase attribute = attributeDefinition.createAttribute();
-            attribute.scene = this;
+        // create attribute instances based on all the attribute definitions stored in the shotlist
+        for (SceneAttributeDefinitionBase attributeDefinition : shotlist.sceneAttributeDefinitions) {
+            SceneAttributeBase attribute = attributeDefinition.createAttribute(this);
             this.attributes.add(attribute);
+            persist(attribute);
         }
-
-        this.attributes = attributes;
     }
 }

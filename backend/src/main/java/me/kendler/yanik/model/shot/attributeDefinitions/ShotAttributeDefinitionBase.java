@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import me.kendler.yanik.model.Shotlist;
+import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 @Entity
@@ -15,7 +16,15 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
     String name;
     int position;
 
+    public ShotAttributeDefinitionBase() { }
+
+    public ShotAttributeDefinitionBase(Shotlist shotlist, String name) {
+        this.shotlist = shotlist;
+        this.name = name;
+        this.position = shotlist.shotAttributeDefinitions.size();
+    }
+
     abstract public String getType();
 
-    abstract public ShotAttributeBase createAttribute();
+    abstract public ShotAttributeBase createAttribute(Shot shot);
 }

@@ -11,4 +11,10 @@ import me.kendler.yanik.model.scene.Scene;
 public abstract class SceneAttributeBase extends PanacheEntity {
     @ManyToOne
     public Scene scene;
+
+    public SceneAttributeBase() { }
+
+    public SceneAttributeBase(Scene scene) {
+        this.scene = scene;
+    }
 }

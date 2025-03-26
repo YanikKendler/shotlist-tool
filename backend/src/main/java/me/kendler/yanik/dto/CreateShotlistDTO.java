@@ -1,7 +1,9 @@
 package me.kendler.yanik.dto;
 
+import java.util.UUID;
+
 public record CreateShotlistDTO(
-        String userId,
-        String templateId,
+        UUID userId,
+        UUID templateId,
         String name
 ) { }
