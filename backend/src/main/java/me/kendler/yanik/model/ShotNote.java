@@ -3,7 +3,7 @@ package me.kendler.yanik.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
-import me.kendler.yanik.model.shotlist.shot.Shot;
+import me.kendler.yanik.model.shot.Shot;
 
 @Entity
 @Table(name = "shotnote")

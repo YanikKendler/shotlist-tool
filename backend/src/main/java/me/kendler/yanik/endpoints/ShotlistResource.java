@@ -7,7 +7,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.CreateShotlistDTO;
-import me.kendler.yanik.repositories.shotlist.ShotlistRepository;
+import me.kendler.yanik.repositories.ShotlistRepository;
 
 @Path("/shotlist")
 public class ShotlistResource {

@@ -12,6 +12,8 @@ entity Shotlist {
   * id : Long
   * user : User
   * template: ShotlistTemplate
+  * sceneAttributeDefinitions: Set<SceneAttributeDefinitionBase>
+  * shotAttributeDefinitions: Set<ShotAttributeDefinitionBase>
   * scenes: Set<Scene>
   --
   * name : string
