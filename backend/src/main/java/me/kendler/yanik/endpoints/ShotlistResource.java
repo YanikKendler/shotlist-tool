@@ -7,7 +7,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.CreateShotlistDTO;
-import me.kendler.yanik.model.shotlist.Shotlist;
 import me.kendler.yanik.repositories.shotlist.ShotlistRepository;
 
 @Path("/shotlist")
