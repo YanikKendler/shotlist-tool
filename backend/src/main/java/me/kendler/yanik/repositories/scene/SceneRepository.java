@@ -19,7 +19,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotlistRepository shotlistRepository;
 
-    public Scene create(String shotlistId) {
+    public Scene create(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
 
         Scene scene = new Scene(shotlist);

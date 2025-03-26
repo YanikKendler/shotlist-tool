@@ -32,7 +32,8 @@ public class ShotlistResource {
     }
 
     @DELETE
-    public Response delete(@QueryParam("id") UUID id) {
+    @Path("/{id}")
+    public Response delete(@PathParam("id") UUID id) {
         shotlistRepository.deleteById(id);
         return Response.ok().build();
     }

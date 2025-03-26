@@ -12,20 +12,21 @@ import java.util.UUID;
 public class SceneResource {
     @Inject
     SceneRepository sceneRepository;
-
     @GET
-    public Response getAll(@PathParam("shotlistId") String shotlistId) {
+    public Response getAll(@PathParam("shotlistId") UUID shotlistId) {
         return Response.ok().entity(sceneRepository.list("shotlist.id", shotlistId)).build();
     }
 
     @POST
-    public Response create(@PathParam("shotlistId") String shotlistId) {
+    public Response create(@PathParam("shotlistId") UUID shotlistId) {
         return Response.ok().entity(sceneRepository.create(shotlistId)).build();
     }
 
     @DELETE
-    public Response delete(@QueryParam("id") UUID id) {
+    @Path("/{id}")
+    public Response delete(@PathParam("id") UUID id) {
         sceneRepository.deleteById(id);
         return Response.ok().build();
     }
+
 }
