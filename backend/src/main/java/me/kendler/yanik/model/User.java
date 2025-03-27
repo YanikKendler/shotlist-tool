@@ -4,11 +4,14 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "app_user")
 public class User extends PanacheEntityBase {
     @Id
-    public String id;
+    @GeneratedValue
+    public UUID id;
     public String username;
     public String email;
 }

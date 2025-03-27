@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.repositories.scene.SceneRepository;
@@ -11,6 +12,7 @@ import me.kendler.yanik.repositories.scene.SceneRepository;
 import java.util.UUID;
 
 @ApplicationScoped
+@Transactional
 public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
     @Inject
     SceneRepository sceneRepository;
