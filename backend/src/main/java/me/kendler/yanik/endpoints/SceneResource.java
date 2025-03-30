@@ -3,7 +3,6 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import me.kendler.yanik.dto.CreateShotlistDTO;
 import me.kendler.yanik.repositories.scene.SceneRepository;
 
 import java.util.UUID;

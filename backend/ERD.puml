@@ -6,11 +6,13 @@ entity User {
   --
   * username : string
   * email : string
+	* shotlists: Set<Shotlist>
+	* templates: Set<Template>
 }
 
 entity Shotlist {
   * id : Long
-  * user : User
+  * owner : User
   * template: ShotlistTemplate
   * sceneAttributeDefinitions: Set<SceneAttributeDefinitionBase>
   * shotAttributeDefinitions: Set<ShotAttributeDefinitionBase>
@@ -18,6 +20,7 @@ entity Shotlist {
   --
   * name : string
   * createdAt : LocalDateTime
+  * editedAt : LocalDateTime
 }
 
 User ||--o{ Shotlist
@@ -28,7 +31,7 @@ User ||--o{ Shotlist
 
 entity Template {
     * id : Long
-    * user : User
+    * owner : User
     * sceneAttributes: Set<SceneAttributeTemplateBase>
     * shotAttributes: Set<ShotAttributeTemplateBase>
     --
