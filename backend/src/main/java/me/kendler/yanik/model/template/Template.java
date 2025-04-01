@@ -15,7 +15,7 @@ public class Template extends PanacheEntityBase {
     @GeneratedValue
     public UUID id;
     @ManyToOne
-    public User user;
+    public User owner;
     @OneToMany(mappedBy = "template")
     public Set<SceneAttributeTemplateBase> sceneAttributes;
     @OneToMany(mappedBy = "template")

@@ -19,7 +19,7 @@ public class Shotlist extends PanacheEntityBase {
     @GeneratedValue
     public UUID id;
     @ManyToOne
-    public User user;
+    public User owner;
     @ManyToOne
     public Template template;
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
@@ -30,19 +30,21 @@ public class Shotlist extends PanacheEntityBase {
     public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions;
     public String name;
     public LocalDateTime createdAt;
+    public LocalDateTime editedAt;
 
     public Shotlist() {
         this.createdAt = LocalDateTime.now();
+        this.editedAt = LocalDateTime.now();
     }
 
-    public Shotlist(User user, String name) {
+    public Shotlist(User owner, String name) {
         this();
-        this.user = user;
+        this.owner = owner;
         this.name = name;
     }
 
-    public Shotlist(User user, Template template, String name) {
-        this(user, name);
+    public Shotlist(User owner, Template template, String name) {
+        this(owner, name);
 
         this.template = template;
 
@@ -59,5 +61,9 @@ public class Shotlist extends PanacheEntityBase {
             persist(attributeDefinition);
             shotAttributeDefinitions.add(attributeDefinition);
         }
+    }
+
+    public void registerEdit() {
+        this.editedAt = LocalDateTime.now();
     }
 }

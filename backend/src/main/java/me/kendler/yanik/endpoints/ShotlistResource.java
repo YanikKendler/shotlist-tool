@@ -3,8 +3,8 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import me.kendler.yanik.dto.CreateShotlistDTO;
-import me.kendler.yanik.dto.EditShotlistDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.repositories.ShotlistRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -24,15 +24,14 @@ public class ShotlistResource {
         //TODO only show shotlists of the current user
         return shotlistRepository.listAll();
     }
-
     @Mutation
-    public Shotlist createShotlist(CreateShotlistDTO createShotlistDTO) {
-        return shotlistRepository.create(createShotlistDTO);
+    public Shotlist createShotlist(ShotlistCreateDTO shotlistCreateDTODTO) {
+        return shotlistRepository.create(shotlistCreateDTODTO);
     }
 
     @Mutation
-    public Shotlist updateShotlist(EditShotlistDTO editShotlistDTO) {
-        return shotlistRepository.update(editShotlistDTO);
+    public Shotlist updateShotlist(ShotlistEditDTO shotlistEditDTO) {
+        return shotlistRepository.update(shotlistEditDTO);
     }
 
     @Mutation

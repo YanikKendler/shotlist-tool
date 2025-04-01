@@ -4,8 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import me.kendler.yanik.dto.CreateShotlistDTO;
-import me.kendler.yanik.dto.EditShotlistDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
@@ -23,7 +23,7 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
     @Inject
     TemplateRepository templateRepository;
 
-    public Shotlist create(CreateShotlistDTO createDTO){
+    public Shotlist create(ShotlistCreateDTO createDTO){
         User user = userRepository.findById(createDTO.userId());
 
         Shotlist shotlist;
@@ -33,6 +33,9 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
         }
         else {
             Template template = templateRepository.findById(createDTO.templateId());
+            if(template == null) {
+                throw new IllegalArgumentException("Template not found");
+            }
             shotlist = new Shotlist(user, template, createDTO.name());
         }
 
@@ -41,7 +44,7 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
         return shotlist;
     }
 
-    public Shotlist update(EditShotlistDTO editDTO){
+    public Shotlist update(ShotlistEditDTO editDTO){
         Shotlist shotlist = findById(editDTO.id());
         shotlist.name = editDTO.name();
         persist(shotlist);
