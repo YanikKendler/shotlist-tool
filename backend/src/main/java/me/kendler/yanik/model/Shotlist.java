@@ -22,11 +22,11 @@ public class Shotlist extends PanacheEntityBase {
     public User user;
     @ManyToOne
     public Template template;
-    @OneToMany(mappedBy = "shotlist")
+    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<Scene> scenes;
-    @OneToMany(mappedBy = "shotlist")
+    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions;
-    @OneToMany(mappedBy = "shotlist")
+    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions;
     public String name;
     public LocalDateTime createdAt;

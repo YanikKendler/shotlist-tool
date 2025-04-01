@@ -29,4 +29,13 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
         return scene;
     }
+
+    public Scene delete(UUID id) {
+        Scene scene = findById(id);
+        if (scene != null) {
+            delete(scene);
+            return scene;
+        }
+        return null;
+    }
 }

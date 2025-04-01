@@ -4,29 +4,33 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.CreateShotlistDTO;
+import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.repositories.scene.SceneRepository;
+import org.eclipse.microprofile.graphql.GraphQLApi;
+import org.eclipse.microprofile.graphql.Mutation;
+import org.eclipse.microprofile.graphql.Query;
 
+import java.util.List;
 import java.util.UUID;
 
-@Path("/shotlist/{shotlistId}/scene")
+@GraphQLApi
 public class SceneResource {
     @Inject
     SceneRepository sceneRepository;
-    @GET
-    public Response getAll(@PathParam("shotlistId") UUID shotlistId) {
-        return Response.ok().entity(sceneRepository.list("shotlist.id", shotlistId)).build();
+
+    @Query
+    public List<Scene> getScenes(UUID shotlistId) {
+        return sceneRepository.list("shotlist.id", shotlistId);
     }
 
-    @POST
-    public Response create(@PathParam("shotlistId") UUID shotlistId) {
-        return Response.ok().entity(sceneRepository.create(shotlistId)).build();
+    @Mutation
+    public Scene createScene(UUID shotlistId) {
+        return sceneRepository.create(shotlistId);
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response delete(@PathParam("id") UUID id) {
-        sceneRepository.deleteById(id);
-        return Response.ok().build();
+    @Mutation
+    public Scene deleteScene(UUID id) {
+        return sceneRepository.delete(id);
     }
 
 }

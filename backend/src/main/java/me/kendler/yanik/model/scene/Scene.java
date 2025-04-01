@@ -17,9 +17,9 @@ public class Scene extends PanacheEntityBase {
     public UUID id;
     @ManyToOne
     public Shotlist shotlist;
-    @OneToMany(mappedBy = "scene")
+    @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
     public Set<SceneAttributeBase> attributes;
-    @OneToMany(mappedBy = "scene")
+    @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
     public Set<Shot> shots;
     public int number;
     public LocalDateTime createdAt;

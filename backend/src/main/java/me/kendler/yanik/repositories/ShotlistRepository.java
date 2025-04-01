@@ -8,6 +8,7 @@ import me.kendler.yanik.dto.CreateShotlistDTO;
 import me.kendler.yanik.dto.EditShotlistDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
+import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 
@@ -40,9 +41,19 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
         return shotlist;
     }
 
-    public void update(EditShotlistDTO editDTO){
+    public Shotlist update(EditShotlistDTO editDTO){
         Shotlist shotlist = findById(editDTO.id());
         shotlist.name = editDTO.name();
         persist(shotlist);
+        return shotlist;
+    }
+
+    public Shotlist delete(UUID id){
+        Shotlist shotlist = findById(id);
+        if(shotlist != null) {
+            delete(shotlist);
+            return shotlist;
+        }
+        return null;
     }
 }
