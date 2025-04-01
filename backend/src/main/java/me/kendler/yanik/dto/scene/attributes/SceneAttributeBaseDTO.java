@@ -1,7 +1,10 @@
 package me.kendler.yanik.dto.scene.attributes;
 
-import java.util.UUID;
+import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 
 public interface SceneAttributeBaseDTO {
-    UUID getId();
+    Long getId();
+    Scene getScene();
+    SceneAttributeDefinitionBase getDefinition();
 }

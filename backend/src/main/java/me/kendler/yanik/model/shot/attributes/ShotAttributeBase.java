@@ -4,6 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
 import me.kendler.yanik.model.shot.Shot;
 
 @Entity
@@ -17,4 +19,6 @@ public abstract class ShotAttributeBase extends PanacheEntity {
     public ShotAttributeBase(Shot shot) {
         this.shot = shot;
     }
+
+    public abstract ShotAttributeBaseDTO toDTO();
 }

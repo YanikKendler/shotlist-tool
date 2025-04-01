@@ -25,9 +25,9 @@ public class Shotlist extends PanacheEntityBase {
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<Scene> scenes;
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
-    public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions;
+    public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions = new HashSet<>();
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
-    public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions;
+    public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions = new HashSet<>();
     public String name;
     public LocalDateTime createdAt;
     public LocalDateTime editedAt;

@@ -3,6 +3,7 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import me.kendler.yanik.dto.scene.SceneDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.repositories.scene.SceneRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -18,17 +19,17 @@ public class SceneResource {
     SceneRepository sceneRepository;
 
     @Query
-    public List<Scene> getScenes(UUID shotlistId) {
-        return sceneRepository.list("shotlist.id", shotlistId);
+    public List<SceneDTO> getScenes(UUID shotlistId) {
+        return sceneRepository.list("shotlist.id", shotlistId).stream().map(Scene::toDTO).toList();
     }
 
     @Mutation
-    public Scene createScene(UUID shotlistId) {
-        return sceneRepository.create(shotlistId);
+    public SceneDTO createScene(UUID shotlistId) {
+        return sceneRepository.create(shotlistId).toDTO();
     }
 
     @Mutation
-    public Scene deleteScene(UUID id) {
-        return sceneRepository.delete(id);
+    public SceneDTO deleteScene(UUID id) {
+        return sceneRepository.delete(id).toDTO();
     }
 }

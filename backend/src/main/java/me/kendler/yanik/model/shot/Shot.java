@@ -2,9 +2,12 @@ package me.kendler.yanik.model.shot;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.shot.ShotDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
@@ -18,7 +21,7 @@ public class Shot extends PanacheEntityBase {
     @ManyToOne
     public Scene scene;
     @OneToMany(mappedBy = "shot")
-    public Set<ShotAttributeBase> attributes;
+    public Set<ShotAttributeBase> attributes = new HashSet<>();
     public int number;
     public boolean isSubshot;
     public LocalDateTime createdAt;
@@ -35,5 +38,16 @@ public class Shot extends PanacheEntityBase {
             persist(attribute);
             attributes.add(attribute);
         }
+    }
+
+    public ShotDTO toDTO() {
+        return new ShotDTO(
+            this.id,
+            this.scene,
+            this.attributes.stream().map(ShotAttributeBase::toDTO).collect(Collectors.toSet()),
+            this.number,
+            this.isSubshot,
+            this.createdAt
+        );
     }
 }

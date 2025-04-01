@@ -24,9 +24,10 @@ public class ShotlistResource {
         //TODO only show shotlists of the current user
         return shotlistRepository.listAll();
     }
+
     @Mutation
-    public Shotlist createShotlist(ShotlistCreateDTO shotlistCreateDTODTO) {
-        return shotlistRepository.create(shotlistCreateDTODTO);
+    public Shotlist createShotlist(ShotlistCreateDTO shotlistCreateDTO) {
+        return shotlistRepository.create(shotlistCreateDTO);
     }
 
     @Mutation

@@ -23,4 +23,13 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
         persist(shot);
         return shot;
     }
+
+    public Shot delete(UUID id) {
+        Shot shot = findById(id);
+        if (shot != null) {
+            delete(shot);
+            return shot;
+        }
+        return null;
+    }
 }
