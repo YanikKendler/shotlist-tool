@@ -9,6 +9,7 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
 
 @Entity
+@DiscriminatorValue("ShotSingleSelect")
 public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinitionBase {
     @OneToMany
     public Set<ShotSelectAttributeOptionDefinition> options;

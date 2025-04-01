@@ -25,6 +25,7 @@ public abstract class SceneAttributeDefinitionBase extends PanacheEntity {
         this.shotlist = shotlist;
         this.name = name;
         this.position = shotlist.sceneAttributeDefinitions.size();
+        shotlist.sceneAttributeDefinitions.add(this);
     }
 
     abstract public String getType();

@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.repositories.ShotlistRepository;
@@ -20,23 +21,23 @@ public class ShotlistResource {
     ShotlistRepository shotlistRepository;
 
     @Query
-    public List<Shotlist> getShotlists() {
+    public List<ShotlistDTO> getShotlists() {
         //TODO only show shotlists of the current user
-        return shotlistRepository.listAll();
+        return shotlistRepository.listAll().stream().map(Shotlist::toDTO).toList();
     }
 
     @Mutation
-    public Shotlist createShotlist(ShotlistCreateDTO shotlistCreateDTO) {
-        return shotlistRepository.create(shotlistCreateDTO);
+    public ShotlistDTO createShotlist(ShotlistCreateDTO shotlistCreateDTO) {
+        return shotlistRepository.create(shotlistCreateDTO).toDTO();
     }
 
     @Mutation
-    public Shotlist updateShotlist(ShotlistEditDTO shotlistEditDTO) {
-        return shotlistRepository.update(shotlistEditDTO);
+    public ShotlistDTO updateShotlist(ShotlistEditDTO shotlistEditDTO) {
+        return shotlistRepository.update(shotlistEditDTO).toDTO();
     }
 
     @Mutation
-    public Shotlist deleteShotlist(UUID id) {
-        return shotlistRepository.delete(id);
+    public ShotlistDTO deleteShotlist(UUID id) {
+        return shotlistRepository.delete(id).toDTO();
     }
 }

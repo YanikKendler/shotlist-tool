@@ -9,6 +9,7 @@ import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.scene.attributes.SceneSingleSelectAttribute;
 
 @Entity
+@DiscriminatorValue("SceneSingleSelect")
 public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefinitionBase {
     @OneToMany
     public Set<SceneSelectAttributeOptionDefinition> options;

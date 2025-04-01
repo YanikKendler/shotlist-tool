@@ -19,8 +19,8 @@ public record ShotSingleselectAttributeDTO(
     }
 
     @Override
-    public Scene getShot() {
-        return null;
+    public Shot getShot() {
+        return shot;
     }
 
     @Override

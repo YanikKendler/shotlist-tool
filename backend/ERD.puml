@@ -8,6 +8,7 @@ entity User {
   * email : string
 	* shotlists: Set<Shotlist>
 	* templates: Set<Template>
+	* createdAt : LocalDateTime
 }
 
 entity Shotlist {

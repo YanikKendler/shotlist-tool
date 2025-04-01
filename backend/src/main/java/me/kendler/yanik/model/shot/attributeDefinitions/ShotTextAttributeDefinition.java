@@ -7,6 +7,7 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.model.shot.attributes.ShotTextAttribute;
 
 @Entity
+@DiscriminatorValue("ShotText")
 public class ShotTextAttributeDefinition extends ShotAttributeDefinitionBase {
     public ShotTextAttributeDefinition() { super(); }
 

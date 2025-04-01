@@ -18,6 +18,7 @@ public abstract class ShotAttributeBase extends PanacheEntity {
 
     public ShotAttributeBase(Shot shot) {
         this.shot = shot;
+        shot.attributes.add(this);
     }
 
     public abstract ShotAttributeBaseDTO toDTO();

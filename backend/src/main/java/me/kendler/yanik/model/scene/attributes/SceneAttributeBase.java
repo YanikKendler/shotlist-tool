@@ -21,6 +21,7 @@ public abstract class SceneAttributeBase extends PanacheEntity {
     public SceneAttributeBase(Scene scene, SceneAttributeDefinitionBase definition) {
         this.scene = scene;
         this.definition = definition;
+        scene.attributes.add(this);
     }
 
     public abstract SceneAttributeBaseDTO toDTO();

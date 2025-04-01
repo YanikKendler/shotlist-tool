@@ -11,6 +11,7 @@ import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 @Entity
+@DiscriminatorValue("SceneMultiSelect")
 public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitionBase {
     @OneToMany()
     public Set<SceneSelectAttributeOptionDefinition> options;

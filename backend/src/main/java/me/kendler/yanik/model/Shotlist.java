@@ -2,9 +2,11 @@ package me.kendler.yanik.model;
 
 import java.util.*;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
@@ -23,7 +25,7 @@ public class Shotlist extends PanacheEntityBase {
     @ManyToOne
     public Template template;
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
-    public Set<Scene> scenes;
+    public Set<Scene> scenes = new HashSet<>();
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions = new HashSet<>();
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
@@ -65,5 +67,19 @@ public class Shotlist extends PanacheEntityBase {
 
     public void registerEdit() {
         this.editedAt = LocalDateTime.now();
+    }
+
+    public ShotlistDTO toDTO() {
+        return new ShotlistDTO(
+            this.id,
+            this.owner,
+            this.template,
+            this.scenes.stream().map(Scene::toDTO).collect(Collectors.toSet()),
+            this.sceneAttributeDefinitions,
+            this.shotAttributeDefinitions,
+            this.name,
+            this.createdAt,
+            this.editedAt
+        );
     }
 }

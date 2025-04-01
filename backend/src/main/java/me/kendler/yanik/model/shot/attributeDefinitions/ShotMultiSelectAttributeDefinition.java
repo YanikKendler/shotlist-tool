@@ -9,6 +9,7 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
 
 @Entity
+@DiscriminatorValue("ShotMultiSelect")
 public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionBase {
     @OneToMany
     public Set<ShotSelectAttributeOptionDefinition> options;

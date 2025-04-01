@@ -7,6 +7,7 @@ import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.scene.attributes.SceneTextAttribute;
 
 @Entity
+@DiscriminatorValue("SceneText")
 public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     public SceneTextAttributeDefinition() { super(); }
 

@@ -24,7 +24,7 @@ public class Scene extends PanacheEntityBase {
     @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
     public Set<SceneAttributeBase> attributes = new HashSet<>();
     @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
-    public Set<Shot> shots;
+    public Set<Shot> shots = new HashSet<>();
     public int number;
     public LocalDateTime createdAt;
 
