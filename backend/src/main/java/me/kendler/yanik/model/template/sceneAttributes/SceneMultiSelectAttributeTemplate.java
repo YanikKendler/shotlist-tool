@@ -10,8 +10,8 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOpt
 
 @Entity
 public class SceneMultiSelectAttributeTemplate extends SceneAttributeTemplateBase {
-    @OneToMany
-    public Set<SceneSelectAttributeOptionTemplate> options;
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<SceneSelectAttributeOptionTemplate> options = new HashSet<>();
 
     @Override
     public String getType() {

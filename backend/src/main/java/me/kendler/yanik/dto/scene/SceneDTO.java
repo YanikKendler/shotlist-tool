@@ -1,6 +1,7 @@
 package me.kendler.yanik.dto.scene;
 
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
+import me.kendler.yanik.dto.shot.ShotDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public record SceneDTO (
     UUID id,
     Shotlist shotlist,
     Set<SceneAttributeBaseDTO> attributes,
-    Set<Shot> shots,
+    Set<ShotDTO> shots,
     int number,
     LocalDateTime createdAt
 ){ }

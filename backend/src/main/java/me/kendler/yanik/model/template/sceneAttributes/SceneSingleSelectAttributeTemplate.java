@@ -11,8 +11,8 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneSingleSelectAttrib
 
 @Entity
 public class SceneSingleSelectAttributeTemplate extends SceneAttributeTemplateBase {
-    @OneToMany
-    public Set<SceneSelectAttributeOptionTemplate> options;
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<SceneSelectAttributeOptionTemplate> options = new HashSet<>();
 
     @Override
     public String getType() {

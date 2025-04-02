@@ -10,7 +10,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinit
 public class ShotTextAttribute extends ShotAttributeBase {
     @ManyToOne
     public ShotTextAttributeDefinition definition;
-    public String value;
+    public String value = "";
 
     public ShotTextAttribute() { }
 

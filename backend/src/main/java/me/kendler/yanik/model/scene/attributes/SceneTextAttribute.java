@@ -9,7 +9,7 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneTextAttributeDefin
 
 @Entity
 public class SceneTextAttribute extends SceneAttributeBase{
-    public String value;
+    public String value = "";
 
     public SceneTextAttribute() { super(); }
 

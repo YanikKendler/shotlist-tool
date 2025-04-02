@@ -15,7 +15,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptio
 public class ShotMultiSelectAttribute extends ShotAttributeBase {
     @ManyToOne
     public ShotMultiSelectAttributeDefinition definition;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotSelectAttributeOptionDefinition> value = new HashSet<>();
 
     public ShotMultiSelectAttribute() { }

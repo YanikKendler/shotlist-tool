@@ -11,8 +11,8 @@ import me.kendler.yanik.model.scene.attributes.SceneSingleSelectAttribute;
 @Entity
 @DiscriminatorValue("SceneSingleSelect")
 public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefinitionBase {
-    @OneToMany
-    public Set<SceneSelectAttributeOptionDefinition> options;
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<SceneSelectAttributeOptionDefinition> options = new HashSet<>();
 
     public SceneSingleSelectAttributeDefinition() { super(); }
 

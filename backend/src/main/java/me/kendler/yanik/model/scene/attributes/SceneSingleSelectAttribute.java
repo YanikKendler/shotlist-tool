@@ -12,7 +12,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttribut
 
 @Entity
 public class SceneSingleSelectAttribute extends SceneAttributeBase{
-    @ManyToOne
+    @ManyToOne()
     public SceneSelectAttributeOptionDefinition value;
 
     public SceneSingleSelectAttribute() { super(); }

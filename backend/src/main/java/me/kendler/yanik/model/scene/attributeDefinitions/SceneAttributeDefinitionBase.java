@@ -13,6 +13,7 @@ import me.kendler.yanik.model.shot.Shot;
  */
 @Entity
 @Table(name = "sceneattributedefinition")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class SceneAttributeDefinitionBase extends PanacheEntity {
     @ManyToOne
     public Shotlist shotlist;

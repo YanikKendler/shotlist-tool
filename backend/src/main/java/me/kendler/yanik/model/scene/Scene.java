@@ -50,7 +50,7 @@ public class Scene extends PanacheEntityBase {
             this.id,
             this.shotlist,
             this.attributes.stream().map(SceneAttributeBase::toDTO).collect(Collectors.toSet()),
-            this.shots,
+            this.shots.stream().map(Shot::toDTO).collect(Collectors.toSet()),
             this.number,
             this.createdAt
         );

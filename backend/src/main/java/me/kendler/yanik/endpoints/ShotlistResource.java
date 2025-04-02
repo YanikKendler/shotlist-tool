@@ -15,6 +15,8 @@ import org.eclipse.microprofile.graphql.Query;
 import java.util.List;
 import java.util.UUID;
 
+//TODO i dont know why when getting it only returns a single shot defnition instead of all three
+
 @GraphQLApi
 public class ShotlistResource {
     @Inject

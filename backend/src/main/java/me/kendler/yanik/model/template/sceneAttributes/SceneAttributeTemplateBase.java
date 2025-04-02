@@ -1,15 +1,14 @@
 package me.kendler.yanik.model.template.sceneAttributes;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.template.Template;
 
 @Entity
 @Table(name = "sceneattributetemplate")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class SceneAttributeTemplateBase extends PanacheEntity {
     @ManyToOne
     public Template template;

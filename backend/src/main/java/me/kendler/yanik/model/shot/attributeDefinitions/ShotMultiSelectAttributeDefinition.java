@@ -11,8 +11,8 @@ import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
 @Entity
 @DiscriminatorValue("ShotMultiSelect")
 public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionBase {
-    @OneToMany
-    public Set<ShotSelectAttributeOptionDefinition> options;
+    @OneToMany(fetch = FetchType.EAGER)
+    public Set<ShotSelectAttributeOptionDefinition> options = new HashSet<>();
 
     public ShotMultiSelectAttributeDefinition() { super(); }
 

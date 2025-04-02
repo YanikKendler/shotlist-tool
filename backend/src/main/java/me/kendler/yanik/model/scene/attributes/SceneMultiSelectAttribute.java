@@ -11,7 +11,7 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOpt
 
 @Entity
 public class SceneMultiSelectAttribute extends SceneAttributeBase{
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<SceneSelectAttributeOptionDefinition> value = new HashSet<>();
 
     public SceneMultiSelectAttribute() { super(); }

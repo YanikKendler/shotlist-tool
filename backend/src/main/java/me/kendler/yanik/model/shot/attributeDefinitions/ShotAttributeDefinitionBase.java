@@ -1,20 +1,23 @@
 package me.kendler.yanik.model.shot.attributeDefinitions;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
+/**
+ * Base class for shit attribute definitions.
+ * Defines all the attributes that every single shot in a shotlist has, stores the selection options and names for those attributes.
+ */
 @Entity
 @Table(name = "shotattributedefinition")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
     @ManyToOne
     public Shotlist shotlist;
-    String name;
-    int position;
+    public String name;
+    public int position;
 
     public ShotAttributeDefinitionBase() { }
 
