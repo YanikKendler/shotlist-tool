@@ -82,4 +82,19 @@ public class Shotlist extends PanacheEntityBase {
             this.editedAt
         );
     }
+
+    @Override
+    public String toString() {
+        return "Shotlist{" +
+            "id=" + id +
+            ", owner=" + owner +
+            ", template=" + template +
+            ", scenes=" + scenes +
+            ", sceneAttributeDefinitions=" + sceneAttributeDefinitions +
+            ", shotAttributeDefinitions=" + shotAttributeDefinitions +
+            ", name='" + name + '\'' +
+            ", createdAt=" + createdAt +
+            ", editedAt=" + editedAt +
+            '}';
+    }
 }

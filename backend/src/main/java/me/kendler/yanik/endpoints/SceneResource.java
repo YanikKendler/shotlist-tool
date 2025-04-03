@@ -4,7 +4,12 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.scene.SceneDTO;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
 import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
+import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
+import me.kendler.yanik.repositories.scene.SceneAttributeDefinitionRepository;
+import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.scene.SceneRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -31,5 +36,21 @@ public class SceneResource {
     @Mutation
     public SceneDTO deleteScene(UUID id) {
         return sceneRepository.delete(id).toDTO();
+    }
+
+    @Inject
+    SceneAttributeRepository sceneAttributeRepository;
+
+    @Query
+    public List<SceneAttributeBaseDTO> getSceneAttributes(UUID sceneId){
+        return sceneAttributeRepository.list("scene.id", sceneId).stream().map(SceneAttributeBase::toDTO).toList();
+    }
+
+    @Inject
+    SceneAttributeDefinitionRepository sceneAttributeDefinitionRepository;
+
+    @Query
+    public List<SceneAttributeDefinitionBase> getSceneAttributeDefinitions(UUID shotlistId){
+        return sceneAttributeDefinitionRepository.list("shotlist.id", shotlistId);
     }
 }

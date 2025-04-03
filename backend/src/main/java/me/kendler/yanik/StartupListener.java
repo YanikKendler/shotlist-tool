@@ -33,6 +33,7 @@ public class StartupListener {
     EntityManager entityManager;
 
     @PostConstruct
+    @Transactional
     public void init() {
         System.out.println("Initializing demo data...");
 

@@ -5,6 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
 import me.kendler.yanik.model.shot.Shot;
@@ -24,8 +25,8 @@ public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitio
     }
 
     @Override
-    public String getType() {
-        return "SceneMultiSelect";
+    public SceneAttributeType getType() {
+        return SceneAttributeType.SceneMultiSelectAttribute;
     }
 
     @Override

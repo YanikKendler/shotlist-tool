@@ -5,6 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.scene.attributes.SceneSingleSelectAttribute;
 
@@ -22,8 +23,8 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
     }
 
     @Override
-    public String getType() {
-        return "SceneSingleSelect";
+    public SceneAttributeType getType() {
+        return SceneAttributeType.SceneSingleSelectAttribute;
     }
 
     @Override

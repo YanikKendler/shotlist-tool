@@ -3,9 +3,15 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import me.kendler.yanik.dto.scene.attributeDefinitions.ShotAttributeDefinitionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
 import me.kendler.yanik.model.shot.Shot;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
+import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.repositories.scene.SceneRepository;
+import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
+import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -32,5 +38,26 @@ public class ShotResource {
     @Mutation
     public ShotDTO deleteShot(@PathParam("id") UUID id) {
         return shotRepository.delete(id).toDTO();
+    }
+
+    @Inject
+    ShotAttributeRepository shotAttributeRepository;
+
+    @Query
+    public List<ShotAttributeBaseDTO> getShotAttributes(UUID shotId){
+        return shotAttributeRepository.list("shot.id", shotId).stream().map(ShotAttributeBase::toDTO).toList();
+    }
+
+    @Inject
+    ShotAttributeDefinitionRepository shotAttributeDefinitionRepository;
+
+    @Query
+    public List<ShotAttributeDefinitionBase> getShotAttributeDefinitions(UUID shotlistId){
+        return shotAttributeDefinitionRepository.list("shotlist.id", shotlistId);
+    }
+
+    @Mutation
+    public ShotAttributeDefinitionBase createShotAttributeDefinition(ShotAttributeDefinitionCreateDTO createDTO){
+        return  shotAttributeDefinitionRepository.create(createDTO);
     }
 }

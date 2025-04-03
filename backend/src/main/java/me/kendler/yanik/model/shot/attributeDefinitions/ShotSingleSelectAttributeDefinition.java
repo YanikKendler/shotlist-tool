@@ -5,6 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
+import me.kendler.yanik.model.shot.ShotAttributeType;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
 
@@ -16,14 +17,18 @@ public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinition
 
     public ShotSingleSelectAttributeDefinition() { super(); }
 
+    public ShotSingleSelectAttributeDefinition(Shotlist shotlist) {
+        super(shotlist);
+    }
+
     public ShotSingleSelectAttributeDefinition(Shotlist shotlist, String name, Set<ShotSelectAttributeOptionDefinition> options) {
         super(shotlist, name);
         this.options = options;
     }
 
     @Override
-    public String getType() {
-        return "ShotSingleSelect";
+    public ShotAttributeType getType() {
+        return ShotAttributeType.ShotSingleSelectAttribute;
     }
 
     @Override
