@@ -7,6 +7,5 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionB
 
 public interface ShotAttributeBaseDTO {
     Long getId();
-    Shot getShot();
     ShotAttributeDefinitionBase getDefinition();
 }

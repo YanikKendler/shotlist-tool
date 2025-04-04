@@ -12,18 +12,12 @@ import java.util.Set;
 
 public record ShotMultiselectAttributeDTO(
     Long id,
-    Shot shot,
     ShotAttributeDefinitionBase definition,
     Set<ShotSelectAttributeOptionDefinition> multiselectValue
 ) implements ShotAttributeBaseDTO {
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Shot getShot() {
-        return shot;
     }
 
     @Override

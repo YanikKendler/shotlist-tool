@@ -7,18 +7,12 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptio
 
 public record ShotTextAttributeDTO(
     Long id,
-    Shot shot,
     ShotAttributeDefinitionBase definition,
     String textValue
 ) implements ShotAttributeBaseDTO {
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Shot getShot() {
-        return shot;
     }
 
     @Override

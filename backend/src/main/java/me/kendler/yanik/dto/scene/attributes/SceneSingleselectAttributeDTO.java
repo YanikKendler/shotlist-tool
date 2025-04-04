@@ -8,18 +8,12 @@ import java.util.List;
 
 public record SceneSingleselectAttributeDTO(
         Long id,
-        Scene scene,
         SceneAttributeDefinitionBase definition,
         SceneSelectAttributeOptionDefinition singleselectValue
 ) implements SceneAttributeBaseDTO{
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Scene getScene() {
-        return null;
     }
 
     @Override

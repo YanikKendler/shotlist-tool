@@ -29,4 +29,9 @@ public class ShotTextAttributeDefinition extends ShotAttributeDefinitionBase {
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotTextAttribute(this, shot);
     }
+
+    @Override
+    public boolean addOption(ShotSelectAttributeOptionDefinition option) {
+        return false;
+    }
 }

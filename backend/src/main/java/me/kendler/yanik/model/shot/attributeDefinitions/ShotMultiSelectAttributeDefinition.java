@@ -36,4 +36,10 @@ public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionB
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotMultiSelectAttribute(this, shot);
     }
+
+    @Override
+    public boolean addOption(ShotSelectAttributeOptionDefinition option) {
+        options.add(option);
+        return true;
+    }
 }

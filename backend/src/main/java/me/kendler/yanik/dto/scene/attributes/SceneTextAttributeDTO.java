@@ -5,18 +5,12 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitio
 
 public record SceneTextAttributeDTO(
         Long id,
-        Scene scene,
         SceneAttributeDefinitionBase definition,
         String textValue
 ) implements SceneAttributeBaseDTO{
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Scene getScene() {
-        return null;
     }
 
     @Override

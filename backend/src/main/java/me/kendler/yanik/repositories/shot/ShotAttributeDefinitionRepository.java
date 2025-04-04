@@ -3,7 +3,8 @@ package me.kendler.yanik.repositories.shot;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import me.kendler.yanik.dto.scene.attributeDefinitions.ShotAttributeDefinitionCreateDTO;
+import jakarta.transaction.Transactional;
+import me.kendler.yanik.dto.shot.ShotAttributeDefinitionCreateDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
@@ -12,6 +13,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinit
 import me.kendler.yanik.repositories.ShotlistRepository;
 
 @ApplicationScoped
+@Transactional
 public class ShotAttributeDefinitionRepository implements PanacheRepository<ShotAttributeDefinitionBase> {
     @Inject
     ShotlistRepository shotlistRepository;
@@ -20,11 +22,9 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         if(createDTO == null) {
             throw new IllegalArgumentException("ShotAttributeDefinitionCreateDTO cannot be null");
         }
-
         if(createDTO.shotlistId() == null) {
             throw new IllegalArgumentException("Shotlist ID cannot be null");
         }
-
         if(createDTO.type() == null) {
             throw new IllegalArgumentException("ShotAttributeDefinition type cannot be null");
         }
@@ -51,5 +51,15 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         persist(attributeDefinition);
 
         return attributeDefinition;
+    }
+
+    public ShotAttributeDefinitionBase delete(Long id){
+        ShotAttributeDefinitionBase attributeDefinition = findById(id);
+
+        if(attributeDefinition != null) {
+            delete(attributeDefinition);
+            return attributeDefinition;
+        }
+        return null;
     }
 }

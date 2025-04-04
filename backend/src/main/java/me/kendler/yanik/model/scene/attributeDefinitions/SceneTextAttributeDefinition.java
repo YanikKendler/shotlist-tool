@@ -12,6 +12,10 @@ import me.kendler.yanik.model.scene.attributes.SceneTextAttribute;
 public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     public SceneTextAttributeDefinition() { super(); }
 
+    public SceneTextAttributeDefinition(Shotlist shotlist) {
+        super(shotlist);
+    }
+
     public SceneTextAttributeDefinition(Shotlist shotlist, String name) {
         super(shotlist, name);
     }
@@ -24,5 +28,10 @@ public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneTextAttribute(this, scene);
+    }
+
+    @Override
+    public boolean addOption(SceneSelectAttributeOptionDefinition option) {
+        return false;
     }
 }

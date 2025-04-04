@@ -9,6 +9,7 @@ import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
 import me.kendler.yanik.model.shot.Shot;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 @Entity
@@ -18,6 +19,10 @@ public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitio
     public Set<SceneSelectAttributeOptionDefinition> options = new HashSet<>();
 
     public SceneMultiSelectAttributeDefinition() { super(); }
+
+    public SceneMultiSelectAttributeDefinition(Shotlist shotlist) {
+        super(shotlist);
+    }
 
     public SceneMultiSelectAttributeDefinition(Shotlist shotlist, String name, Set<SceneSelectAttributeOptionDefinition> options) {
         super(shotlist, name);
@@ -32,5 +37,11 @@ public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitio
     @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneMultiSelectAttribute(this, scene);
+    }
+
+    @Override
+    public boolean addOption(SceneSelectAttributeOptionDefinition option) {
+        options.add(option);
+        return true;
     }
 }

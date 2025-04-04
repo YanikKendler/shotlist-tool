@@ -2,14 +2,12 @@ package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
-import me.kendler.yanik.dto.scene.attributeDefinitions.ShotAttributeDefinitionCreateDTO;
+import me.kendler.yanik.dto.shot.ShotAttributeDefinitionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotDTO;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
-import me.kendler.yanik.repositories.scene.SceneRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
@@ -59,5 +57,10 @@ public class ShotResource {
     @Mutation
     public ShotAttributeDefinitionBase createShotAttributeDefinition(ShotAttributeDefinitionCreateDTO createDTO){
         return  shotAttributeDefinitionRepository.create(createDTO);
+    }
+
+    @Mutation
+    public ShotAttributeDefinitionBase deleteShotAttributeDefinition(Long id){
+        return shotAttributeDefinitionRepository.delete(id);
     }
 }

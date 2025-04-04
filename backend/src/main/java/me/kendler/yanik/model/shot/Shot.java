@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
@@ -19,6 +20,7 @@ public class Shot extends PanacheEntityBase {
     @GeneratedValue
     public UUID id;
     @ManyToOne
+    @JsonIgnore
     public Scene scene;
     @OneToMany(mappedBy = "shot", fetch = FetchType.EAGER)
     public Set<ShotAttributeBase> attributes = new HashSet<>();

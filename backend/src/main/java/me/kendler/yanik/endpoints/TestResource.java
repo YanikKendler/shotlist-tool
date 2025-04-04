@@ -20,13 +20,19 @@ public class TestResource {
 
     @GET
     @Path("/shotAttributeDefinitions")
-    public List<Set<ShotAttributeDefinitionBase>> getShots() {
+    public List<Set<ShotAttributeDefinitionBase>> getShotAttDefs() {
         return shotlistRepository.listAll().stream().map(Shotlist::toDTO).map(ShotlistDTO::shotAttributeDefinitions).toList();
     }
 
     @GET
     @Path("/sceneAttributeDefinitions")
-    public List<Set<SceneAttributeDefinitionBase>> getScenes() {
+    public List<Set<SceneAttributeDefinitionBase>> getSceneAttDefs() {
         return shotlistRepository.listAll().stream().map(Shotlist::toDTO).map(ShotlistDTO::sceneAttributeDefinitions).toList();
+    }
+
+    @GET
+    @Path("/shotlists")
+    public List<Shotlist> getShotlists() {
+        return shotlistRepository.listAll();
     }
 }

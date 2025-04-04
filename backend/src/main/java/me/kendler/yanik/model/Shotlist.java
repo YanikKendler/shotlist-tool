@@ -4,6 +4,7 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.shotlist.ShotlistDTO;
@@ -21,15 +22,20 @@ public class Shotlist extends PanacheEntityBase {
     @GeneratedValue
     public UUID id;
     @ManyToOne
+    @JsonIgnore
     public User owner;
     @ManyToOne
     public Template template;
+
     @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
     public Set<Scene> scenes = new HashSet<>();
-    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
+
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions = new HashSet<>();
-    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
+
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions = new HashSet<>();
+
     public String name;
     public LocalDateTime createdAt;
     public LocalDateTime editedAt;

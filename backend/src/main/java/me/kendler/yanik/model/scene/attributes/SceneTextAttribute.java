@@ -21,7 +21,6 @@ public class SceneTextAttribute extends SceneAttributeBase{
     public SceneAttributeBaseDTO toDTO() {
         return new SceneTextAttributeDTO(
             id,
-            scene,
             definition,
             value
         );

@@ -8,22 +8,18 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinit
 
 @Entity
 public class ShotTextAttribute extends ShotAttributeBase {
-    @ManyToOne
-    public ShotTextAttributeDefinition definition;
     public String value = "";
 
     public ShotTextAttribute() { }
 
     public ShotTextAttribute(ShotTextAttributeDefinition definition, Shot shot) {
-        super(shot);
-        this.definition = definition;
+        super(shot, definition);
     }
 
     @Override
     public ShotAttributeBaseDTO toDTO() {
         return new ShotTextAttributeDTO(
             id,
-            shot,
             definition,
             value
         );

@@ -10,22 +10,18 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttribut
 @Entity
 public class ShotSingleSelectAttribute extends ShotAttributeBase {
     @ManyToOne
-    public ShotSingleSelectAttributeDefinition definition;
-    @ManyToOne
     public ShotSelectAttributeOptionDefinition value;
 
     public ShotSingleSelectAttribute() { }
 
     public ShotSingleSelectAttribute(ShotSingleSelectAttributeDefinition definition, Shot shot) {
-        super(shot);
-        this.definition = definition;
+        super(shot, definition);
     }
 
     @Override
     public ShotAttributeBaseDTO toDTO() {
         return new ShotSingleselectAttributeDTO(
             id,
-            shot,
             definition,
             value
         );

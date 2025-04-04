@@ -35,4 +35,10 @@ public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinition
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotSingleSelectAttribute(this, shot);
     }
+
+    @Override
+    public boolean addOption(ShotSelectAttributeOptionDefinition option) {
+        options.add(option);
+        return true;
+    }
 }

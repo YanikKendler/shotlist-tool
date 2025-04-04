@@ -1,4 +1,4 @@
-package me.kendler.yanik.dto.scene.attributeDefinitions;
+package me.kendler.yanik.dto.shot;
 
 import me.kendler.yanik.model.shot.ShotAttributeType;
 

@@ -1,10 +1,9 @@
 package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.scene.SceneDTO;
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
+import me.kendler.yanik.dto.scene.SceneAttributeDefinitionCreateDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
@@ -52,5 +51,15 @@ public class SceneResource {
     @Query
     public List<SceneAttributeDefinitionBase> getSceneAttributeDefinitions(UUID shotlistId){
         return sceneAttributeDefinitionRepository.list("shotlist.id", shotlistId);
+    }
+
+    @Mutation
+    public SceneAttributeDefinitionBase createSceneAttributeDefinition(SceneAttributeDefinitionCreateDTO createDTO){
+        return sceneAttributeDefinitionRepository.create(createDTO);
+    }
+
+    @Mutation
+    public SceneAttributeDefinitionBase deleteSceneAttributeDefinition(Long id){
+        return sceneAttributeDefinitionRepository.delete(id);
     }
 }

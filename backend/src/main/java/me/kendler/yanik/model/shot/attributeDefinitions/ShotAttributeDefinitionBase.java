@@ -17,16 +17,16 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 @Table(name = "shotattributedefinition")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
-    @ManyToOne
+    /*@ManyToOne
     @JsonIgnore
-    public Shotlist shotlist;
+    public Shotlist shotlist;*/
     public String name;
     public int position;
 
     public ShotAttributeDefinitionBase() { }
 
     public ShotAttributeDefinitionBase(Shotlist shotlist) {
-        this.shotlist = shotlist;
+        //this.shotlist = shotlist;
         this.position = shotlist.shotAttributeDefinitions.size();
         shotlist.shotAttributeDefinitions.add(this);
         System.out.println(shotlist);
@@ -40,6 +40,8 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
     abstract public ShotAttributeType getType();
 
     abstract public ShotAttributeBase createAttribute(Shot shot);
+
+    public abstract boolean addOption(ShotSelectAttributeOptionDefinition option);
 
     @Override
     public String toString() {

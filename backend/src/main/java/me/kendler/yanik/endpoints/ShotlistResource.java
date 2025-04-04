@@ -1,19 +1,11 @@
 package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
-import me.kendler.yanik.dto.scene.attributeDefinitions.ShotAttributeDefinitionCreateDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.Shotlist;
-import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.repositories.ShotlistRepository;
-import me.kendler.yanik.repositories.scene.SceneAttributeDefinitionRepository;
-import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;

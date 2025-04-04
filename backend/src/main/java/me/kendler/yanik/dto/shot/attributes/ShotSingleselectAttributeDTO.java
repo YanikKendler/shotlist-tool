@@ -9,18 +9,12 @@ import java.util.Set;
 
 public record ShotSingleselectAttributeDTO(
     Long id,
-    Shot shot,
     ShotAttributeDefinitionBase definition,
     ShotSelectAttributeOptionDefinition singleselectValue
 ) implements ShotAttributeBaseDTO {
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Shot getShot() {
-        return shot;
     }
 
     @Override

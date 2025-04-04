@@ -9,18 +9,12 @@ import java.util.Set;
 
 public record SceneMultiselectAttributeDTO(
         Long id,
-        Scene scene,
         SceneAttributeDefinitionBase definition,
         Set<SceneSelectAttributeOptionDefinition> multiselectValue
 ) implements SceneAttributeBaseDTO{
     @Override
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public Scene getScene() {
-        return null;
     }
 
     @Override

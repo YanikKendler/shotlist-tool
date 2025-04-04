@@ -5,6 +5,5 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitio
 
 public interface SceneAttributeBaseDTO {
     Long getId();
-    Scene getScene();
     SceneAttributeDefinitionBase getDefinition();
 }
