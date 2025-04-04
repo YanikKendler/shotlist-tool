@@ -29,9 +29,4 @@ public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneTextAttribute(this, scene);
     }
-
-    @Override
-    public boolean addOption(SceneSelectAttributeOptionDefinition option) {
-        return false;
-    }
 }

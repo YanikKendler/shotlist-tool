@@ -12,18 +12,14 @@ import me.kendler.yanik.model.scene.attributes.SceneSingleSelectAttribute;
 @Entity
 @DiscriminatorValue("SceneSingleSelect")
 public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefinitionBase {
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<SceneSelectAttributeOptionDefinition> options = new HashSet<>();
-
     public SceneSingleSelectAttributeDefinition() { super(); }
 
     public SceneSingleSelectAttributeDefinition(Shotlist shotlist) {
         super(shotlist);
     }
 
-    public SceneSingleSelectAttributeDefinition(Shotlist shotlist, String name, Set<SceneSelectAttributeOptionDefinition> options) {
+    public SceneSingleSelectAttributeDefinition(Shotlist shotlist, String name) {
         super(shotlist, name);
-        this.options = options;
     }
 
     @Override
@@ -34,11 +30,5 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
     @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneSingleSelectAttribute(this, scene);
-    }
-
-    @Override
-    public boolean addOption(SceneSelectAttributeOptionDefinition option) {
-        options.add(option);
-        return true;
     }
 }

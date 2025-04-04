@@ -9,7 +9,6 @@ import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
-import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -36,14 +35,6 @@ public class ShotResource {
     @Mutation
     public ShotDTO deleteShot(@PathParam("id") UUID id) {
         return shotRepository.delete(id).toDTO();
-    }
-
-    @Inject
-    ShotAttributeRepository shotAttributeRepository;
-
-    @Query
-    public List<ShotAttributeBaseDTO> getShotAttributes(UUID shotId){
-        return shotAttributeRepository.list("shot.id", shotId).stream().map(ShotAttributeBase::toDTO).toList();
     }
 
     @Inject

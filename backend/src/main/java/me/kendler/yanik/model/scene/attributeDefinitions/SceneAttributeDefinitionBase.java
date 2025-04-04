@@ -41,8 +41,6 @@ public abstract class SceneAttributeDefinitionBase extends PanacheEntity {
 
     abstract public SceneAttributeBase createAttribute(Scene scene);
 
-    public abstract boolean addOption(SceneSelectAttributeOptionDefinition option);
-
     @Override
     public String toString() {
         return "SceneAttributeDefinition{" +

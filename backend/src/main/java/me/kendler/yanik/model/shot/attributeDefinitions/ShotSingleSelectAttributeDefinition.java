@@ -12,18 +12,14 @@ import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
 @Entity
 @DiscriminatorValue("ShotSingleSelect")
 public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinitionBase {
-    @OneToMany(fetch = FetchType.EAGER)
-    public Set<ShotSelectAttributeOptionDefinition> options = new HashSet<>();
-
     public ShotSingleSelectAttributeDefinition() { super(); }
 
     public ShotSingleSelectAttributeDefinition(Shotlist shotlist) {
         super(shotlist);
     }
 
-    public ShotSingleSelectAttributeDefinition(Shotlist shotlist, String name, Set<ShotSelectAttributeOptionDefinition> options) {
+    public ShotSingleSelectAttributeDefinition(Shotlist shotlist, String name) {
         super(shotlist, name);
-        this.options = options;
     }
 
     @Override
@@ -34,11 +30,5 @@ public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinition
     @Override
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotSingleSelectAttribute(this, shot);
-    }
-
-    @Override
-    public boolean addOption(ShotSelectAttributeOptionDefinition option) {
-        options.add(option);
-        return true;
     }
 }

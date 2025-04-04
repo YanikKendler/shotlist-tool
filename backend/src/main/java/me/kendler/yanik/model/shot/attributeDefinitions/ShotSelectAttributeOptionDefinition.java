@@ -7,11 +7,14 @@ import jakarta.persistence.*;
 public class ShotSelectAttributeOptionDefinition extends PanacheEntity {
     public String name;
     public int position;
+    @ManyToOne
+    ShotAttributeDefinitionBase shotAttributeDefinition;
 
     public ShotSelectAttributeOptionDefinition() { }
 
-    public ShotSelectAttributeOptionDefinition(String name, int position) {
+    public ShotSelectAttributeOptionDefinition(String name, int position, ShotAttributeDefinitionBase shotAttributeDefinition) {
         this.name = name;
         this.position = position;
+        this.shotAttributeDefinition = shotAttributeDefinition;
     }
 }

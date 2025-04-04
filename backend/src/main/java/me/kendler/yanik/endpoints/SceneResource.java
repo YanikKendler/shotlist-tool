@@ -6,10 +6,11 @@ import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionCreateDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
+import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.repositories.scene.SceneAttributeDefinitionRepository;
-import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.scene.SceneRepository;
+import me.kendler.yanik.repositories.scene.SceneSelectAttributeOptionDefinitionRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
@@ -38,14 +39,6 @@ public class SceneResource {
     }
 
     @Inject
-    SceneAttributeRepository sceneAttributeRepository;
-
-    @Query
-    public List<SceneAttributeBaseDTO> getSceneAttributes(UUID sceneId){
-        return sceneAttributeRepository.list("scene.id", sceneId).stream().map(SceneAttributeBase::toDTO).toList();
-    }
-
-    @Inject
     SceneAttributeDefinitionRepository sceneAttributeDefinitionRepository;
 
     @Query
@@ -61,5 +54,13 @@ public class SceneResource {
     @Mutation
     public SceneAttributeDefinitionBase deleteSceneAttributeDefinition(Long id){
         return sceneAttributeDefinitionRepository.delete(id);
+    }
+
+    @Inject
+    SceneSelectAttributeOptionDefinitionRepository sceneSelectAttributeOptionDefinitionRepository;
+
+    @Query
+    public List<SceneSelectAttributeOptionDefinition> getSceneSelectAttributeOptions(Long attributeDefinitionId) {
+        return sceneSelectAttributeOptionDefinitionRepository.list("sceneSelectAttributeDefinition.id", attributeDefinitionId);
     }
 }

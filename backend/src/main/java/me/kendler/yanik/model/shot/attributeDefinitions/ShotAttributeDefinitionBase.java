@@ -41,8 +41,6 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
 
     abstract public ShotAttributeBase createAttribute(Shot shot);
 
-    public abstract boolean addOption(ShotSelectAttributeOptionDefinition option);
-
     @Override
     public String toString() {
         return "ShotAttributeDefinition{" +

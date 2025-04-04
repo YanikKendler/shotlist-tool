@@ -125,7 +125,6 @@ SceneAttributeTemplateBase <|-down- SceneTextAttributeTemplate
 
 abstract SceneAttributeDefinitionBase {
     * id : Long
-    * shotlist : Shotlist
     --
     * name : string
     * position : int
@@ -221,7 +220,6 @@ SceneAttributeBase <|-down- SceneTextAttribute
 
 abstract ShotAttributeDefinitionBase {
     * id : Long
-    * shotlist : Shotlist
     --
     * name : string
     * position : int
