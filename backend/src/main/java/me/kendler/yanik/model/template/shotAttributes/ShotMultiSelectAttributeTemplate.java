@@ -24,12 +24,13 @@ public class ShotMultiSelectAttributeTemplate extends ShotAttributeTemplateBase 
 
     @Override
     public ShotAttributeDefinitionBase createDefinition(Shotlist shotlist) {
+        ShotMultiSelectAttributeDefinition attributeDefinition = new ShotMultiSelectAttributeDefinition(shotlist, this.name);
 
         for (ShotSelectAttributeOptionTemplate option : options) {
-            ShotSelectAttributeOptionDefinition optionDefinition = option.createDefinition();
+            ShotSelectAttributeOptionDefinition optionDefinition = option.createDefinition(attributeDefinition);
             persist(optionDefinition);
         }
 
-        return new ShotMultiSelectAttributeDefinition(shotlist, this.name);
+        return attributeDefinition;
     }
 }

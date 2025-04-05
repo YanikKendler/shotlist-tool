@@ -3,6 +3,8 @@ package me.kendler.yanik.model.template.shotAttributes;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 
 @Entity
@@ -18,7 +20,7 @@ public class ShotSelectAttributeOptionTemplate extends PanacheEntity {
         this.position = position;
     }
 
-    public ShotSelectAttributeOptionDefinition createDefinition() {
-        return new ShotSelectAttributeOptionDefinition(this.name, this.position);
+    public ShotSelectAttributeOptionDefinition createDefinition(ShotAttributeDefinitionBase attributeDefinition) {
+        return new ShotSelectAttributeOptionDefinition(this.name, attributeDefinition);
     }
 }

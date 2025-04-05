@@ -1,6 +1,6 @@
 package me.kendler.yanik.dto.scene;
 
 public record SceneSelectAttributeOptionSearchDTO(
-    Long SceneAttributeDefinitionId,
+    Long sceneAttributeDefinitionId,
     String searchTerm
 ) { }

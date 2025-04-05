@@ -3,10 +3,9 @@ package me.kendler.yanik.model.shot.attributes;
 import java.util.*;
 
 import jakarta.persistence.*;
-import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
-import me.kendler.yanik.dto.scene.attributes.SceneMultiselectAttributeDTO;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
-import me.kendler.yanik.dto.shot.attributes.ShotMultiselectAttributeDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotMultiSelectAttributeDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
@@ -24,10 +23,15 @@ public class ShotMultiSelectAttribute extends ShotAttributeBase {
 
     @Override
     public ShotAttributeBaseDTO toDTO() {
-        return new ShotMultiselectAttributeDTO(
+        return new ShotMultiSelectAttributeDTO(
             id,
             definition,
             value
         );
+    }
+
+    @Override
+    public void update(ShotAttributeEditDTO editDTO) {
+        value = editDTO.multiSelectValue();
     }
 }

@@ -22,7 +22,7 @@ public class Shot extends PanacheEntityBase {
     @ManyToOne
     @JsonIgnore
     public Scene scene;
-    @OneToMany(mappedBy = "shot", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotAttributeBase> attributes = new HashSet<>();
     public int number;
     public boolean isSubshot;

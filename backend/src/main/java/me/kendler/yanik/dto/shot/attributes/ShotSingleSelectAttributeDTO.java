@@ -1,16 +1,12 @@
 package me.kendler.yanik.dto.shot.attributes;
 
-import me.kendler.yanik.model.scene.Scene;
-import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 
-import java.util.Set;
-
-public record ShotSingleselectAttributeDTO(
+public record ShotSingleSelectAttributeDTO(
     Long id,
     ShotAttributeDefinitionBase definition,
-    ShotSelectAttributeOptionDefinition singleselectValue
+    ShotSelectAttributeOptionDefinition singleSelectValue
 ) implements ShotAttributeBaseDTO {
     @Override
     public Long getId() {

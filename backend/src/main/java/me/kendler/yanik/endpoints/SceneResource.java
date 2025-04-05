@@ -2,13 +2,17 @@ package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.SceneDTO;
+import me.kendler.yanik.dto.scene.SceneSelectAttributeCreateDTO;
+import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionSearchDTO;
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionCreateDTO;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.repositories.scene.SceneAttributeDefinitionRepository;
+import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.scene.SceneRepository;
 import me.kendler.yanik.repositories.scene.SceneSelectAttributeOptionDefinitionRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -38,6 +42,10 @@ public class SceneResource {
         return sceneRepository.delete(id).toDTO();
     }
 
+    /*
+    * ATTRIBUTE DEFINITIONS
+    */
+
     @Inject
     SceneAttributeDefinitionRepository sceneAttributeDefinitionRepository;
 
@@ -56,11 +64,42 @@ public class SceneResource {
         return sceneAttributeDefinitionRepository.delete(id);
     }
 
+    /*
+    * ATTRIBUTES
+    */
+
+    @Inject
+    SceneAttributeRepository sceneAttributeRepository;
+
+    @Mutation
+    public SceneAttributeBase updateSceneAttribute(SceneAttributeEditDTO editDTO) {
+        return sceneAttributeRepository.update(editDTO);
+    }
+
+    /*
+    * SELECT OPTIONS
+    */
+
     @Inject
     SceneSelectAttributeOptionDefinitionRepository sceneSelectAttributeOptionDefinitionRepository;
 
     @Query
     public List<SceneSelectAttributeOptionDefinition> getSceneSelectAttributeOptions(Long attributeDefinitionId) {
-        return sceneSelectAttributeOptionDefinitionRepository.list("sceneSelectAttributeDefinition.id", attributeDefinitionId);
+        return sceneSelectAttributeOptionDefinitionRepository.list("sceneSelectAttributeDefinition.id order by name", attributeDefinitionId);
+    }
+
+    @Query
+    public List<SceneSelectAttributeOptionDefinition> searchSceneSelectAttributeOptions(SceneSelectAttributeOptionSearchDTO searchDTO){
+        return sceneSelectAttributeOptionDefinitionRepository.search(searchDTO);
+    }
+
+    @Mutation
+    public SceneSelectAttributeOptionDefinition createSceneSelectAttributeOption(SceneSelectAttributeCreateDTO createDTO){
+        return sceneSelectAttributeOptionDefinitionRepository.create(createDTO);
+    }
+
+    @Mutation
+    public SceneSelectAttributeOptionDefinition deleteSceneSelectAttributeOption(Long id){
+        return sceneSelectAttributeOptionDefinitionRepository.delete(id);
     }
 }

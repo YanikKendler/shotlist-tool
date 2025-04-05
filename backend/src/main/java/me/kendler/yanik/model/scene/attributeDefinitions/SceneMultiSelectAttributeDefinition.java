@@ -3,6 +3,7 @@ package me.kendler.yanik.model.scene.attributeDefinitions;
 import java.util.*;
 
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.SceneAttributeType;

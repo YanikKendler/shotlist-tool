@@ -20,12 +20,13 @@ public class SceneMultiSelectAttributeTemplate extends SceneAttributeTemplateBas
 
     @Override
     public SceneAttributeDefinitionBase createDefinition(Shotlist shotlist) {
+        SceneMultiSelectAttributeDefinition attributeDefinition = new SceneMultiSelectAttributeDefinition(shotlist, this.name);
 
         for (SceneSelectAttributeOptionTemplate option : options) {
-            SceneSelectAttributeOptionDefinition optionDefinition = option.createDefinition();
+            SceneSelectAttributeOptionDefinition optionDefinition = option.createDefinition(attributeDefinition);
             persist(optionDefinition);
         }
 
-        return new SceneMultiSelectAttributeDefinition(shotlist, this.name);
+        return attributeDefinition;
     }
 }

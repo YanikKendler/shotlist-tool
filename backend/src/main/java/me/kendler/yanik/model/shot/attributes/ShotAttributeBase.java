@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
@@ -29,4 +31,6 @@ public abstract class ShotAttributeBase extends PanacheEntity {
     }
 
     public abstract ShotAttributeBaseDTO toDTO();
+
+    abstract public void update(ShotAttributeEditDTO editDTO);
 }

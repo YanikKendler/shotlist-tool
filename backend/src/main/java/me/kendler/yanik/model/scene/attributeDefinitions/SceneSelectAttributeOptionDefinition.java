@@ -7,20 +7,14 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionB
 @Entity
 @Table(name = "sceneselectattributeoptiondefinition")
 public class SceneSelectAttributeOptionDefinition extends PanacheEntity {
-    public String name;
-    public int position;
+    public String name = "";
     @ManyToOne
-    SceneAttributeDefinitionBase sceneAttributeDefinition;
+    public SceneAttributeDefinitionBase sceneAttributeDefinition;
 
     public SceneSelectAttributeOptionDefinition() { }
 
-    public SceneSelectAttributeOptionDefinition(SceneAttributeDefinitionBase sceneAttributeDefinition) {
-        this.sceneAttributeDefinition = sceneAttributeDefinition;
-    }
-
-    public SceneSelectAttributeOptionDefinition(String name, int position, SceneAttributeDefinitionBase sceneAttributeDefinition) {
-        this(sceneAttributeDefinition);
+    public SceneSelectAttributeOptionDefinition(String name, SceneAttributeDefinitionBase sceneAttributeDefinition) {
         this.name = name;
-        this.position = position;
+        this.sceneAttributeDefinition = sceneAttributeDefinition;
     }
 }

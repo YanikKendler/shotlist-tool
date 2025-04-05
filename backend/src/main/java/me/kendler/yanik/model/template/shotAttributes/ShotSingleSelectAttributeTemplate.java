@@ -21,11 +21,13 @@ public class ShotSingleSelectAttributeTemplate extends ShotAttributeTemplateBase
 
     @Override
     public ShotAttributeDefinitionBase createDefinition(Shotlist shotlist) {
+        ShotSingleSelectAttributeDefinition attributeDefinition = new ShotSingleSelectAttributeDefinition(shotlist, this.name);
+
         for (ShotSelectAttributeOptionTemplate option : options) {
-            ShotSelectAttributeOptionDefinition optionDefinition = option.createDefinition();
+            ShotSelectAttributeOptionDefinition optionDefinition = option.createDefinition(attributeDefinition);
             persist(optionDefinition);
         }
 
-        return new ShotSingleSelectAttributeDefinition(shotlist, this.name);
+        return attributeDefinition;
     }
 }

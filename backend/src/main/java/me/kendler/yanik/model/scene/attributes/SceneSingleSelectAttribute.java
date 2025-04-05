@@ -2,6 +2,7 @@ package me.kendler.yanik.model.scene.attributes;
 
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
 import me.kendler.yanik.dto.scene.attributes.SceneMultiselectAttributeDTO;
 import me.kendler.yanik.dto.scene.attributes.SceneSingleselectAttributeDTO;
 import me.kendler.yanik.model.scene.Scene;
@@ -28,5 +29,10 @@ public class SceneSingleSelectAttribute extends SceneAttributeBase{
             definition,
             value
         );
+    }
+
+    @Override
+    public void update(SceneAttributeEditDTO editDTO) {
+        value = editDTO.singleSelectValue();
     }
 }

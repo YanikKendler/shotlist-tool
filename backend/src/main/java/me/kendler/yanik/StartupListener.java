@@ -67,11 +67,11 @@ public class StartupListener {
         entityManager.persist(sceneDef2);
         entityManager.persist(sceneDef3);
 
-        SceneSelectAttributeOptionDefinition sceneOption1 = new SceneSelectAttributeOptionDefinition("Option 1", 0, sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption2 = new SceneSelectAttributeOptionDefinition("Option 2", 1, sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption3 = new SceneSelectAttributeOptionDefinition("Option 3", 0, sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption4 = new SceneSelectAttributeOptionDefinition("Option 4", 1, sceneDef3);
-        SceneSelectAttributeOptionDefinition sceneOption5 = new SceneSelectAttributeOptionDefinition("Option 5", 2, sceneDef3);
+        SceneSelectAttributeOptionDefinition sceneOption1 = new SceneSelectAttributeOptionDefinition("Option 1", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption2 = new SceneSelectAttributeOptionDefinition("Option 2", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption3 = new SceneSelectAttributeOptionDefinition("Option 3", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption4 = new SceneSelectAttributeOptionDefinition("Option 4", sceneDef3);
+        SceneSelectAttributeOptionDefinition sceneOption5 = new SceneSelectAttributeOptionDefinition("Option 5", sceneDef3);
         entityManager.persist(sceneOption1);
         entityManager.persist(sceneOption2);
         entityManager.persist(sceneOption3);
@@ -106,11 +106,11 @@ public class StartupListener {
         entityManager.persist(shotDef2);
         entityManager.persist(shotDef3);
 
-        ShotSelectAttributeOptionDefinition shotOption1 = new ShotSelectAttributeOptionDefinition("Option 1", 0, shotDef2);
-        ShotSelectAttributeOptionDefinition shotOption2 = new ShotSelectAttributeOptionDefinition("Option 2", 1, shotDef2);
-        ShotSelectAttributeOptionDefinition shotOption3 = new ShotSelectAttributeOptionDefinition("Option 3", 0, shotDef3);
-        ShotSelectAttributeOptionDefinition shotOption4 = new ShotSelectAttributeOptionDefinition("Option 4", 1, shotDef3);
-        ShotSelectAttributeOptionDefinition shotOption5 = new ShotSelectAttributeOptionDefinition("Option 5", 2, shotDef3);
+        ShotSelectAttributeOptionDefinition shotOption1 = new ShotSelectAttributeOptionDefinition("Option 1", shotDef2);
+        ShotSelectAttributeOptionDefinition shotOption2 = new ShotSelectAttributeOptionDefinition("Option 2", shotDef2);
+        ShotSelectAttributeOptionDefinition shotOption3 = new ShotSelectAttributeOptionDefinition("Option 3", shotDef3);
+        ShotSelectAttributeOptionDefinition shotOption4 = new ShotSelectAttributeOptionDefinition("Option 4", shotDef3);
+        ShotSelectAttributeOptionDefinition shotOption5 = new ShotSelectAttributeOptionDefinition("Option 5", shotDef3);
         entityManager.persist(shotOption1);
         entityManager.persist(shotOption2);
         entityManager.persist(shotOption3);

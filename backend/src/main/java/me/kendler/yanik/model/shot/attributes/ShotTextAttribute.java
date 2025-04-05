@@ -2,6 +2,7 @@ package me.kendler.yanik.model.shot.attributes;
 
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
 import me.kendler.yanik.dto.shot.attributes.ShotTextAttributeDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinition;
@@ -23,5 +24,10 @@ public class ShotTextAttribute extends ShotAttributeBase {
             definition,
             value
         );
+    }
+
+    @Override
+    public void update(ShotAttributeEditDTO editDTO) {
+        value = editDTO.textValue();
     }
 }
