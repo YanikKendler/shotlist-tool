@@ -1,5 +1,6 @@
 package me.kendler.yanik.endpoints;
 
+import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.SceneDTO;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeCreateDTO;
