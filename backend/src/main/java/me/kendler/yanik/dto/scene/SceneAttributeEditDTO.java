@@ -1,7 +1,6 @@
-package me.kendler.yanik.dto.scene.attributes;
+package me.kendler.yanik.dto.scene;
 
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 
 import java.util.Set;
 

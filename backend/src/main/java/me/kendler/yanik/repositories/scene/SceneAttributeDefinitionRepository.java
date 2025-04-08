@@ -5,11 +5,13 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionCreateDTO;
+import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSingleSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneTextAttributeDefinition;
+import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.repositories.ShotlistRepository;
 
 @ApplicationScoped
@@ -50,6 +52,15 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
         persist(attributeDefinition);
 
         return attributeDefinition;
+    }
+
+    public SceneAttributeDefinitionBase update(SceneAttributeDefinitionEditDTO editDTO) {
+        SceneAttributeDefinitionBase attribute = findById(editDTO.id());
+        if (attribute == null) {
+            throw new IllegalArgumentException("Attribute not found");
+        }
+        attribute.update(editDTO);
+        return attribute;
     }
 
     public SceneAttributeDefinitionBase delete(Long id){

@@ -3,6 +3,9 @@ package me.kendler.yanik.model.shot.attributeDefinitions;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.shot.ShotAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.shot.Shot;
@@ -17,16 +20,12 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 @Table(name = "shotattributedefinition")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
-    /*@ManyToOne
-    @JsonIgnore
-    public Shotlist shotlist;*/
     public String name;
     public int position;
 
     public ShotAttributeDefinitionBase() { }
 
     public ShotAttributeDefinitionBase(Shotlist shotlist) {
-        //this.shotlist = shotlist;
         this.position = shotlist.shotAttributeDefinitions.size();
         shotlist.shotAttributeDefinitions.add(this);
         System.out.println(shotlist);
@@ -35,6 +34,11 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
     public ShotAttributeDefinitionBase(Shotlist shotlist, String name) {
         this(shotlist);
         this.name = name;
+    }
+
+    public void update(ShotAttributeDefinitionEditDTO editDTO){
+        this.name = editDTO.name();
+        this.position = editDTO.position();
     }
 
     abstract public ShotAttributeType getType();

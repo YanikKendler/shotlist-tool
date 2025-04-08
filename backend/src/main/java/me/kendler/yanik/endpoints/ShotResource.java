@@ -2,21 +2,15 @@ package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionSearchDTO;
-import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
-import me.kendler.yanik.dto.shot.ShotAttributeDefinitionCreateDTO;
-import me.kendler.yanik.dto.shot.ShotDTO;
-import me.kendler.yanik.dto.shot.ShotSelectAttributeCreateDTO;
-import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionSearchDTO;
-import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
-import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
+import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.scene.SceneAttributeEditDTO;
+import me.kendler.yanik.dto.shot.*;
+import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
-import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
-import me.kendler.yanik.repositories.scene.SceneSelectAttributeOptionDefinitionRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
 import me.kendler.yanik.repositories.shot.ShotSelectAttributeOptionDefinitionRepository;
@@ -69,6 +63,11 @@ public class ShotResource {
         return shotAttributeDefinitionRepository.delete(id);
     }
 
+    @Mutation
+    public ShotAttributeDefinitionBase updateSceneAttributeDefinition(ShotAttributeDefinitionEditDTO editDTO) {
+        return shotAttributeDefinitionRepository.update(editDTO);
+    }
+
     /*
      * ATTRIBUTES
      */
@@ -106,5 +105,10 @@ public class ShotResource {
     @Mutation
     public ShotSelectAttributeOptionDefinition deleteShotSelectAttributeOption(Long id){
         return shotSelectAttributeOptionDefinitionRepository.delete(id);
+    }
+
+    @Mutation
+    public ShotSelectAttributeOptionDefinition updateShotSelectAttributeOption(ShotSelectAttributeOptionEditDTO editDTO) {
+        return shotSelectAttributeOptionDefinitionRepository.update(editDTO);
     }
 }

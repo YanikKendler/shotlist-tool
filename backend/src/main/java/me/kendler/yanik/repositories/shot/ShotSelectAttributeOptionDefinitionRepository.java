@@ -5,6 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeCreateDTO;
+import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionSearchDTO;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
@@ -31,6 +32,15 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
                 searchDTO.shotAttributeDefinitionId(),
                 searchDTO.searchTerm()
         ).list();
+    }
+
+    public ShotSelectAttributeOptionDefinition update(ShotSelectAttributeOptionEditDTO editDTO) {
+        ShotSelectAttributeOptionDefinition option = findById(editDTO.id());
+        if (option == null) {
+            throw new IllegalArgumentException("ShotSelectAttributeOptionDefinition not found");
+        }
+        option.name = editDTO.name();
+        return option;
     }
 
     public ShotSelectAttributeOptionDefinition delete(Long id){

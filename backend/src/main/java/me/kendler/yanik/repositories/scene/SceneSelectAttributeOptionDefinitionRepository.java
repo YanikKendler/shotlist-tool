@@ -7,9 +7,12 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeCreateDTO;
+import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionSearchDTO;
+import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 
 import java.net.URI;
 import java.util.List;
@@ -35,6 +38,15 @@ public class SceneSelectAttributeOptionDefinitionRepository implements PanacheRe
                     searchDTO.sceneAttributeDefinitionId()
         )
         .list();
+    }
+
+    public SceneSelectAttributeOptionDefinition update(SceneSelectAttributeOptionEditDTO editDTO) {
+        SceneSelectAttributeOptionDefinition option = findById(editDTO.id());
+        if (option == null) {
+            throw new IllegalArgumentException("SceneSelectAttributeOptionDefinition not found");
+        }
+        option.name = editDTO.name();
+        return option;
     }
 
     public SceneSelectAttributeOptionDefinition delete(Long id){

@@ -4,7 +4,7 @@ import java.util.*;
 
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
-import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
+import me.kendler.yanik.dto.scene.SceneAttributeEditDTO;
 import me.kendler.yanik.dto.scene.attributes.SceneMultiselectAttributeDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;

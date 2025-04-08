@@ -1,13 +1,7 @@
 package me.kendler.yanik.endpoints;
 
-import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
-import me.kendler.yanik.dto.scene.SceneDTO;
-import me.kendler.yanik.dto.scene.SceneSelectAttributeCreateDTO;
-import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionSearchDTO;
-import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
-import me.kendler.yanik.dto.scene.SceneAttributeDefinitionCreateDTO;
-import me.kendler.yanik.dto.scene.attributes.SceneAttributeEditDTO;
+import me.kendler.yanik.dto.scene.*;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
@@ -65,6 +59,11 @@ public class SceneResource {
         return sceneAttributeDefinitionRepository.delete(id);
     }
 
+    @Mutation
+    public SceneAttributeDefinitionBase updateSceneAttributeDefinition(SceneAttributeDefinitionEditDTO editDTO) {
+        return sceneAttributeDefinitionRepository.update(editDTO);
+    }
+
     /*
     * ATTRIBUTES
     */
@@ -102,5 +101,10 @@ public class SceneResource {
     @Mutation
     public SceneSelectAttributeOptionDefinition deleteSceneSelectAttributeOption(Long id){
         return sceneSelectAttributeOptionDefinitionRepository.delete(id);
+    }
+
+    @Mutation
+    public SceneSelectAttributeOptionDefinition updateSceneSelectAttributeOption(SceneSelectAttributeOptionEditDTO editDTO) {
+        return sceneSelectAttributeOptionDefinitionRepository.update(editDTO);
     }
 }
