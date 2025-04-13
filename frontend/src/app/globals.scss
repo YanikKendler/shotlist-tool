@@ -1,5 +1,6 @@
 :root {
-  --accent: hsl(18, 100, 47);
+  --accent: hsl(18, 100%, 47%);
+  --accent-light: hsl(18, 100%, 60%);
 
   --background: #ffffff;
   --foreground: #171717;
@@ -49,6 +50,6 @@ img{
 }
 
 ::selection{
-  background-color: var(--accent);
+  background-color: var(--accent-light);
   color: hsl(0, 0%, 0%);
 }

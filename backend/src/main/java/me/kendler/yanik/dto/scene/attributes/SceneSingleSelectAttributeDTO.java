@@ -1,16 +1,12 @@
 package me.kendler.yanik.dto.scene.attributes;
 
-import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 
-import java.util.List;
-import java.util.Set;
-
-public record SceneMultiselectAttributeDTO(
+public record SceneSingleSelectAttributeDTO(
         Long id,
         SceneAttributeDefinitionBase definition,
-        Set<SceneSelectAttributeOptionDefinition> multiselectValue
+        SceneSelectAttributeOptionDefinition singleSelectValue
 ) implements SceneAttributeBaseDTO{
     @Override
     public Long getId() {
