@@ -1,19 +1,26 @@
 :root {
+  --accent: hsl(18, 100, 47);
+
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+
+  html {
+    color-scheme: dark;
+  }
+}*/
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -35,8 +42,13 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+img{
+  width:100%;
+  display: block;
+  object-fit: contain;
+}
+
+::selection{
+  background-color: var(--accent);
+  color: hsl(0, 0%, 0%);
 }

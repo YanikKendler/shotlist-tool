@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.7",
+    "@apollo/client-integration-nextjs": "^0.12.1",
     "next": "15.2.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -18,8 +19,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.5",
     "sass": "^1.86.3",
     "typescript": "^5"
   }

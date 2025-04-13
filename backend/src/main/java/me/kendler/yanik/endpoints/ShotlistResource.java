@@ -26,6 +26,11 @@ public class ShotlistResource {
         return shotlistRepository.listAll().stream().map(Shotlist::toDTO).toList();
     }
 
+    @Query
+    public ShotlistDTO getShotlist(UUID id) {
+        return shotlistRepository.findById(id).toDTO();
+    }
+
     @Mutation
     public ShotlistDTO createShotlist(ShotlistCreateDTO createDTO) {
         return shotlistRepository.create(createDTO).toDTO();
