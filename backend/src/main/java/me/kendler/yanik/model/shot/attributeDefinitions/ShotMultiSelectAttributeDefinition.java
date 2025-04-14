@@ -24,11 +24,6 @@ public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionB
     }
 
     @Override
-    public ShotAttributeType getType() {
-        return ShotAttributeType.ShotMultiSelectAttribute;
-    }
-
-    @Override
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotMultiSelectAttribute(this, shot);
     }

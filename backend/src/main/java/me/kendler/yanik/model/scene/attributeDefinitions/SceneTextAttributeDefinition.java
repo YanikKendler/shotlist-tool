@@ -21,11 +21,6 @@ public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     }
 
     @Override
-    public SceneAttributeType getType() {
-        return SceneAttributeType.SceneTextAttribute;
-    }
-
-    @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneTextAttribute(this, scene);
     }

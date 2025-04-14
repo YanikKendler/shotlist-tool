@@ -21,11 +21,6 @@ public class ShotTextAttributeDefinition extends ShotAttributeDefinitionBase {
     }
 
     @Override
-    public ShotAttributeType getType() {
-        return ShotAttributeType.ShotTextAttribute;
-    }
-
-    @Override
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotTextAttribute(this, shot);
     }

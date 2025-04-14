@@ -21,11 +21,6 @@ public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitio
     }
 
     @Override
-    public SceneAttributeType getType() {
-        return SceneAttributeType.SceneMultiSelectAttribute;
-    }
-
-    @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneMultiSelectAttribute(this, scene);
     }

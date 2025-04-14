@@ -1,14 +1,17 @@
-import {query} from "@/ApolloClient"
-import gql from "graphql-tag"
+'use client'
 
-export default async function Page(
+import gql from "graphql-tag"
+import {use} from "react"
+import {useQuery} from "@apollo/client"
+
+export default function Page(
   {
     params,
   }: {
     params: Promise<{ id: string }>
   }) {
-  const { id } = await params
-  const { data } = await query({ query: gql`
+  const { id } = use(params)
+  const { loading, error, data } = useQuery(gql`
     query shotlist($id: String!){
       shotlist(id: $id){
         id
@@ -18,7 +21,7 @@ export default async function Page(
           number
           attributes{
             id
-            definition{type, name, position}
+            definition{name, position}
             
             ... on SceneSingleSelectAttributeDTO{
               singleSelectValue{name}
@@ -36,7 +39,7 @@ export default async function Page(
             number
             attributes{
               id
-              definition{type, name, position}
+              definition{name, position}
               
               ... on ShotSingleSelectAttributeDTO{
                 singleSelectValue{name}
@@ -62,10 +65,13 @@ export default async function Page(
         }
       }
     }`,
-    variables: { id: id }
-  });
+    { variables: {id: id} }
+  )
 
   console.log(data)
+
+  if(loading) return <div>loading..</div>
+  if(error) return <div>error: {error.name}, message: {error.message}</div>
 
   return(
     <div>

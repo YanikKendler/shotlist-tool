@@ -41,8 +41,6 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
         this.position = editDTO.position();
     }
 
-    abstract public ShotAttributeType getType();
-
     abstract public ShotAttributeBase createAttribute(Shot shot);
 
     @Override

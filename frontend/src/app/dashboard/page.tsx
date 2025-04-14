@@ -1,16 +1,19 @@
-import {query} from "@/ApolloClient"
+'use client'
+
 import gql from "graphql-tag"
 import Link from "next/link"
+import {useQuery, useSuspenseQuery} from "@apollo/client"
 
-export default async function Page() {
-  const { data } = await query({ query: gql`
+export default function Page() {
+  const { loading, data } = useQuery(gql`
     query shotlists {
         shotlists{
           id
           name
         }
-    }`
-  });
+    }`);
+
+    if(loading) return <div>loading..</div>
 
     return (
       <>

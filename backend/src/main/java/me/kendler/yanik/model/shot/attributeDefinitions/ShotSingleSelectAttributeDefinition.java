@@ -23,11 +23,6 @@ public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinition
     }
 
     @Override
-    public ShotAttributeType getType() {
-        return ShotAttributeType.ShotSingleSelectAttribute;
-    }
-
-    @Override
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotSingleSelectAttribute(this, shot);
     }

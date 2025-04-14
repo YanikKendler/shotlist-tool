@@ -23,11 +23,6 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
     }
 
     @Override
-    public SceneAttributeType getType() {
-        return SceneAttributeType.SceneSingleSelectAttribute;
-    }
-
-    @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneSingleSelectAttribute(this, scene);
     }

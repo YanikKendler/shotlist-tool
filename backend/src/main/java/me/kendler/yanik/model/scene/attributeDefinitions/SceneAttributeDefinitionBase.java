@@ -35,8 +35,6 @@ public abstract class SceneAttributeDefinitionBase extends PanacheEntity {
         this.name = editDTO.name();
         this.position = editDTO.position();
     }
-    
-    abstract public SceneAttributeType getType();
 
     abstract public SceneAttributeBase createAttribute(Scene scene);
 
