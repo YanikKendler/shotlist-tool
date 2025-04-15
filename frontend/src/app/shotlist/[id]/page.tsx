@@ -3,8 +3,10 @@
 import gql from "graphql-tag"
 import {use} from "react"
 import {useQuery} from "@apollo/client"
+import {SceneAttributeParser} from "@/util/AttributeParser"
+import Scene from "@/components/scene"
 
-export default function Page(
+export default function Shotlist(
   {
     params,
   }: {
@@ -76,11 +78,8 @@ export default function Page(
   return(
     <div>
       <p>{data.shotlist.name}</p>
-      {data.shotlist.scenes.map((scene: { id: string; number: string; attributes: any[] }) => (
-        <div key={scene.id}>
-          <p>{scene.number+1}</p>
-          <p>{scene.attributes.map(attr => attr.definition.name).join(" • ")}</p>
-        </div>
+      {data.shotlist.scenes.map((scene) => (
+        <Scene key={scene.id} scene={scene}/>
       ))}
     </div>
   )

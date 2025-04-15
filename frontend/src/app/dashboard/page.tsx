@@ -4,8 +4,8 @@ import gql from "graphql-tag"
 import Link from "next/link"
 import {useQuery, useSuspenseQuery} from "@apollo/client"
 
-export default function Page() {
-  const { loading, data } = useQuery(gql`
+export default function Dashboard() {
+  const { error, loading, data } = useQuery(gql`
     query shotlists {
         shotlists{
           id
@@ -14,6 +14,7 @@ export default function Page() {
     }`);
 
     if(loading) return <div>loading..</div>
+    if(error) return <div>error: {error.name}, message: {error.message}</div>
 
     return (
       <>

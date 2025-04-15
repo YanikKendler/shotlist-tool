@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.scss"
 import React from "react"
-import {ApolloWrapper} from "@/app/ApolloWrapper"
+import {ApolloWrapper} from "@/ApolloWrapper"
 
 export const metadata: Metadata = {
   title: "Shotlist Tool",
