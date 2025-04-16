@@ -41,8 +41,7 @@ public class StartupListener {
     }
 
     @Transactional
-    public void createDemoData(){
-        // Insert a new User (assuming a User entity exists)
+    public void createDemoData() {
         User user = new User("yanik", "yanik@mail");
         entityManager.persist(user);
 
@@ -50,79 +49,65 @@ public class StartupListener {
         Shotlist shotlist = new Shotlist(user, "Demo Shotlist");
         entityManager.persist(shotlist);
 
-        // Insert a new Scene associated with the Shotlist
-        Scene scene = new Scene(shotlist);
-        entityManager.persist(scene);
-
-        SceneTextAttributeDefinition sceneDef1 = new SceneTextAttributeDefinition(shotlist, "Text Attribute");
-        SceneSingleSelectAttributeDefinition sceneDef2 = new SceneSingleSelectAttributeDefinition(
-                shotlist,
-                "Scene Single Select Attribute"
-        );
-        SceneMultiSelectAttributeDefinition sceneDef3 = new SceneMultiSelectAttributeDefinition(
-                shotlist,
-                "Scene Multi Select Attribute"
-        );
+        // Define Scene attribute definitions and options
+        SceneTextAttributeDefinition sceneDef1 = new SceneTextAttributeDefinition(shotlist, "Props");
+        SceneSingleSelectAttributeDefinition sceneDef2 = new SceneSingleSelectAttributeDefinition(shotlist, "Time");
+        SceneMultiSelectAttributeDefinition sceneDef3 = new SceneMultiSelectAttributeDefinition(shotlist, "Actors");
         entityManager.persist(sceneDef1);
         entityManager.persist(sceneDef2);
         entityManager.persist(sceneDef3);
 
-        SceneSelectAttributeOptionDefinition sceneOption1 = new SceneSelectAttributeOptionDefinition("Option 1", sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption2 = new SceneSelectAttributeOptionDefinition("Option 2", sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption3 = new SceneSelectAttributeOptionDefinition("Option 3", sceneDef2);
-        SceneSelectAttributeOptionDefinition sceneOption4 = new SceneSelectAttributeOptionDefinition("Option 4", sceneDef3);
-        SceneSelectAttributeOptionDefinition sceneOption5 = new SceneSelectAttributeOptionDefinition("Option 5", sceneDef3);
+        SceneSelectAttributeOptionDefinition sceneOption1 = new SceneSelectAttributeOptionDefinition("Day", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption2 = new SceneSelectAttributeOptionDefinition("Night", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption3 = new SceneSelectAttributeOptionDefinition("Evening", sceneDef2);
+        SceneSelectAttributeOptionDefinition sceneOption4 = new SceneSelectAttributeOptionDefinition("Josh", sceneDef3);
+        SceneSelectAttributeOptionDefinition sceneOption5 = new SceneSelectAttributeOptionDefinition("Peter", sceneDef3);
         entityManager.persist(sceneOption1);
         entityManager.persist(sceneOption2);
         entityManager.persist(sceneOption3);
         entityManager.persist(sceneOption4);
         entityManager.persist(sceneOption5);
 
-        // Insert three attributes for the Scene
-        SceneAttributeBase sceneAttribute1 = new SceneTextAttribute(sceneDef1, scene);
-        SceneAttributeBase sceneAttribute2 = new SceneSingleSelectAttribute(sceneDef2, scene);
-        SceneAttributeBase sceneAttribute3 = new SceneMultiSelectAttribute(sceneDef3, scene);
-        entityManager.persist(sceneAttribute1);
-        entityManager.persist(sceneAttribute2);
-        entityManager.persist(sceneAttribute3);
-
-        // Insert a new Shot associated with the Scene
-        Shot shot = new Shot(scene);
-        entityManager.persist(shot);
-
         // Define Shot attribute definitions and options
-        ShotTextAttributeDefinition shotDef1 = new ShotTextAttributeDefinition(shotlist, "Text Attribute");
-
-        ShotSingleSelectAttributeDefinition shotDef2 = new ShotSingleSelectAttributeDefinition(
-                shotlist,
-                "Shot Single Select Attribute"
-        );
-        ShotMultiSelectAttributeDefinition shotDef3 = new ShotMultiSelectAttributeDefinition(
-                shotlist,
-                "Shot Multi Select Attribute"
-        );
-
+        ShotTextAttributeDefinition shotDef1 = new ShotTextAttributeDefinition(shotlist, "Motive");
+        ShotSingleSelectAttributeDefinition shotDef2 = new ShotSingleSelectAttributeDefinition(shotlist, "Size");
+        ShotMultiSelectAttributeDefinition shotDef3 = new ShotMultiSelectAttributeDefinition(shotlist, "Equipment");
         entityManager.persist(shotDef1);
         entityManager.persist(shotDef2);
         entityManager.persist(shotDef3);
 
-        ShotSelectAttributeOptionDefinition shotOption1 = new ShotSelectAttributeOptionDefinition("Option 1", shotDef2);
-        ShotSelectAttributeOptionDefinition shotOption2 = new ShotSelectAttributeOptionDefinition("Option 2", shotDef2);
-        ShotSelectAttributeOptionDefinition shotOption3 = new ShotSelectAttributeOptionDefinition("Option 3", shotDef3);
-        ShotSelectAttributeOptionDefinition shotOption4 = new ShotSelectAttributeOptionDefinition("Option 4", shotDef3);
-        ShotSelectAttributeOptionDefinition shotOption5 = new ShotSelectAttributeOptionDefinition("Option 5", shotDef3);
+        ShotSelectAttributeOptionDefinition shotOption1 = new ShotSelectAttributeOptionDefinition("Medium Shot", shotDef2);
+        ShotSelectAttributeOptionDefinition shotOption2 = new ShotSelectAttributeOptionDefinition("Long Shot", shotDef2);
+        ShotSelectAttributeOptionDefinition shotOption3 = new ShotSelectAttributeOptionDefinition("Close Up", shotDef2);
+        ShotSelectAttributeOptionDefinition shotOption4 = new ShotSelectAttributeOptionDefinition("Lights", shotDef3);
+        ShotSelectAttributeOptionDefinition shotOption5 = new ShotSelectAttributeOptionDefinition("Gimbal", shotDef3);
         entityManager.persist(shotOption1);
         entityManager.persist(shotOption2);
         entityManager.persist(shotOption3);
         entityManager.persist(shotOption4);
         entityManager.persist(shotOption5);
 
-        // Insert three attributes for the Shot
-        ShotAttributeBase shotAttribute1 = new ShotTextAttribute(shotDef1, shot);
-        ShotAttributeBase shotAttribute2 = new ShotSingleSelectAttribute(shotDef2, shot);
-        ShotAttributeBase shotAttribute3 = new ShotMultiSelectAttribute(shotDef3, shot);
-        entityManager.persist(shotAttribute1);
-        entityManager.persist(shotAttribute2);
-        entityManager.persist(shotAttribute3);
+        // -------- Scene 1 --------
+        Scene scene1 = new Scene(shotlist);
+        entityManager.persist(scene1);
+
+        Shot shot1 = new Shot(scene1);
+        entityManager.persist(shot1);
+
+        Shot shot2 = new Shot(scene1);
+        entityManager.persist(shot2);
+
+        Shot shot3 = new Shot(scene1);
+        entityManager.persist(shot3);
+
+        // -------- Scene 2 --------
+        Scene scene2 = new Scene(shotlist);
+        entityManager.persist(scene2);
+
+        Shot scene2Shot1 = new Shot(scene2);
+        entityManager.persist(scene2Shot1);
+
+        Shot scene2Shot2 = new Shot(scene2);
+        entityManager.persist(scene2Shot2);
     }
 }

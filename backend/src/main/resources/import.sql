@@ -1,1 +1,0 @@
-insert into app_user (id, username, email) values ('Db5a3B18-3A69-7eEa-6035-1fbCF1eb929c', 'Yanik', 'yanik@mail');
