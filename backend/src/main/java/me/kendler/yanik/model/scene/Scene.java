@@ -39,6 +39,7 @@ public class Scene extends PanacheEntityBase {
         this();
         this.shotlist = shotlist;
         this.number = shotlist.scenes.size();
+        shotlist.scenes.add(this);
 
         // create attribute instances based on all the attribute definitions stored in the shotlist
         for (SceneAttributeDefinitionBase attributeDefinition : shotlist.sceneAttributeDefinitions) {

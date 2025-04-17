@@ -1,0 +1,15 @@
+.main{
+  display: flex;
+  gap: 1rem;
+  height: 100lvh;
+  width: 100%;
+}
+
+.sidebar{
+  background-color: var(--accent-sidebar);
+}
+
+.header{
+  display: flex;
+  gap: 1rem;
+}

@@ -80,9 +80,16 @@ public class Shotlist extends PanacheEntityBase {
             this.id,
             this.owner,
             this.template,
-            this.scenes.stream().map(Scene::toDTO).collect(Collectors.toSet()),
-            this.sceneAttributeDefinitions,
-            this.shotAttributeDefinitions,
+            this.scenes.stream()
+                    .sorted(Comparator.comparingInt(scene -> scene.number))
+                    .map(Scene::toDTO)
+                    .collect(Collectors.toList()),
+            this.sceneAttributeDefinitions.stream()
+                    .sorted(Comparator.comparingInt(definition -> definition.position))
+                    .collect(Collectors.toList()),
+            this.shotAttributeDefinitions.stream()
+                    .sorted(Comparator.comparingInt(definition -> definition.position))
+                    .collect(Collectors.toList()),
             this.name,
             this.createdAt,
             this.editedAt

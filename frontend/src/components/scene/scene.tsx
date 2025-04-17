@@ -1,7 +1,8 @@
 'use client'
 
 import {SceneAttributeParser} from "@/util/AttributeParser"
-import {SceneDto} from "../../lib/graphql/generated"
+import {SceneDto} from "../../../lib/graphql/generated"
+import styles from "./scene.module.scss"
 
 export default function Scene({scene}: {scene: SceneDto}){
     return (

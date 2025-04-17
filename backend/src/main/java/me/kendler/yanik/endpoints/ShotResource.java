@@ -28,7 +28,7 @@ public class ShotResource {
 
     @Query
     public List<ShotDTO> getShots(UUID sceneId) {
-        return shotRepository.list("scene.id", sceneId).stream().map(Shot::toDTO).toList();
+        return shotRepository.list("scene.id = ?1 order by number", sceneId).stream().map(Shot::toDTO).toList();
     }
 
     @Mutation
@@ -89,7 +89,7 @@ public class ShotResource {
 
     @Query
     public List<ShotSelectAttributeOptionDefinition> getShotSelectAttributeOptions(Long attributeDefinitionId) {
-        return shotSelectAttributeOptionDefinitionRepository.list("shotSelectAttributeDefinition.id order by name", attributeDefinitionId);
+        return shotSelectAttributeOptionDefinitionRepository.list("shotAttributeDefinition.id = ?1 order by name", attributeDefinitionId);
     }
 
     @Query

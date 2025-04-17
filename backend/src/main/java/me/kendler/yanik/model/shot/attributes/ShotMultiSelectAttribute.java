@@ -4,7 +4,7 @@ import java.util.*;
 
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
-import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
+import me.kendler.yanik.dto.shot.ShotAttributeEditDTO;
 import me.kendler.yanik.dto.shot.attributes.ShotMultiSelectAttributeDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;

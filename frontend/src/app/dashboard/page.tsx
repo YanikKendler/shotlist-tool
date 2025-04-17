@@ -19,11 +19,11 @@ export default function Dashboard() {
     return (
       <>
         <p>hello</p>
-          {data.shotlists.map((shotlist: { id: string; name: string }) => (
-            <div key={shotlist.id}>
-              <Link href={`/shotlist/${shotlist.id}`}>{shotlist.name}</Link>
-            </div>
-          ))}
+        {data.shotlists.map((shotlist: { id: string; name: string }) => (
+          <div key={shotlist.id}>
+            <Link href={`/shotlist/${shotlist.id}`}>{shotlist.name}</Link>
+          </div>
+        ))}
       </>
     );
 }

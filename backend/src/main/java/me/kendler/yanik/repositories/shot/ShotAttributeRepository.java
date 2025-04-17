@@ -3,7 +3,7 @@ package me.kendler.yanik.repositories.shot;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
+import me.kendler.yanik.dto.shot.ShotAttributeEditDTO;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 @ApplicationScoped

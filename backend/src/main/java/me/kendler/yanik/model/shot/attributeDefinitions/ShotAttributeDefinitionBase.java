@@ -1,15 +1,10 @@
 package me.kendler.yanik.model.shot.attributeDefinitions;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
-import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
 import me.kendler.yanik.dto.shot.ShotAttributeDefinitionEditDTO;
-import me.kendler.yanik.dto.shot.attributes.ShotAttributeEditDTO;
 import me.kendler.yanik.model.Shotlist;
-import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.shot.Shot;
-import me.kendler.yanik.model.shot.ShotAttributeType;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 /**

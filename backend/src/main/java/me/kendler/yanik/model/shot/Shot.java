@@ -35,6 +35,7 @@ public class Shot extends PanacheEntityBase {
     public Shot(Scene scene) {
         this.scene = scene;
         this.number = scene.shots.size();
+        scene.shots.add(this);
         for(ShotAttributeDefinitionBase attributeDefinition : scene.shotlist.shotAttributeDefinitions) {
             ShotAttributeBase attribute = attributeDefinition.createAttribute(this);
             persist(attribute);

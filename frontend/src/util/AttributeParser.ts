@@ -1,11 +1,7 @@
-import {
-    SceneMultiSelectAttributeDto,
-    SceneSingleSelectAttributeDto,
-    SceneTextAttributeDto
-} from "../../lib/graphql/generated"
+import {AnySceneAttribute} from "@/util/Types"
 
 export abstract class SceneAttributeParser {
-    static toValueString(attribute: SceneTextAttributeDto | SceneSingleSelectAttributeDto | SceneMultiSelectAttributeDto): string{
+    static toValueString(attribute: AnySceneAttribute): string{
         switch (attribute.__typename) {
             case "SceneTextAttributeDTO":
                 return <string>attribute.textValue
@@ -16,4 +12,8 @@ export abstract class SceneAttributeParser {
         }
         return ""
     }
+}
+
+export abstract class ShotAttributeDefinitionParser {
+
 }

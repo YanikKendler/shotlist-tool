@@ -1,4 +1,4 @@
-package me.kendler.yanik.dto.shot.attributes;
+package me.kendler.yanik.dto.shot;
 
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 

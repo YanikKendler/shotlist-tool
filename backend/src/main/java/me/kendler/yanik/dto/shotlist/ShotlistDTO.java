@@ -21,9 +21,9 @@ public record ShotlistDTO(
     UUID id,
     User owner,
     Template template,
-    Set<SceneDTO> scenes,
-    Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions,
-    Set<ShotAttributeDefinitionBase> shotAttributeDefinitions,
+    List<SceneDTO> scenes,
+    List<SceneAttributeDefinitionBase> sceneAttributeDefinitions,
+    List<ShotAttributeDefinitionBase> shotAttributeDefinitions,
     String name,
     LocalDateTime createdAt,
     LocalDateTime editedAt
