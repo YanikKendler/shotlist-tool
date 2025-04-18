@@ -2,41 +2,45 @@
 
 import {AnyShotAttribute} from "@/util/Types"
 import styles from './shotAttribute.module.scss'
-import React from "react"
+import React, {ChangeEventHandler, useDebugValue} from "react"
 import AsyncSelect from "react-select/async"
-import {query} from "@/ApolloClient"
+import {getClient} from "@/ApolloClient"
 import gql from "graphql-tag"
+import {useApolloClient} from "@apollo/client"
 
 export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
 
-    const loadOptions = (
-        inputValue: string,
-        callback: (options: any[]) => void
-    ) => {
-        query({
-            query: gql`
-                query search{
-                    searchShotSelectAttributeOptions(searchDTO:{shotAttributeDefinitionId:2, searchTerm: "d"}){
-                        id
-                        name
-                    }
-                }
-            `,
-            variables: { inputValue },
-        })
-        .then(({data, error}) => {
-            if(error) {
-                console.error('Error fetching shotlist:', error);
-                return;
+    const SEARCH_QUERY = gql`
+        query search($searchTerm: String!) {
+            searchShotSelectAttributeOptions(
+                searchDTO: { shotAttributeDefinitionId: 2, searchTerm: $searchTerm }
+            ) {
+                id
+                name
             }
+        }
+    `
 
-            callback(
-                data.searchShotSelectAttributeOptions.map((option: any) => ({
-                    value: option.id,
-                    label: option.name,
-                }))
-            )
-        })
+    const client = useApolloClient()
+
+    const loadOptions = async (inputValue: string) => {
+        try {
+            const { data } = await client.query({
+                query: SEARCH_QUERY,
+                variables: { searchTerm: inputValue },
+            });
+
+            return data.searchShotSelectAttributeOptions.map((option: any) => ({
+                value: option.id,
+                label: option.name,
+            }));
+        } catch (error) {
+            console.error('Error fetching options', error)
+        }
+    }
+
+    const updateTextValue = (e: any) => {
+        console.log(e)
     }
 
     switch (attribute.__typename) {
@@ -48,13 +52,13 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         case "ShotMultiSelectAttributeDTO":
             return (
                 <div className={styles.shotAttribute}>
-                    <AsyncSelect loadOptions={loadOptions} />
+                    <AsyncSelect loadOptions={loadOptions} defaultOptions/>
                 </div>
             )
         case "ShotTextAttributeDTO":
             return (
                 <div className={styles.shotAttribute}>
-                    <input type="text" value={attribute.textValue || ""}/>
+                    <input type="text" defaultValue={attribute.textValue || ""} onChange={updateTextValue}/>
                 </div>
             )
     }
