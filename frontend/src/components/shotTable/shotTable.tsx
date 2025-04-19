@@ -3,6 +3,7 @@
 import {useQuery} from "@apollo/client"
 import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
+import "./shotTable.scss"
 
 export default function ShotTable({sceneId}: {sceneId: string}){
     const { loading, error, data } = useQuery(gql`
@@ -12,7 +13,7 @@ export default function ShotTable({sceneId}: {sceneId: string}){
                 number
                 attributes{
                     id
-                    definition{name, position}
+                    definition{id, name, position}
 
                     ... on ShotSingleSelectAttributeDTO{
                         singleSelectValue{name}
@@ -37,10 +38,10 @@ export default function ShotTable({sceneId}: {sceneId: string}){
     }
 
     return (
-        <>
+        <div className="shotTable">
             {data.shots.map((shot: any) => (
-                <Shot shot={shot} key={shot.id} />
+                <Shot shot={shot} key={shot.id}/>
             ))}
-        </>
+        </div>
     );
 }

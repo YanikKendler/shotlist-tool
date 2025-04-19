@@ -4,12 +4,16 @@ import {ShotDto, Shotlist} from "../../../lib/graphql/generated"
 import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import {AnyShotAttribute} from "@/util/Types"
 import {wuText} from "@yanikkendler/web-utils"
-import styles from './shot.module.scss'
+import './shot.scss'
+import {GripVertical} from "lucide-react"
 
 export default function Shot({shot}: {shot: ShotDto}) {
   return (
-    <div className={styles.shot}>
-        <p>{wuText.numberToLetter(shot.number)}</p>
+    <div className="shot">
+        <div className="shotAttribute number">
+            <p>{wuText.numberToLetter(shot.number)}</p>
+            <GripVertical className="grip" />
+        </div>
         {(shot.attributes as [AnyShotAttribute])?.map((attr) => (
             <ShotAttribute attribute={attr} key={attr.id}></ShotAttribute>
         ))}

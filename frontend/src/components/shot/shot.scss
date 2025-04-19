@@ -1,0 +1,36 @@
+div.shot{
+  display: flex;
+
+  &:nth-of-type(even){
+    background-color: var(--second-cell-bg);
+  }
+
+  .number{
+    width: 5ch;
+    text-align: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    justify-content: center;
+
+    p{
+      font-weight: 700;
+    }
+
+    .grip{
+      display: none;
+      color: var(--accent);
+    }
+  }
+
+  &:hover{
+    .number {
+      p {
+        display: none;
+      }
+
+      .grip {
+        display: block;
+      }
+    }
+  }
+}

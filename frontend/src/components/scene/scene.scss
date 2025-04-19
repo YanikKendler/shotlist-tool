@@ -12,6 +12,7 @@
   &:not(.expanded):hover{
     border-color: var(--scene-hover-border);
     color: var(--accent);
+    cursor: pointer;
   }
 
   &.expanded{

@@ -47,7 +47,10 @@ public class Shot extends PanacheEntityBase {
         return new ShotDTO(
             this.id,
             this.scene,
-            this.attributes.stream().map(ShotAttributeBase::toDTO).collect(Collectors.toSet()),
+            this.attributes.stream()
+                    .sorted(Comparator.comparingInt(attr -> attr.definition.position))
+                    .map(ShotAttributeBase::toDTO)
+                    .collect(Collectors.toList()),
             this.number,
             this.isSubshot,
             this.createdAt

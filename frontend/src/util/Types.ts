@@ -6,3 +6,8 @@ import {
 
 export type AnySceneAttribute = SceneTextAttributeDto | SceneSingleSelectAttributeDto | SceneMultiSelectAttributeDto
 export type AnyShotAttribute = ShotTextAttributeDto | ShotSingleSelectAttributeDto | ShotMultiSelectAttributeDto
+
+export interface SelectOption {
+    label: string
+    value: string
+}

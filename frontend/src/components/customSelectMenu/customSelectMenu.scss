@@ -1,0 +1,30 @@
+div.customSelectMenu{
+  --select-menu-bg: hsl(0, 0%, 97%);
+  --select-menu-bottom-bg: hsl(0, 0%, 88%);
+
+  background-color: var(--select-menu-bg);
+
+  .content{
+    padding-inline: .3rem;
+  }
+
+  .bottom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem;
+    background-color: var(--select-menu-bottom-bg);
+    cursor: pointer;
+
+    &:hover{
+      p {
+        text-decoration: underline;
+      }
+    }
+
+    p{
+      font-size: .85rem;
+      font-weight: 600;
+    }
+  }
+}

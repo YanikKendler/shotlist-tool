@@ -1,22 +1,23 @@
 main.shotlist{
-  --sidebar-bg: hsl(12, 8%, 88%);
+  --sidebar-bg: hsl(20, 29%, 94%);
   --home-button-bg: hsl(14, 21%, 88%);
   --link-seperator-color: hsl(0, 0%, 34.5%);
   --scene-create-color: hsl(0, 0%, 42%);
 
   display: flex;
-  gap: 1rem;
   height: 100lvh;
   width: 100%;
+  background-color: var(--sidebar-bg);
 
   .sidebar{
-    background-color: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
 
     .content{
       display: flex;
       flex-direction: column;
-      padding: .3rem .25rem;
-      gap: 1rem;
+      padding: .2rem .5rem;
+      gap: .5rem;
 
       .top{
         display: flex;
@@ -62,8 +63,14 @@ main.shotlist{
     }
   }
 
-  .header{
+  .content{
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    width: 100%;
+
+    .header{
+      display: flex;
+      gap: 1rem;
+    }
   }
 }

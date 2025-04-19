@@ -1,8 +1,13 @@
 :root {
   --accent: hsl(18, 100%, 47%);
-  --accent-light: hsl(18, 100%, 60%);
+  --accent-60: hsl(18, 100%, 60%);
+  --accent-70: hsl(18, 100%, 70%);
+  --accent-80: hsl(18, 100%, 75%);
+  --accent-90: hsl(19, 81%, 86%);
+  --accent-95: hsl(19, 81%, 92%);
 
   --text: hsl(0, 0%, 0%);
+  --contrast: hsl(0, 0%, 100%);
 
   --hover-bg-10: hsla(0, 0%, 50%, 10%);
 }
@@ -56,7 +61,7 @@ img{
 }
 
 ::selection{
-  background-color: var(--accent-light);
+  background-color: var(--accent-60);
   color: hsl(0, 0%, 0%);
 }
 
@@ -74,6 +79,7 @@ button, a{
   border-radius: .4rem;
   padding: .5rem;
   transition: color .15s ease-in-out, background-color .15s ease-in-out;
+  cursor: pointer;
 
   &:focus-visible{
 

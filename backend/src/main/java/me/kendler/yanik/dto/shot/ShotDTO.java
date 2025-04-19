@@ -11,13 +11,14 @@ import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public record ShotDTO (
     UUID id,
     Scene scene,
-    Set<ShotAttributeBaseDTO> attributes,
+    List<ShotAttributeBaseDTO> attributes,
     int number,
     boolean isSubshot,
     LocalDateTime createdAt
