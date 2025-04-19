@@ -5,8 +5,6 @@ import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
 
 export default function ShotTable({sceneId}: {sceneId: string}){
-    console.log(sceneId)
-
     const { loading, error, data } = useQuery(gql`
         query shotlist($sceneId: String!){
             shots(sceneId: $sceneId){

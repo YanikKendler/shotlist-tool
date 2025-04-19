@@ -1,21 +1,18 @@
 'use client'
 
 import gql from "graphql-tag"
-import {use, useState} from "react"
+import React, {use, useState} from "react"
 import {useQuery} from "@apollo/client"
 import {SceneAttributeParser} from "@/util/AttributeParser"
 import Scene from "@/components/scene/scene"
 import {SceneDto} from "../../../../lib/graphql/generated"
 import {useSearchParams} from "next/navigation"
 import ShotTable from "@/components/shotTable/shotTable"
-import styles from "./styles.module.scss"
+import {House, Plus} from "lucide-react"
+import Link from "next/link"
+import './shotlist.scss'
 
-export default function Shotlist(
-    {
-        params,
-    }: {
-        params: Promise<{ id: string }>
-    }) {
+export default function Shotlist({params,}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
 
     const searchParams = useSearchParams()
@@ -62,6 +59,10 @@ export default function Shotlist(
         { variables: {id: id} }
     )
 
+    const selectScene = (sceneId: string) => {
+        setSelectedSceneId(sceneId)
+    }
+
     if(loading) return <div>loading..</div>
     if(error) return <div>error: {error.name}, message: {error.message}</div>
 
@@ -70,15 +71,28 @@ export default function Shotlist(
     console.log(data)
 
     return (
-        <main className={styles.main}>
-            <div className={styles.sidebar}>
-                <p>{data.shotlist.name}</p>
-                {data.shotlist.scenes.map((scene: SceneDto) => (
-                    <Scene key={scene.id} scene={scene}/>
-                ))}
+        <main className="shotlist">
+            <div className="sidebar">
+                <div className="content">
+                    <div className="top">
+                        <Link href={`../dashboard`}><House strokeWidth={2.5}/></Link>
+                        <p>/</p>
+                        <input type="text" defaultValue={data.shotlist.name}/>
+                    </div>
+                    <div className="scenes">
+                        {data.shotlist.scenes.map((scene: SceneDto) => (
+                            <Scene key={scene.id} scene={scene} expanded={selectedSceneId == scene.id} onSelect={selectScene}/>
+                        ))}
+                        <button>New scene <Plus></Plus></button>
+                    </div>
+                    <div className="bottom">
+
+                    </div>
+                </div>
+                <div className="bottom"></div>
             </div>
             <div className="content">
-                <div className={styles.header}>
+                <div className="header">
                     <p>#</p>
                     {data.shotlist.shotAttributeDefinitions.map((attr: any) => (
                         <p key={attr.id}>{attr.name}</p>

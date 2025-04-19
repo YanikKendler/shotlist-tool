@@ -1,10 +1,10 @@
 :root {
   --accent: hsl(18, 100%, 47%);
   --accent-light: hsl(18, 100%, 60%);
-  --accent-sidebar: hsl(12, 8%, 88%);
 
-  --background: #ffffff;
-  --foreground: #171717;
+  --text: hsl(0, 0%, 0%);
+
+  --hover-bg-10: hsla(0, 0%, 50%, 10%);
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -42,6 +42,11 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+  display: block;
+
+  svg{
+    display: block;
+  }
 }
 
 img{
@@ -53,4 +58,58 @@ img{
 ::selection{
   background-color: var(--accent-light);
   color: hsl(0, 0%, 0%);
+}
+
+input, button{
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+button, a{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  font-size: 1rem;
+  border-radius: .4rem;
+  padding: .5rem;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out;
+
+  &:focus-visible{
+
+  }
+
+  &:active{
+    transform: translate(0, 1px) scale(0.995);
+  }
+}
+
+// Style radix collapsible
+
+.CollapsibleContent {
+  overflow: hidden;
+}
+.CollapsibleContent[data-state="open"] {
+  animation: slideDown 300ms ease-out;
+}
+.CollapsibleContent[data-state="closed"] {
+  animation: slideUp 300ms ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
 }

@@ -3,6 +3,7 @@
 import gql from "graphql-tag"
 import Link from "next/link"
 import {useQuery, useSuspenseQuery} from "@apollo/client"
+import "./dashboard.scss"
 
 export default function Dashboard() {
   const { error, loading, data } = useQuery(gql`
@@ -17,13 +18,13 @@ export default function Dashboard() {
     if(error) return <div>error: {error.name}, message: {error.message}</div>
 
     return (
-      <>
+      <main className="dashboard">
         <p>hello</p>
         {data.shotlists.map((shotlist: { id: string; name: string }) => (
           <div key={shotlist.id}>
             <Link href={`/shotlist/${shotlist.id}`}>{shotlist.name}</Link>
           </div>
         ))}
-      </>
+      </main>
     );
 }
