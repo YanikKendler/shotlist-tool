@@ -11,3 +11,9 @@ export interface SelectOption {
     label: string
     value: string
 }
+
+export interface AttributeValueCollection {
+    textValue?: string
+    singleSelectValue?: number
+    multiSelectValue?: number[]
+}

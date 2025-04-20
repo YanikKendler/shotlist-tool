@@ -27,9 +27,4 @@ public class SceneSingleSelectAttribute extends SceneAttributeBase{
             value
         );
     }
-
-    @Override
-    public void update(SceneAttributeEditDTO editDTO) {
-        value = editDTO.singleSelectValue();
-    }
 }

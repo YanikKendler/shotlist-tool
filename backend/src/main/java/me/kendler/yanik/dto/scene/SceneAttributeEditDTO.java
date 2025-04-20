@@ -6,7 +6,7 @@ import java.util.Set;
 
 public record SceneAttributeEditDTO(
     Long id,
-    Set<SceneSelectAttributeOptionDefinition> multiSelectValue,
-    SceneSelectAttributeOptionDefinition singleSelectValue,
+    Set<Long> multiSelectValue,
+    Long singleSelectValue,
     String textValue
 ){ }

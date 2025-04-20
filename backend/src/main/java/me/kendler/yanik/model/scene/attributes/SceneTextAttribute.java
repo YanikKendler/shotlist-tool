@@ -25,9 +25,4 @@ public class SceneTextAttribute extends SceneAttributeBase{
             value
         );
     }
-
-    @Override
-    public void update(SceneAttributeEditDTO editDTO) {
-        value = editDTO.textValue();
-    }
 }

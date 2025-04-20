@@ -29,9 +29,4 @@ public class SceneMultiSelectAttribute extends SceneAttributeBase{
             value
         );
     }
-
-    @Override
-    public void update(SceneAttributeEditDTO editDTO) {
-        value = editDTO.multiSelectValue();
-    }
 }

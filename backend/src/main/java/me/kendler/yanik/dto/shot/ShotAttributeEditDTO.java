@@ -1,12 +1,12 @@
 package me.kendler.yanik.dto.shot;
 
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
+import io.smallrye.graphql.api.Nullable;
 
 import java.util.Set;
 
 public record ShotAttributeEditDTO (
     Long id,
-    Set<ShotSelectAttributeOptionDefinition> multiSelectValue,
-    ShotSelectAttributeOptionDefinition singleSelectValue,
+    Set<Long> multiSelectValue,
+    Long singleSelectValue,
     String textValue
 ){ }

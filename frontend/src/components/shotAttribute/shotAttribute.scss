@@ -1,10 +1,11 @@
 div.shotAttribute{
   border: 1px solid var(--cell-border);
   box-sizing: border-box;
-  height: 2.5rem;
+  min-height: 2.5rem;
   display: flex;
   align-items: center;
   width: 100%;
+  flex-grow: 0;
 
   &:first-of-type{
     border-top-left-radius: .3rem;
@@ -16,28 +17,46 @@ div.shotAttribute{
     border-bottom-right-radius: .3rem;
   }
 
-  input{
-    width: 100%;
-    height: 100%;
-    flex: 1;
-    color: var(--text);
-    border-radius: .2rem;
-    border: 2px solid transparent;
-    padding: .2rem;
-    font-size: 1rem;
-    transition: border-color 0.2s ease;
-
-    &::placeholder{
-      font-weight: 400;
-      color: var(--cell-placeholder);
-    }
-
-    &:focus-visible{
-      outline: none;
-      border-color: var(--accent);
-    }
+  input, textarea, p[contenteditable="true"]{
 
   }
+
+  .input{
+    flex: 1;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease, outline-color 0.2s ease;
+    height: 100%;
+    border-radius: .2rem;
+    outline: 1px solid transparent;
+    display: grid;
+    align-items: center;
+    cursor: text;
+
+    .text{
+      width: 100%;
+      height: fit-content;
+      color: var(--text);
+      padding: .2rem;
+      font-size: 1rem;
+      vertical-align: middle;
+      border: none;
+      outline: none;
+    }
+
+    .placeholder{
+      font-weight: 400;
+      color: var(--cell-placeholder);
+      position: absolute;
+      margin-left: .2rem;
+      pointer-events: none;
+    }
+
+    &:has(.text:focus-visible){
+      border-color: var(--accent);
+      outline-color: var(--accent);
+    }
+  }
+
 
   .select{
     width: 100%;

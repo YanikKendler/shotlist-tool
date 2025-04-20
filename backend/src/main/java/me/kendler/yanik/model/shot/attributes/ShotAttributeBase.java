@@ -1,11 +1,13 @@
 package me.kendler.yanik.model.shot.attributes;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.shot.attributes.ShotAttributeBaseDTO;
 import me.kendler.yanik.dto.shot.ShotAttributeEditDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
+import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 
 @Entity
 @Table(name = "shotattribute")
@@ -22,6 +24,4 @@ public abstract class ShotAttributeBase extends PanacheEntity {
     }
 
     public abstract ShotAttributeBaseDTO toDTO();
-
-    abstract public void update(ShotAttributeEditDTO editDTO);
 }

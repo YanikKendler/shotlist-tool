@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.scss"
 import React from "react"
 import {ApolloWrapper} from "@/ApolloWrapper"
+import SelectRefreshProvider from "@/components/SelectRefreshContext"
 
 export const metadata: Metadata = {
   title: "Shotlist Tool",
@@ -16,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ApolloWrapper>
+            <SelectRefreshProvider>
+                {children}
+            </SelectRefreshProvider>
+        </ApolloWrapper>
       </body>
     </html>
   )

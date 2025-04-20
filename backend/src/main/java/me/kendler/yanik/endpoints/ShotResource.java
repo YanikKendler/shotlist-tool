@@ -10,8 +10,10 @@ import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
+import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
+import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
 import me.kendler.yanik.repositories.shot.ShotSelectAttributeOptionDefinitionRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
@@ -73,11 +75,11 @@ public class ShotResource {
      */
 
     @Inject
-    SceneAttributeRepository sceneAttributeRepository;
+    ShotAttributeRepository shotAttributeRepository;
 
     @Mutation
-    public SceneAttributeBase updateSceneAttribute(SceneAttributeEditDTO editDTO) {
-        return sceneAttributeRepository.update(editDTO);
+    public ShotAttributeBase updateShotAttribute(ShotAttributeEditDTO editDTO) {
+        return shotAttributeRepository.update(editDTO);
     }
 
     /*

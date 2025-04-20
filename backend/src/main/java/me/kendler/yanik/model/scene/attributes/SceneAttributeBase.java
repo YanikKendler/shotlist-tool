@@ -22,6 +22,4 @@ public abstract class SceneAttributeBase extends PanacheEntity {
     }
 
     public abstract SceneAttributeBaseDTO toDTO();
-
-    abstract public void update(SceneAttributeEditDTO editDTO);
 }

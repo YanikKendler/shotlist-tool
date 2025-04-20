@@ -1,11 +1,11 @@
 div.customSelectMenu{
-  --select-menu-bg: hsl(0, 0%, 97%);
+  --select-menu-bg: hsl(0, 0%, 95%);
   --select-menu-bottom-bg: hsl(0, 0%, 88%);
 
   background-color: var(--select-menu-bg);
 
   .content{
-    padding-inline: .3rem;
+    padding: .3rem;
   }
 
   .bottom{

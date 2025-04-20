@@ -12,7 +12,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptio
 
 @Entity
 public class ShotMultiSelectAttribute extends ShotAttributeBase {
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<ShotSelectAttributeOptionDefinition> value = new HashSet<>();
 
     public ShotMultiSelectAttribute() { }
@@ -28,10 +28,5 @@ public class ShotMultiSelectAttribute extends ShotAttributeBase {
             definition,
             value
         );
-    }
-
-    @Override
-    public void update(ShotAttributeEditDTO editDTO) {
-        value = editDTO.multiSelectValue();
     }
 }

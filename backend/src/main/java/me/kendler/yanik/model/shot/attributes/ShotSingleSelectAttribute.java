@@ -27,9 +27,4 @@ public class ShotSingleSelectAttribute extends ShotAttributeBase {
             value
         );
     }
-
-    @Override
-    public void update(ShotAttributeEditDTO editDTO) {
-        value = editDTO.singleSelectValue();
-    }
 }

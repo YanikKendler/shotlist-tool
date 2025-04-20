@@ -7,7 +7,7 @@ import "./shotTable.scss"
 
 export default function ShotTable({sceneId}: {sceneId: string}){
     const { loading, error, data } = useQuery(gql`
-        query shotlist($sceneId: String!){
+        query shots($sceneId: String!){
             shots(sceneId: $sceneId){
                 id
                 number

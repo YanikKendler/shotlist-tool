@@ -1,7 +1,7 @@
 'use client'
 
-import {AnyShotAttribute, SelectOption} from "@/util/Types"
-import React, {ChangeEventHandler, useDebugValue, useState} from "react"
+import {AnyShotAttribute, AttributeValueCollection, SelectOption} from "@/util/Types"
+import React, {ChangeEventHandler, FormEventHandler, useDebugValue, useEffect, useRef, useState} from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
@@ -9,15 +9,54 @@ import AsyncCreatableSelect from "react-select/async-creatable"
 import {CustomSelectMenu} from "@/components/customSelectMenu/customSelectMenu"
 import {selectStyles, selectTheme} from "@/util/selectConfig"
 import {components, MultiValueProps, PlaceholderProps, ValueContainerProps} from "react-select"
+import {useSelectRefresh} from "@/components/SelectRefreshContext"
+import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
+import {buildRetryFunction} from "@apollo/client/link/retry/retryFunction"
 
 export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
+    const [textValue, setTextValue] = useState<string>("");
+
+    const textInputRef = useRef<HTMLParagraphElement>(null);
+
+    const { refreshMap, triggerRefresh } = useSelectRefresh();
 
     const client = useApolloClient()
 
+    useEffect(() => {
+        if (!attribute) return;
+
+        switch (attribute.__typename) {
+            case "ShotSingleSelectAttributeDTO":
+                if(attribute.singleSelectValue === null) return
+                setSingleSelectValue({
+                    label: attribute.singleSelectValue?.name || "",
+                    value: attribute.singleSelectValue?.id || "",
+                })
+                break
+            case "ShotMultiSelectAttributeDTO":
+                if(attribute.multiSelectValue === null || attribute.multiSelectValue?.length == 0) return
+                setMultiSelectValue(attribute.multiSelectValue?.map(
+                    (option) => ({
+                        label: option?.name || "",
+                        value: option?.id || "",
+                    })
+                ))
+                break
+            case "ShotTextAttributeDTO":
+                setTextValue(attribute.textValue || "")
+                break
+        }
+    }, [attribute]);
+
+    useEffect(() => {
+        if (textInputRef.current && textInputRef.current.textContent !== textValue) {
+            textInputRef.current.textContent = textValue;
+        }
+    }, [textValue]);
+
     const loadOptions = async (inputValue: string) => {
-        console.log("loading options from server")
         const { data } = await client.query({
             query: gql`
                 query search($definitionId: BigInteger!, $searchTerm: String!) {
@@ -29,7 +68,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                     }
                 }
             `,
-            variables: { definitionId: attribute.definition?.id, searchTerm: inputValue },
+            variables: { definitionId: attribute.definition?.id, searchTerm: inputValue},
             fetchPolicy: 'no-cache'
         });
 
@@ -55,32 +94,82 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             variables: { definitionId: attribute.definition?.id, name: inputValue },
         });
 
-        console.log(data.createShotSelectAttributeOption)
-
         setSingleSelectValue({
             label: data.createShotSelectAttributeOption.name,
             value: data.createShotSelectAttributeOption.id
         })
+        setMultiSelectValue([
+            ...multiSelectValue || [],
+            {
+                label: data.createShotSelectAttributeOption.name,
+                value: data.createShotSelectAttributeOption.id
+            }
+        ])
+
+        triggerRefresh(attribute.definition?.id);
     }
 
-    const updateTextValue = (e: any) => {
-        console.log(e)
+    const updateTextValue = () => {
+        if(!textInputRef.current) return;
+
+        // remove all newlines
+        let cleaned = textInputRef.current.innerText.replace(/[\r\n]+/g, " ");
+
+        textInputRef.current.innerText = cleaned;
+
+        // Move cursor to the end (otherwise it might jump)
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(textInputRef.current);
+        range.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+
+        setTextValue(cleaned)
+
+        console.log("update text value")
+
+        debouncedUpdateTextAttributeValue()
     }
 
-    const updateSingleSelectValue = (e: any) => {
-        console.log(e)
+    const updateSingleSelectValue = (value: SelectOption | null) => {
+        updateAttributeValue({singleSelectValue: Number(value?.value)})
     }
 
-    const updateMultiSelectValue = (e: any) => {
-        console.log(e)
+    const updateMultiSelectValue = (value: SelectOption[] | null) => {
+        updateAttributeValue({multiSelectValue: value?.map((option) => Number(option.value))})
     }
+
+    const updateAttributeValue = async (value: AttributeValueCollection) => {
+        console.log("updating attribute value", attribute.id, value)
+        const {data, errors} = await client.mutate({
+            mutation : gql`
+                mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
+                    updateShotAttribute(editDTO:{
+                        id: $id
+                        textValue: $textValue
+                        singleSelectValue: $singleSelectValue
+                        multiSelectValue: $multiSelectValue
+                    }){
+                        id
+                    }
+                }
+            `,
+            variables: {id: attribute.id, ...value},
+        });
+        if(errors) {
+            console.error(errors)
+        }
+    }
+
+    //TODO
+    const debouncedUpdateTextAttributeValue = wuGeneral.debounce(() => updateAttributeValue({textValue: textValue}), 1000);
 
     const { ValueContainer, Placeholder } = components;
 
     const CustomMultiValue = (
         props: MultiValueProps<SelectOption, true>
     ) => {
-        // only render the chip when the dropdown is actually open
         if (!props.selectProps.menuIsOpen) return null;
         return <components.MultiValue {...props} />;
     };
@@ -92,27 +181,16 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         const isOpen = selectProps.menuIsOpen;
         const selected = getValue();
 
-        const filteredChildren = React.Children.toArray(children).filter(
-            (child) =>
-                !(
-                    React.isValidElement<PlaceholderProps<SelectOption, true>>(child) &&
-                    child.type === Placeholder
-                )
-        )
-
         return (
             <ValueContainer {...props}>
-                {!isOpen && (
-                    <div {...innerProps} style={{ width: "100%", cursor: "pointer" }}>
-                        {selected.length > 0
-                            ? selected.map((o) => o.label).join(", ")
-                            : selectProps.placeholder}
-                    </div>
-                )}
-
-                <div style={{ display: isOpen ? "block" : "none" }}>
-                    {filteredChildren}
+                <div style={{position: "absolute", width: "100%"}}>
+                    {!isOpen && selected.length > 0 && (
+                        <p style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
+                            {selected.map((o) => o.label).join(", ")}
+                        </p>
+                    )}
                 </div>
+                {children}
             </ValueContainer>
         )
     }
@@ -122,8 +200,9 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             return (
                 <div className="shotAttribute">
                     <AsyncCreatableSelect
+                        key={`${attribute.definition?.id}-${refreshMap[attribute.definition?.id] || 0}`}
                         value={singleSelectValue}
-                        onChange={(newValue) => updateSingleSelectValue(newValue)}
+                        onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
                         onCreateOption={createOption}
                         loadOptions={loadOptions}
                         defaultOptions
@@ -141,8 +220,9 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                 <div className="shotAttribute">
                     <AsyncCreatableSelect
                         value={multiSelectValue}
-                        onChange={(newValue) => updateMultiSelectValue(newValue)}
+                        onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
                         isMulti
+                        isClearable={false}
                         onCreateOption={createOption}
                         loadOptions={loadOptions}
                         defaultOptions
@@ -162,12 +242,21 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         case "ShotTextAttributeDTO":
             return (
                 <div className="shotAttribute">
-                    <input
-                        type="text"
-                        defaultValue={attribute.textValue || ""}
-                        placeholder={attribute.definition?.name || ""}
-                        onChange={updateTextValue}
-                    />
+                    <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
+                        <p
+                            className={"text"}
+                            ref={textInputRef}
+                            contentEditable={true}
+                            onInput={updateTextValue}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                }
+                            }}
+                        />
+
+                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || ""}</p>}
+                    </div>
                 </div>
             )
     }

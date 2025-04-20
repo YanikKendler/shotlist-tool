@@ -16,7 +16,8 @@ export const selectStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectO
     control: (baseStyles, state) => ({
         ...baseStyles,
         borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
-        backgroundColor: "transparent",
+        backgroundColor: "var(--shot-background)",
+        zIndex: state.isFocused ? 100 : 0,
         cursor: 'text',
         transition: 'background-color 0.2s ease, border-color 0.2s ease',
         '&:hover': {
@@ -27,6 +28,15 @@ export const selectStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectO
         ...baseStyles,
         cursor: 'pointer',
         borderRadius: ".3rem",
-        paddingInline: ".5rem"
+        paddingInline: ".5rem",
+        fontSize: ".9rem"
     }),
+    multiValueRemove: (baseStyles) => ({
+        ...baseStyles,
+        cursor: 'pointer',
+    }),
+    menu: (baseStyles) => ({
+        ...baseStyles,
+        marginTop: 0,
+    })
 }
