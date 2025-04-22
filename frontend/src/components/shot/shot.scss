@@ -1,38 +1,55 @@
 div.shot{
   --shot-background: var(--contrast);
+  --grip-color: hsl(0, 0%, 70%);
+  --grip-hover-color: hsl(0, 0%, 50%);
 
   display: flex;
   background-color: var(--shot-background);
+  position: relative;
 
   &:nth-of-type(even){
     --shot-background: var(--second-cell-bg);
   }
 
+  .grip{
+    opacity: 0;
+    color: var(--grip-color);
+    position: absolute;
+    right: 100%;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    transition: color .3s, opacity .1s;
+
+    &:hover{
+      color: var(--grip-hover-color);
+    }
+  }
+
   .number{
     width: 5ch;
     text-align: center;
-    cursor: pointer;
     flex-shrink: 0;
     justify-content: center;
 
     p{
       font-weight: 700;
-    }
-
-    .grip{
-      display: none;
-      color: var(--accent);
+      transition: color .2s;
     }
   }
 
-  &:hover{
-    .number {
-      p {
-        display: none;
-      }
 
-      .grip {
-        display: block;
+  &:hover, &:has(*:focus-visible){
+    .grip {
+      opacity: 1;
+    }
+
+    .number {
+      p{
+        color: var(--accent);
       }
     }
   }

@@ -1,6 +1,12 @@
 'use client'
 
-import {AnyShotAttribute, ShotAttributeValueCollection, SelectOption} from "@/util/Types"
+import {
+    AnySceneAttribute,
+    AnyShotAttribute,
+    ShotAttributeValueCollection,
+    SelectOption,
+    SceneAttributeValueCollection
+} from "@/util/Types"
 import React, {
     useCallback,
     useEffect,
@@ -10,12 +16,12 @@ import React, {
 } from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
-import './shotAttribute.scss'
+import './sceneAttribute.scss'
 import {useSelectRefresh} from "@/components/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
-import Select, {selectShotStyles} from "@/components/select/select"
+import Select, {selectSceneStyles} from "@/components/select/select"
 
-export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
+export default function SceneAttribute({attribute}: {attribute: AnySceneAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -30,14 +36,14 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         if (!attribute) return;
 
         switch (attribute.__typename) {
-            case "ShotSingleSelectAttributeDTO":
+            case "SceneSingleSelectAttributeDTO":
                 if(attribute.singleSelectValue === null) return
                 setSingleSelectValue({
                     label: attribute.singleSelectValue?.name || "",
                     value: attribute.singleSelectValue?.id || "",
                 })
                 break
-            case "ShotMultiSelectAttributeDTO":
+            case "SceneMultiSelectAttributeDTO":
                 if(attribute.multiSelectValue === null || attribute.multiSelectValue?.length == 0) return
                 setMultiSelectValue(attribute.multiSelectValue?.map(
                     (option) => {
@@ -48,7 +54,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                     }
                 ))
                 break
-            case "ShotTextAttributeDTO":
+            case "SceneTextAttributeDTO":
                 setTextValue(attribute.textValue || "")
                 break
         }
@@ -64,8 +70,8 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         const { data } = await client.query({
             query: gql`
                 query search($definitionId: BigInteger!, $searchTerm: String!) {
-                    searchShotSelectAttributeOptions(
-                        searchDTO: { shotAttributeDefinitionId: $definitionId, searchTerm: $searchTerm }
+                    searchSceneSelectAttributeOptions(
+                        searchDTO: { sceneAttributeDefinitionId: $definitionId, searchTerm: $searchTerm }
                     ) {
                         id
                         name
@@ -76,7 +82,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             fetchPolicy: 'no-cache'
         });
 
-        return data.searchShotSelectAttributeOptions.map((option: any): SelectOption => ({
+        return data.searchSceneSelectAttributeOptions.map((option: any): SelectOption => ({
             value: option.id,
             label: option.name,
         }));
@@ -86,7 +92,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         const { data } = await client.mutate({
             mutation: gql`
                 mutation create($definitionId: BigInteger!, $name: String!) {
-                    createShotSelectAttributeOption(createDTO:{
+                    createSceneSelectAttributeOption(createDTO:{
                         selectAttributeId: $definitionId,
                         name: $name
                     }){
@@ -99,14 +105,14 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         });
 
         setSingleSelectValue({
-            label: data.createShotSelectAttributeOption.name,
-            value: data.createShotSelectAttributeOption.id
+            label: data.createSceneSelectAttributeOption.name,
+            value: data.createSceneSelectAttributeOption.id
         })
         setMultiSelectValue([
             ...multiSelectValue || [],
             {
-                label: data.createShotSelectAttributeOption.name,
-                value: data.createShotSelectAttributeOption.id
+                label: data.createSceneSelectAttributeOption.name,
+                value: data.createSceneSelectAttributeOption.id
             }
         ])
 
@@ -138,11 +144,11 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         updateAttributeValue({multiSelectValue: value?.map((option) => Number(option.value))})
     }
 
-    const updateAttributeValue = async (value: ShotAttributeValueCollection) => {
+    const updateAttributeValue = async (value: SceneAttributeValueCollection) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
                 mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
-                    updateShotAttribute(editDTO:{
+                    updateSceneAttribute(editDTO:{
                         id: $id
                         textValue: $textValue
                         singleSelectValue: $singleSelectValue
@@ -162,9 +168,9 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
     const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(updateAttributeValue), []);
 
     switch (attribute.__typename) {
-        case "ShotSingleSelectAttributeDTO":
+        case "SceneSingleSelectAttributeDTO":
             return (
-                <div className="shotAttribute">
+                <div className="sceneAttribute">
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={false}
@@ -173,14 +179,14 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                         onCreate={createOption}
                         placeholder={attribute.definition?.name || ""}
                         value={singleSelectValue}
-                        shotOrScene={"shot"}
-                        styles={selectShotStyles}
+                        shotOrScene={"scene"}
+                        styles={selectSceneStyles}
                     ></Select>
                 </div>
             )
-        case "ShotMultiSelectAttributeDTO":
+        case "SceneMultiSelectAttributeDTO":
             return (
-                <div className="shotAttribute">
+                <div className="sceneAttribute">
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={true}
@@ -189,14 +195,14 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                         onCreate={createOption}
                         placeholder={attribute.definition?.name || ""}
                         value={multiSelectValue}
-                        shotOrScene={"shot"}
-                        styles={selectShotStyles}
+                        shotOrScene={"scene"}
+                        styles={selectSceneStyles}
                     ></Select>
                 </div>
             )
-        case "ShotTextAttributeDTO":
+        case "SceneTextAttributeDTO":
             return (
-                <div className="shotAttribute">
+                <div className="sceneAttribute">
                     <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
                         <p
                             className={"text"}

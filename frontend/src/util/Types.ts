@@ -12,7 +12,13 @@ export interface SelectOption {
     value: string
 }
 
-export interface AttributeValueCollection {
+export interface ShotAttributeValueCollection {
+    textValue?: string
+    singleSelectValue?: number
+    multiSelectValue?: number[]
+}
+
+export interface SceneAttributeValueCollection {
     textValue?: string
     singleSelectValue?: number
     multiSelectValue?: number[]

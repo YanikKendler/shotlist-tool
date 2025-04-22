@@ -1,39 +1,23 @@
-div.shotAttribute{
-  border: 1px solid var(--cell-border);
-  box-sizing: border-box;
-  min-height: 2.5rem;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  flex-grow: 0;
-
-  &:first-of-type{
-    border-top-left-radius: .3rem;
-    border-bottom-left-radius: .3rem;
-  }
-
-  &:last-of-type{
-    border-top-right-radius: .3rem;
-    border-bottom-right-radius: .3rem;
-  }
+div.sceneAttribute{
+  --scene-placeholder-color: hsl(0, 0%, 57%);
+  --scene-underline-color: hsl(0, 0%, 65%);
+  --multi-value-background: hsl(0, 0%, 80%);
 
   .input{
-    flex: 1;
-    border: 1px solid transparent;
+    border: none;
+    border-bottom: 2px solid var(--scene-underline-color);
     transition: border-color 0.2s ease, outline-color 0.2s ease;
-    height: 100%;
-    border-radius: .2rem;
-    outline: 1px solid transparent;
     display: grid;
-    align-items: center;
+    align-items: end;
     cursor: text;
+    min-height: 38px;
     position: relative;
 
     .text{
       width: 100%;
       height: fit-content;
       color: var(--text);
-      padding: .2rem;
+      padding: .3rem .2rem;
       font-size: 1rem;
       vertical-align: middle;
       border: none;
@@ -42,9 +26,10 @@ div.shotAttribute{
 
     .placeholder{
       font-weight: 400;
-      color: var(--cell-placeholder);
+      color: var(--scene-placeholder-color);
       position: absolute;
       margin-left: .2rem;
+      margin-bottom: .3rem;
       pointer-events: none;
     }
 

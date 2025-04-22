@@ -15,6 +15,7 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitio
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.Shotlist;
+import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
 @Entity
 public class Scene extends PanacheEntityBase {
@@ -53,8 +54,14 @@ public class Scene extends PanacheEntityBase {
         return new SceneDTO(
             this.id,
             this.shotlist,
-            this.attributes.stream().map(SceneAttributeBase::toDTO).collect(Collectors.toSet()),
-            this.shots.stream().map(Shot::toDTO).collect(Collectors.toSet()),
+            this.attributes.stream()
+                    .sorted(Comparator.comparingInt(attr -> attr.definition.position))
+                    .map(SceneAttributeBase::toDTO)
+                    .collect(Collectors.toList()),
+            this.shots.stream()
+                    .sorted(Comparator.comparingInt(shot -> shot.number))
+                    .map(Shot::toDTO)
+                    .collect(Collectors.toList()),
             this.number,
             this.createdAt
         );

@@ -3,10 +3,26 @@
 import {SceneAttributeParser} from "@/util/AttributeParser"
 import {SceneDto} from "../../../lib/graphql/generated"
 import "./scene.scss"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import { Collapsible } from "radix-ui"
+import ShotAttribute from "@/components/shotAttribute/shotAttribute"
+import SceneAttribute from "@/components/sceneAttribute/sceneAttribute"
+import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
 
 export default function Scene({scene, expanded, onSelect}: {scene: SceneDto, expanded: boolean, onSelect: ( id: string) => void}) {
+    const [overflowVisible, setOverflowVisible] = useState(false);
+
+    useEffect(() => {
+        if (!expanded) {
+            setOverflowVisible(false); // Immediately hide overflow before closing animation
+        }
+        else {
+            setTimeout(() => {
+                setOverflowVisible(true); // Show overflow after the opening animation
+            },300)
+        }
+    }, [expanded]);
+
     if(!scene || !scene.id) return (<p>scene not found</p>)
 
     return (
@@ -17,9 +33,12 @@ export default function Scene({scene, expanded, onSelect}: {scene: SceneDto, exp
             </div>
 
             <Collapsible.Root open={expanded}>
-                <Collapsible.Content className="CollapsibleContent">
-                    {scene.attributes?.map(attr => (
-                        <p key={attr?.id}>attribute</p>
+                <Collapsible.Content
+                    className="CollapsibleContent"
+                    style={{ overflow: overflowVisible ? "visible" : "hidden",}}
+                >
+                    {(scene.attributes as [AnySceneAttribute])?.map(attr => (
+                        <SceneAttribute attribute={attr} key={attr.id}></SceneAttribute>
                     ))}
                 </Collapsible.Content>
             </Collapsible.Root>

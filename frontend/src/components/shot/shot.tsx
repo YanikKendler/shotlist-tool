@@ -10,9 +10,11 @@ import {GripVertical} from "lucide-react"
 export default function Shot({shot}: {shot: ShotDto}) {
   return (
     <div className="shot">
+        <div className="grip">
+            <GripVertical/>
+        </div>
         <div className="shotAttribute number">
             <p>{wuText.numberToLetter(shot.number)}</p>
-            <GripVertical className="grip" />
         </div>
         {(shot.attributes as [AnyShotAttribute])?.map((attr) => (
             <ShotAttribute attribute={attr} key={attr.id}></ShotAttribute>

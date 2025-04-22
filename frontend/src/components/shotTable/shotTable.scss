@@ -2,10 +2,34 @@
   --cell-border: hsl(0, 0%, 50%);
   --second-cell-bg: hsl(0, 0%, 96%);
   --cell-placeholder: hsl(0, 0%, 50%);
+  --preview-cell-border: hsl(0, 0%, 87%);
+  --preview-cell-color: hsl(0, 0%, 50%);
 
+  overflow-y: auto;
   height: 100%;
   width: 100%;
   background-color: var(--contrast);
   border-top-left-radius: 1rem;
   padding: 1.5rem;
+  padding-bottom: 5rem;
+
+  div.shot.new{
+    background-color: transparent;
+
+    .shotAttribute{
+      border-color: var(--preview-cell-border);
+      padding-inline: .3rem;
+      color: var(--preview-cell-color);
+      cursor: text;
+    }
+  }
+
+  .scrollAreaRoot{
+
+
+    .scrollAreaViewport{
+      padding: 1.3rem;
+      height: 100%;
+    }
+  }
 }

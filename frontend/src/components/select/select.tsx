@@ -27,19 +27,7 @@ export const selectTheme: ThemeConfig = (theme) => ({
     },
 })
 
-export const selectStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
-    control: (baseStyles, state) => ({
-        ...baseStyles,
-        borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
-        backgroundColor: "var(--shot-background)",
-        zIndex: state.isFocused ? 100 : 0,
-        cursor: 'text',
-        transition: 'background-color 0.2s ease, border-color 0.2s ease',
-        '&:hover': {
-            borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
-        },
-        height: "inherit"
-    }),
+export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
     option: (baseStyles) => ({
         ...baseStyles,
         cursor: 'pointer',
@@ -59,32 +47,59 @@ export const selectStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectO
         ...baseStyles,
         color: "var(--text)",
         fontWeight: "500",
+    }),
+    valueContainer: (baseStyles) => ({
+        ...baseStyles,
+        padding: "2px .1rem"
+    }),
+}
+
+export const selectShotStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
+    ...selectBaseStyles,
+    control: (baseStyles, state) => ({
+        ...baseStyles,
+        borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
+        backgroundColor: "var(--shot-background)",
+        zIndex: state.isFocused ? 100 : 0,
+        cursor: 'text',
+        transition: 'background-color 0.2s ease, border-color 0.2s ease',
+        '&:hover': {
+            borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
+        },
+        height: "inherit"
+    }),
+}
+
+export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
+    ...selectBaseStyles,
+    control: (baseStyles, state) => ({
+        ...baseStyles,
+        border: "none",
+        boxShadow: "none",
+        outline: "none",
+        borderBottom: `2px solid ${state.isFocused ? 'var(--accent)' : 'var(--scene-underline-color)'}`,
+        backgroundColor: "transparent",
+        zIndex: state.isFocused ? 100 : 0,
+        cursor: 'text',
+        transition: 'border-color 0.2s ease',
+        borderRadius: "0",
+        '&:hover': {
+            borderColor: state.isFocused ? 'var(--accent)' : 'var(--scene-underline-color)',
+        },
+    }),
+    valueContainer: (baseStyles) => ({
+        ...baseStyles,
+        padding: "2px .1rem",
+        alignItems: "end"
+    }),
+    multiValue: (baseStyles) => ({
+        ...baseStyles,
+        backgroundColor: "var(--multi-value-background)",
     })
 }
 
-export const CustomSelectMenu = <
-    Option,
-    IsMulti extends boolean = false
->(
-    props: MenuProps<Option, IsMulti, GroupBase<Option>>
-) => {
-    return (
-        <components.Menu {...props}>
-            <div className="customSelectMenu">
-                <div className="content">
-                    {props.children}
-                </div>
-                <div className="bottom">
-                    <p>Edit Attributes</p>
-                    <Pen size={18} strokeWidth={2} />
-                </div>
-            </div>
-        </components.Menu>
-    )
-}
-
 export default function Select(
-    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene}:
+    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, styles = selectBaseStyles}:
     {
         definitionId: number,
         value: SelectOption | SelectOption[] | undefined,
@@ -94,12 +109,30 @@ export default function Select(
         placeholder: string,
         isMulti: boolean
         shotOrScene: "shot" | "scene"
+        styles?: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>>
 }) {
     const { refreshMap } = useSelectRefresh();
 
-    useEffect(() => {
-        console.log(value)
-    }, [value]);
+    const CustomSelectMenu = <
+        Option,
+        IsMulti extends boolean = false
+    >(
+        props: MenuProps<Option, IsMulti, GroupBase<Option>>
+    ) => {
+        return (
+            <components.Menu {...props}>
+                <div className="customSelectMenu" style={{backgroundColor: shotOrScene == "shot" ? "var(--select-menu-bg)" : "var(--select-menu-scene-bg)"}}>
+                    <div className="content">
+                        {props.children}
+                    </div>
+                    <div className="bottom">
+                        <p>Edit Attributes</p>
+                        <Pen size={18} strokeWidth={2} />
+                    </div>
+                </div>
+            </components.Menu>
+        )
+    }
 
     const CustomMultiValue = (
         props: MultiValueProps<SelectOption, true>
@@ -163,7 +196,7 @@ export default function Select(
             className="select"
             components={getComponents(isMulti)}
             theme={selectTheme}
-            styles={selectStyles}
+            styles={styles}
         />
     );
 }

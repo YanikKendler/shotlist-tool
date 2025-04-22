@@ -11,7 +11,8 @@
   "dependencies": {
     "@apollo/client": "^3.13.7",
     "@apollo/client-integration-nextjs": "^0.12.1",
-    "@yanikkendler/web-utils": "^1.0.8",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@yanikkendler/web-utils": "^1.0.9",
     "graphql": "^16.10.0",
     "lucide-react": "^0.501.0",
     "next": "15.2.5",

@@ -11,6 +11,7 @@ import ShotTable from "@/components/shotTable/shotTable"
 import {House, Plus} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
+import { ScrollArea } from "radix-ui"
 
 export default function Shotlist({params,}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -30,14 +31,14 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
                     number
                     attributes{
                         id
-                        definition{name, position}
+                        definition{id, name, position}
 
                         ... on SceneSingleSelectAttributeDTO{
-                            singleSelectValue{name}
+                            singleSelectValue{id,name}
                         }
 
                         ... on SceneMultiSelectAttributeDTO{
-                            multiSelectValue{name}
+                            multiSelectValue{id,name}
                         }
                         ... on SceneTextAttributeDTO{
                             textValue
@@ -100,7 +101,7 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
                         <p key={attr.id}>{attr.name}</p>
                     ))}
                 </div>
-                <ShotTable sceneId={selectedSceneId}></ShotTable>
+                <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={data.shotlist.shotAttributeDefinitions}></ShotTable>
             </div>
         </main>
     )
