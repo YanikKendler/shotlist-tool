@@ -11,12 +11,9 @@ import React, {
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
-import AsyncCreatableSelect from "react-select/async-creatable"
-import {CustomSelectMenu} from "@/components/customSelectMenu/customSelectMenu"
-import {selectStyles, selectTheme} from "@/util/selectConfig"
-import {components, MultiValueProps, ValueContainerProps} from "react-select"
 import {useSelectRefresh} from "@/components/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
+import Select from "@/components/select/select"
 
 export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -43,10 +40,12 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             case "ShotMultiSelectAttributeDTO":
                 if(attribute.multiSelectValue === null || attribute.multiSelectValue?.length == 0) return
                 setMultiSelectValue(attribute.multiSelectValue?.map(
-                    (option) => ({
-                        label: option?.name || "",
-                        value: option?.id || "",
-                    })
+                    (option) => {
+                        return {
+                            label: option?.name || "",
+                            value: option?.id || "",
+                        }
+                    }
                 ))
                 break
             case "ShotTextAttributeDTO":
@@ -103,7 +102,6 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             label: data.createShotSelectAttributeOption.name,
             value: data.createShotSelectAttributeOption.id
         })
-        console.log(multiSelectValue)
         setMultiSelectValue([
             ...multiSelectValue || [],
             {
@@ -169,83 +167,35 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
 
     const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(updateAttributeValue), []);
 
-    const CustomMultiValue = (
-        props: MultiValueProps<SelectOption, true>
-    ) => {
-        if (!props.selectProps.menuIsOpen) return <p style={{display: "inline"}}>{props.data.label}</p>;
-        return <components.MultiValue {...props} />;
-    };
-
-    const CustomValueContainer = useCallback((
-        props: ValueContainerProps<SelectOption, true>
-    ) => {
-        const { children, innerProps, selectProps, getValue } = props;
-        const selected = getValue()
-
-        let childrenArray = React.Children.toArray(children);
-        let options = childrenArray.slice(0, -1); // all selected items
-        let input = childrenArray.at(-1);
-
-        if(!selectProps.menuIsOpen && selected.length > 0) {
-            options = options.map((child, index) => {
-                if (index > 0 && index < selected.length) {
-                    return <div style={{display: "inline"}} key={index}><span>,</span> {child}</div>
-                }
-                return child
-            })
-        }
-
-        return (
-            <components.ValueContainer {...props}>
-                {options}
-                {input}
-            </components.ValueContainer>
-        )
-    }, []);
-
     switch (attribute.__typename) {
         case "ShotSingleSelectAttributeDTO":
             return (
                 <div className="shotAttribute">
-                    <AsyncCreatableSelect
-                        key={`${attribute.definition?.id}-${refreshMap[attribute.definition?.id] || 0}`}
-                        value={singleSelectValue}
-                        onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
-                        onCreateOption={createOption}
+                    <Select
+                        definitionId={attribute.definition?.id}
+                        isMulti={false}
                         loadOptions={loadOptions}
-                        defaultOptions
+                        onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
+                        onCreate={createOption}
                         placeholder={attribute.definition?.name || ""}
-                        openMenuOnFocus={false}
-                        className="select"
-                        components={{ Menu: CustomSelectMenu}}
-                        theme={selectTheme}
-                        styles={selectStyles}
-                    />
+                        value={singleSelectValue}
+                        shotOrScene={"shot"}
+                    ></Select>
                 </div>
             )
         case "ShotMultiSelectAttributeDTO":
             return (
                 <div className="shotAttribute">
-                    <AsyncCreatableSelect
-                        key={`${attribute.definition?.id}-${refreshMap[attribute.definition?.id] || 0}`}
-                        value={multiSelectValue}
-                        onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
-                        isMulti
-                        isClearable={false}
-                        onCreateOption={createOption}
+                    <Select
+                        definitionId={attribute.definition?.id}
+                        isMulti={true}
                         loadOptions={loadOptions}
-                        defaultOptions
+                        onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
+                        onCreate={createOption}
                         placeholder={attribute.definition?.name || ""}
-                        openMenuOnFocus={false}
-                        className="select"
-                        components={{
-                            Menu: CustomSelectMenu,
-                            MultiValue: CustomMultiValue,
-                            ValueContainer: CustomValueContainer,
-                        }}
-                        theme={selectTheme}
-                        styles={selectStyles}
-                    />
+                        value={multiSelectValue}
+                        shotOrScene={"shot"}
+                    ></Select>
                 </div>
             )
         case "ShotTextAttributeDTO":

@@ -1,0 +1,48 @@
+.sidebarScene{
+  --scene-hover-border: hsla(18, 58%, 71%, 1);
+
+  display: flex;
+  flex-direction: column;
+  padding: .5rem;
+  box-sizing: border-box;
+  border-radius: .3rem;
+  border: 2px solid transparent;
+  transition: border .2s, color .2s;
+
+  &:not(.expanded):hover{
+    border-color: var(--scene-hover-border);
+    color: var(--accent);
+    cursor: pointer;
+  }
+
+  &.expanded{
+    border-color: var(--accent);
+
+    .name{
+      color: var(--accent) !important;
+
+      .text{
+        font-weight: 700;
+      }
+    }
+  }
+
+  .name{
+    display: flex;
+    gap: .5rem;
+    color: var(--text);
+
+    .number{
+      font-weight: 700;
+    }
+  }
+
+  .attributes{
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height .5s .2s ease-out;
+  }
+}

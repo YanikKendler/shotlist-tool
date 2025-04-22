@@ -16,11 +16,11 @@ export default function ShotTable({sceneId}: {sceneId: string}){
                     definition{id, name, position}
 
                     ... on ShotSingleSelectAttributeDTO{
-                        singleSelectValue{name}
+                        singleSelectValue{id,name}
                     }
 
                     ... on ShotMultiSelectAttributeDTO{
-                        multiSelectValue{name}
+                        multiSelectValue{id,name}
                     }
                     ... on ShotTextAttributeDTO{
                         textValue
