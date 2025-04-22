@@ -2,10 +2,7 @@
 
 import {AnyShotAttribute, AttributeValueCollection, SelectOption} from "@/util/Types"
 import React, {
-    ChangeEventHandler,
-    FormEventHandler,
     useCallback,
-    useDebugValue,
     useEffect,
     useMemo,
     useRef,
@@ -17,10 +14,9 @@ import './shotAttribute.scss'
 import AsyncCreatableSelect from "react-select/async-creatable"
 import {CustomSelectMenu} from "@/components/customSelectMenu/customSelectMenu"
 import {selectStyles, selectTheme} from "@/util/selectConfig"
-import {components, MultiValueProps, PlaceholderProps, ValueContainerProps} from "react-select"
+import {components, MultiValueProps, ValueContainerProps} from "react-select"
 import {useSelectRefresh} from "@/components/SelectRefreshContext"
-import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
-import {buildRetryFunction} from "@apollo/client/link/retry/retryFunction"
+import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 
 export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -116,7 +112,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             }
         ])
 
-        triggerRefresh(attribute.definition?.id);
+        triggerRefresh("shot", attribute.definition?.id);
     }
 
     const updateTextValue = () => {
@@ -151,7 +147,6 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
     }
 
     const updateAttributeValue = async (value: AttributeValueCollection) => {
-        console.log("updating attribute value", attribute.id, value)
         const {data, errors} = await client.mutate({
             mutation : gql`
                 mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
