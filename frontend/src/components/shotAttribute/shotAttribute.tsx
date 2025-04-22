@@ -1,7 +1,16 @@
 'use client'
 
 import {AnyShotAttribute, AttributeValueCollection, SelectOption} from "@/util/Types"
-import React, {ChangeEventHandler, FormEventHandler, useDebugValue, useEffect, useRef, useState} from "react"
+import React, {
+    ChangeEventHandler,
+    FormEventHandler,
+    useCallback,
+    useDebugValue,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
@@ -98,6 +107,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             label: data.createShotSelectAttributeOption.name,
             value: data.createShotSelectAttributeOption.id
         })
+        console.log(multiSelectValue)
         setMultiSelectValue([
             ...multiSelectValue || [],
             {
@@ -127,16 +137,16 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
 
         setTextValue(cleaned)
 
-        console.log("update text value")
-
-        debouncedUpdateTextAttributeValue()
+        debouncedUpdateAttributeValue({textValue: cleaned})
     }
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
+        setSingleSelectValue(value || undefined)
         updateAttributeValue({singleSelectValue: Number(value?.value)})
     }
 
     const updateMultiSelectValue = (value: SelectOption[] | null) => {
+        setMultiSelectValue(value || [])
         updateAttributeValue({multiSelectValue: value?.map((option) => Number(option.value))})
     }
 
@@ -162,38 +172,41 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
         }
     }
 
-    //TODO
-    const debouncedUpdateTextAttributeValue = wuGeneral.debounce(() => updateAttributeValue({textValue: textValue}), 1000);
-
-    const { ValueContainer, Placeholder } = components;
+    const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(updateAttributeValue), []);
 
     const CustomMultiValue = (
         props: MultiValueProps<SelectOption, true>
     ) => {
-        if (!props.selectProps.menuIsOpen) return null;
+        if (!props.selectProps.menuIsOpen) return <p style={{display: "inline"}}>{props.data.label}</p>;
         return <components.MultiValue {...props} />;
     };
 
-    const CustomValueContainer = (
+    const CustomValueContainer = useCallback((
         props: ValueContainerProps<SelectOption, true>
     ) => {
         const { children, innerProps, selectProps, getValue } = props;
-        const isOpen = selectProps.menuIsOpen;
-        const selected = getValue();
+        const selected = getValue()
+
+        let childrenArray = React.Children.toArray(children);
+        let options = childrenArray.slice(0, -1); // all selected items
+        let input = childrenArray.at(-1);
+
+        if(!selectProps.menuIsOpen && selected.length > 0) {
+            options = options.map((child, index) => {
+                if (index > 0 && index < selected.length) {
+                    return <div style={{display: "inline"}} key={index}><span>,</span> {child}</div>
+                }
+                return child
+            })
+        }
 
         return (
-            <ValueContainer {...props}>
-                <div style={{position: "absolute", width: "100%"}}>
-                    {!isOpen && selected.length > 0 && (
-                        <p style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
-                            {selected.map((o) => o.label).join(", ")}
-                        </p>
-                    )}
-                </div>
-                {children}
-            </ValueContainer>
+            <components.ValueContainer {...props}>
+                {options}
+                {input}
+            </components.ValueContainer>
         )
-    }
+    }, []);
 
     switch (attribute.__typename) {
         case "ShotSingleSelectAttributeDTO":
@@ -219,6 +232,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
             return (
                 <div className="shotAttribute">
                     <AsyncCreatableSelect
+                        key={`${attribute.definition?.id}-${refreshMap[attribute.definition?.id] || 0}`}
                         value={multiSelectValue}
                         onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
                         isMulti

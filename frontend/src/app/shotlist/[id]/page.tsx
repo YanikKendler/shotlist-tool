@@ -66,6 +66,8 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
     if(loading) return <div>loading..</div>
     if(error) return <div>error: {error.name}, message: {error.message}</div>
 
+    if(!data || !data.shotlist) return <div><p>Sorry, we could not find that Shotlist</p><Link href={`../dashboard`}>Back to Home</Link></div>
+
     if(selectedSceneId == "" && data.shotlist.scenes[0]?.id != undefined) setSelectedSceneId(data.shotlist.scenes[0].id)
 
     console.log(data)

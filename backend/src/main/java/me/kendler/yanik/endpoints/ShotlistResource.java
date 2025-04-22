@@ -28,7 +28,11 @@ public class ShotlistResource {
 
     @Query
     public ShotlistDTO getShotlist(UUID id) {
-        return shotlistRepository.findById(id).toDTO();
+        Shotlist shotlist = shotlistRepository.findById(id);
+        if (shotlist == null) {
+            return null;
+        }
+        return shotlist.toDTO();
     }
 
     @Mutation
