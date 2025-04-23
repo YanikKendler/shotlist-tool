@@ -20,7 +20,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
 
-    const textInputRef = useRef<HTMLParagraphElement>(null);
+    const textInputRef = useRef<HTMLParagraphElement | null>(null);
 
     const { refreshMap, triggerRefresh } = useSelectRefresh();
 
