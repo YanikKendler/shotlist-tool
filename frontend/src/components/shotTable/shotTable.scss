@@ -6,6 +6,7 @@
   --preview-cell-color: hsl(0, 0%, 50%);
 
   overflow-y: auto;
+  overflow-x: hidden;
   height: 100%;
   width: 100%;
   background-color: var(--contrast);
@@ -21,15 +22,6 @@
       padding-inline: .3rem;
       color: var(--preview-cell-color);
       cursor: text;
-    }
-  }
-
-  .scrollAreaRoot{
-
-
-    .scrollAreaViewport{
-      padding: 1.3rem;
-      height: 100%;
     }
   }
 }

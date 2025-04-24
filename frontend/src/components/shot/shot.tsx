@@ -9,8 +9,8 @@ import {GripVertical} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 
-export default function Shot({shot}: {shot: ShotDto}) {
-    //@ts-ignore
+export default function Shot({shot, dndTarget, position}: {shot: ShotDto, dndTarget: boolean, position: number}) {
+    // @ts-ignore
     const {
         attributes,
             listeners,
@@ -26,7 +26,7 @@ export default function Shot({shot}: {shot: ShotDto}) {
     };
 
     return (
-        <div className="shot" ref={setNodeRef}>
+        <div className={`shot ${dndTarget && "dndTarget"}`} ref={setNodeRef} style={style}>
             <div
                 className="grip"
                 ref={setActivatorNodeRef}
@@ -36,7 +36,7 @@ export default function Shot({shot}: {shot: ShotDto}) {
                 <GripVertical/>
             </div>
             <div className="shotAttribute number">
-                <p>{wuText.numberToLetter(shot.number)}</p>
+                <p>{wuText.numberToLetter(position)}</p>
             </div>
             {(shot.attributes as [AnyShotAttribute])?.map((attr) => (
                 <ShotAttribute attribute={attr} key={attr.id}></ShotAttribute>

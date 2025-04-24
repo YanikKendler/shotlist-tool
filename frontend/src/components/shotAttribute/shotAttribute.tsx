@@ -15,7 +15,7 @@ import {useSelectRefresh} from "@/components/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 import Select, {selectShotStyles} from "@/components/select/select"
 
-export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
+const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -61,6 +61,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
     }, [textValue]);
 
     const loadOptions = async (inputValue: string) => {
+        //TODO optimize this, especially when dragging, some sort of cashing is needed
         const { data } = await client.query({
             query: gql`
                 query search($definitionId: BigInteger!, $searchTerm: String!) {
@@ -215,4 +216,7 @@ export default function ShotAttribute({attribute}: {attribute: AnyShotAttribute}
                 </div>
             )
     }
-}
+})
+
+//TODO nvm this does not work, clears data after drag
+export default ShotAttribute;

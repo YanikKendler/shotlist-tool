@@ -25,7 +25,6 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
 
     useEffect(() => {
-        console.log("loading shots")
         loadShots()
     }, [])
 
@@ -39,6 +38,8 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
     const client = useApolloClient()
 
     const loadShots = async () => {
+        console.log("loading shots")
+
         const { data, errors, loading } = await client.query({
             query : gql`
                 query shots($sceneId: String!){
@@ -64,6 +65,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 }
             `,
             variables: { sceneId: sceneId },
+            fetchPolicy: "no-cache"
         })
 
         setShots({data: data.shots, loading: loading, error: errors})
@@ -106,12 +108,11 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
 
     function handleDragOver(event: any) {
         setOverId(event.over?.id ?? null);
+        console.log("dragover")
     }
 
     function handleDragEnd(event: any) {
         const {active, over} = event;
-
-        console.log("dragEnd", active, over)
 
         if (active.id !== over.id) {
             setShots((shots) => {
@@ -124,8 +125,6 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
             });
         }
 
-        console.log(shots)
-
         setActiveId(null);
         setOverId(null);
     }
@@ -134,22 +133,22 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
         <div className="shotTable" ref={shotTableElement}>
             <DndContext
                 sensors={sensors}
-                collisionDetection={rectIntersection}
+                collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
-                onDragOver={handleDragOver}
+                /*onDragOver={handleDragOver}*/
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
                     items={shots.data}
                     strategy={verticalListSortingStrategy}
                 >
-                    {shots.data.map((shot: any) => (
-                        <Shot shot={shot} key={shot.id}/>
+                    {shots.data.map((shot: any, index) => (
+                        <Shot shot={shot} key={shot.id} dndTarget={false} position={index}/>
                     ))}
                 </SortableContext>
-                <DragOverlay>
+                {/*<DragOverlay>
                     {activeId ? <p>hallo welt</p> : null}
-                </DragOverlay>
+                </DragOverlay>*/}
             </DndContext>
 
             <div className="shot new">
