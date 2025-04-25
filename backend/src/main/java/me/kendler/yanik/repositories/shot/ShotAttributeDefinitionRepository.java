@@ -61,7 +61,17 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
         }
-        attribute.update(editDTO);
+        if(editDTO.name() != null && !editDTO.name().isEmpty()) {
+            attribute.name = editDTO.name();
+        }
+        if(attribute.position != editDTO.position()){
+            Shotlist shotlist = getEntityManager()
+                                    .createQuery("select s from Shotlist s where :attribute in s.shotAttributeDefinitions", Shotlist.class)
+                                    .setParameter("attribute", attribute)
+                                    .getSingleResult();
+            shotlist.shotAttributeDefinitions.stream().filter(a -> a.position < attribute.position && a.position >= editDTO.position()).forEach(a -> a.position++);
+            shotlist.shotAttributeDefinitions.stream().filter(a -> a.position > attribute.position && a.position <= editDTO.position()).forEach(a -> a.position--);
+        }
         return attribute;
     }
 

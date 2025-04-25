@@ -28,7 +28,7 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
                 name
                 scenes{
                     id
-                    number
+                    position
                     attributes{
                         id
                         definition{id, name, position}
@@ -71,8 +71,6 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
 
     if(selectedSceneId == "" && data.shotlist.scenes[0]?.id != undefined) setSelectedSceneId(data.shotlist.scenes[0].id)
 
-    console.log(data)
-
     return (
         <main className="shotlist">
             <div className="sidebar">
@@ -96,9 +94,9 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
             </div>
             <div className="content">
                 <div className="header">
-                    <p>#</p>
+                    <div className="number"><p>#</p></div>
                     {data.shotlist.shotAttributeDefinitions.map((attr: any) => (
-                        <p key={attr.id}>{attr.name}</p>
+                        <div key={attr.id}><p>{attr.name}</p></div>
                     ))}
                 </div>
                 <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={data.shotlist.shotAttributeDefinitions}></ShotTable>

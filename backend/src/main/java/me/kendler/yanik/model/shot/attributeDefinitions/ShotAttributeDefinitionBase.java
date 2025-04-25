@@ -31,11 +31,6 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
         this.name = name;
     }
 
-    public void update(ShotAttributeDefinitionEditDTO editDTO){
-        this.name = editDTO.name();
-        this.position = editDTO.position();
-    }
-
     abstract public ShotAttributeBase createAttribute(Shot shot);
 
     @Override

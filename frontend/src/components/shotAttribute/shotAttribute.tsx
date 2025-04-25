@@ -14,6 +14,7 @@ import './shotAttribute.scss'
 import {useSelectRefresh} from "@/components/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 import Select, {selectShotStyles} from "@/components/select/select"
+import ShotService from "@/service/ShotService"
 
 const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -64,7 +65,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
         //TODO optimize this, especially when dragging, some sort of cashing is needed
         const { data } = await client.query({
             query: gql`
-                query search($definitionId: BigInteger!, $searchTerm: String!) {
+                query searchShotSelectAttributeOptions($definitionId: BigInteger!, $searchTerm: String!) {
                     searchShotSelectAttributeOptions(
                         searchDTO: { shotAttributeDefinitionId: $definitionId, searchTerm: $searchTerm }
                     ) {
@@ -86,7 +87,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
     const createOption = async (inputValue: string) => {
         const { data } = await client.mutate({
             mutation: gql`
-                mutation create($definitionId: BigInteger!, $name: String!) {
+                mutation createShotOption($definitionId: BigInteger!, $name: String!) {
                     createShotSelectAttributeOption(createDTO:{
                         selectAttributeId: $definitionId,
                         name: $name
@@ -126,44 +127,20 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
 
         setTextValue(cleaned)
 
-        debouncedUpdateAttributeValue({textValue: cleaned})
-
-        console.log("updated text value", cleaned)
+        debouncedUpdateAttributeValue(attribute.id, {textValue: cleaned})
     }
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
         setSingleSelectValue(value || undefined)
-        updateAttributeValue({singleSelectValue: Number(value?.value)})
+        ShotService.updateAttribute(attribute.id, {singleSelectValue: Number(value?.value)})
     }
 
     const updateMultiSelectValue = (value: SelectOption[] | null) => {
         setMultiSelectValue(value || [])
-        updateAttributeValue({multiSelectValue: value?.map((option) => Number(option.value))})
+        ShotService.updateAttribute(attribute.id, {multiSelectValue: value?.map((option) => Number(option.value))})
     }
 
-    const updateAttributeValue = async (value: ShotAttributeValueCollection) => {
-        console.log("updating attribute value", value)
-        const {data, errors} = await client.mutate({
-            mutation : gql`
-                mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
-                    updateShotAttribute(editDTO:{
-                        id: $id
-                        textValue: $textValue
-                        singleSelectValue: $singleSelectValue
-                        multiSelectValue: $multiSelectValue
-                    }){
-                        id
-                    }
-                }
-            `,
-            variables: {id: attribute.id, ...value},
-        });
-        if(errors) {
-            console.error(errors)
-        }
-    }
-
-    const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(updateAttributeValue), []);
+    const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(ShotService.updateAttribute), []);
 
     switch (attribute.__typename) {
         case "ShotSingleSelectAttributeDTO":
@@ -221,5 +198,4 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
     }
 })
 
-//TODO nvm this does not work, clears data after drag
 export default ShotAttribute;

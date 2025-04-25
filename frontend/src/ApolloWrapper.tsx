@@ -7,7 +7,7 @@ import {
     InMemoryCache,
 } from "@apollo/client-integration-nextjs";
 
-function makeClient() {
+export function makeClient() {
     const httpLink = new HttpLink({
         uri: "http://localhost:8080/graphql",
         fetchOptions: {
@@ -26,6 +26,8 @@ function makeClient() {
         link: httpLink,
     });
 }
+
+export const apolloClient = makeClient();
 
 // you need to create a component to wrap your app in
 export function ApolloWrapper({ children }: React.PropsWithChildren) {

@@ -1,10 +1,10 @@
 package me.kendler.yanik.repositories.shot;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import me.kendler.yanik.dto.shot.ShotEditDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.repositories.scene.SceneRepository;
@@ -21,6 +21,19 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
         Scene scene = sceneRepository.findById(sceneId);
         Shot shot = new Shot(scene);
         persist(shot);
+        return shot;
+    }
+
+    public Shot update(ShotEditDTO editDTO) {
+        Shot shot = findById(editDTO.id());
+
+        if(shot.position != editDTO.position()){
+            shot.scene.shots.stream().filter(s -> s.position < shot.position && s.position >= editDTO.position()).forEach(a -> a.position++);
+            shot.scene.shots.stream().filter(s -> s.position > shot.position && s.position <= editDTO.position()).forEach(a -> a.position--);
+        }
+
+        shot.position = editDTO.position();
+
         return shot;
     }
 

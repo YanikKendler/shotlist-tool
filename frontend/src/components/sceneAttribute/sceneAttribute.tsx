@@ -69,7 +69,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
     const loadOptions = async (inputValue: string) => {
         const { data } = await client.query({
             query: gql`
-                query search($definitionId: BigInteger!, $searchTerm: String!) {
+                query searchSceneSelectAttributeOptions($definitionId: BigInteger!, $searchTerm: String!) {
                     searchSceneSelectAttributeOptions(
                         searchDTO: { sceneAttributeDefinitionId: $definitionId, searchTerm: $searchTerm }
                     ) {
@@ -91,7 +91,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
     const createOption = async (inputValue: string) => {
         const { data } = await client.mutate({
             mutation: gql`
-                mutation create($definitionId: BigInteger!, $name: String!) {
+                mutation createSceneOption($definitionId: BigInteger!, $name: String!) {
                     createSceneSelectAttributeOption(createDTO:{
                         selectAttributeId: $definitionId,
                         name: $name

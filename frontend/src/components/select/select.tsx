@@ -197,6 +197,7 @@ export default function Select(
             components={getComponents(isMulti)}
             theme={selectTheme}
             styles={styles}
+            menuPlacement="auto"
         />
     );
 }

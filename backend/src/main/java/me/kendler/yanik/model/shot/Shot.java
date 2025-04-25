@@ -5,12 +5,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.shot.ShotDTO;
 import me.kendler.yanik.model.scene.Scene;
-import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 
@@ -24,7 +22,7 @@ public class Shot extends PanacheEntityBase {
     public Scene scene;
     @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotAttributeBase> attributes = new HashSet<>();
-    public int number;
+    public int position;
     public boolean isSubshot;
     public LocalDateTime createdAt;
 
@@ -34,7 +32,7 @@ public class Shot extends PanacheEntityBase {
 
     public Shot(Scene scene) {
         this.scene = scene;
-        this.number = scene.shots.size();
+        this.position = scene.shots.size();
         scene.shots.add(this);
         for(ShotAttributeDefinitionBase attributeDefinition : scene.shotlist.shotAttributeDefinitions) {
             ShotAttributeBase attribute = attributeDefinition.createAttribute(this);
@@ -51,7 +49,7 @@ public class Shot extends PanacheEntityBase {
                     .sorted(Comparator.comparingInt(attr -> attr.definition.position))
                     .map(ShotAttributeBase::toDTO)
                     .collect(Collectors.toList()),
-            this.number,
+            this.position,
             this.isSubshot,
             this.createdAt
         );

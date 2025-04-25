@@ -81,7 +81,7 @@ public class Shotlist extends PanacheEntityBase {
             this.owner,
             this.template,
             this.scenes.stream()
-                    .sorted(Comparator.comparingInt(scene -> scene.number))
+                    .sorted(Comparator.comparingInt(scene -> scene.position))
                     .map(Scene::toDTO)
                     .collect(Collectors.toList()),
             this.sceneAttributeDefinitions.stream()

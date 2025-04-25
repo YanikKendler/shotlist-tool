@@ -28,7 +28,7 @@ export default function Scene({scene, expanded, onSelect}: {scene: SceneDto, exp
     return (
         <div className={`sidebarScene ${expanded ? 'expanded' : ''}`} onClick={() => {onSelect(scene.id as string)}}>
             <div className="name">
-                <p className="number">{scene.number+1}</p>
+                <p className="number">{scene.position+1}</p>
                 <p className="text">{scene.attributes?.map(attr => SceneAttributeParser.toValueString(attr as any)).join(" • ")}</p>
             </div>
 

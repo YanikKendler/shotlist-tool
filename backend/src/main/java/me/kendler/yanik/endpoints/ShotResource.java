@@ -30,7 +30,7 @@ public class ShotResource {
 
     @Query
     public List<ShotDTO> getShots(UUID sceneId) {
-        return shotRepository.list("scene.id = ?1 order by number", sceneId).stream().map(Shot::toDTO).toList();
+        return shotRepository.list("scene.id = ?1 order by position", sceneId).stream().map(Shot::toDTO).toList();
     }
 
     @Mutation
@@ -41,6 +41,11 @@ public class ShotResource {
     @Mutation
     public ShotDTO deleteShot(@PathParam("id") UUID id) {
         return shotRepository.delete(id).toDTO();
+    }
+
+    @Mutation
+    public ShotDTO updateShot(ShotEditDTO editDTO) {
+        return shotRepository.update(editDTO).toDTO();
     }
 
     /*
@@ -66,7 +71,7 @@ public class ShotResource {
     }
 
     @Mutation
-    public ShotAttributeDefinitionBase updateSceneAttributeDefinition(ShotAttributeDefinitionEditDTO editDTO) {
+    public ShotAttributeDefinitionBase updateShotAttributeDefinition(ShotAttributeDefinitionEditDTO editDTO) {
         return shotAttributeDefinitionRepository.update(editDTO);
     }
 

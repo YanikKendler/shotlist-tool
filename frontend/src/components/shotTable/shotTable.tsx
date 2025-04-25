@@ -17,12 +17,15 @@ import {
     useSensors
 } from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
+import {ShotAttributeValueCollection} from "@/util/Types"
+import ShotService from "@/service/ShotService"
+import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 
 export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}) {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
     const [activeId, setActiveId] = useState(null);
-    const [overId, setOverId] = useState(null);
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
+    const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
 
     useEffect(() => {
         loadShots()
@@ -35,6 +38,18 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
         })
     );
 
+    useEffect(() => {
+        if(focusAttributeAt < 0) return
+
+        if(shotTableElement.current && shotTableElement.current instanceof HTMLElement) {
+            let allShots = shotTableElement.current.querySelectorAll(".shot:not(.new)").values().toArray()
+            let newShotElement = allShots.at(-1) as HTMLElement
+            let attributeElement = newShotElement?.querySelectorAll(".shotAttribute").values().toArray().at(focusAttributeAt) as HTMLElement
+            attributeElement.querySelector("input")?.focus()
+            attributeElement.querySelector("p")?.focus()
+        }
+    }, [shots]);
+
     const client = useApolloClient()
 
     const loadShots = async () => {
@@ -45,7 +60,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 query shots($sceneId: String!){
                     shots(sceneId: $sceneId){
                         id
-                        number
+                        position
                         attributes{
                             id
                             definition{id, name, position}
@@ -68,13 +83,15 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
             fetchPolicy: "no-cache"
         })
 
+        console.log(data.shots)
+
         setShots({data: data.shots, loading: loading, error: errors})
     }
 
     const createShot = async (attributePosition: number) => {
         const { data, errors } = await client.mutate({
             mutation: gql`
-                mutation create($sceneId: String!) {
+                mutation createShot($sceneId: String!) {
                     createShot(sceneId: $sceneId){
                         id
                     }
@@ -88,10 +105,9 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
             return;
         }
 
-        await loadShots()
+        setFocusAttributeAt(attributePosition+1)
 
-        if(shotTableElement.current && shotTableElement.current instanceof HTMLElement)
-            console.log(shotTableElement.current.querySelectorAll(".shot:not(.new)").values().toArray().at(-1))
+        loadShots()
     }
 
     if(shots.error) return <div>loading..</div>
@@ -106,11 +122,6 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
         setActiveId(active.id);
     }
 
-    function handleDragOver(event: any) {
-        setOverId(event.over?.id ?? null);
-        console.log("dragover")
-    }
-
     function handleDragEnd(event: any) {
         const {active, over} = event;
 
@@ -119,14 +130,16 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 const oldIndex = shots.data.findIndex((shot) => shot.id === active.id);
                 const newIndex = shots.data.findIndex((shot) => shot.id === over.id);
 
-                console.log(oldIndex, newIndex)
+                ShotService.updateShot(active.id, newIndex).then(response => {
+                    if(response.errors) console.error(response.errors)
+                    console.log(response.data)
+                })
 
                 return {data: arrayMove(shots.data, oldIndex, newIndex), error: shots.error, loading: shots.loading};
             });
         }
 
         setActiveId(null);
-        setOverId(null);
     }
 
     return (
@@ -135,7 +148,6 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragStart={handleDragStart}
-                /*onDragOver={handleDragOver}*/
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext

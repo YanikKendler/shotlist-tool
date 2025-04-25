@@ -70,7 +70,17 @@ main.shotlist{
 
     .header{
       display: flex;
-      gap: 1rem;
+      padding-inline: 1.5rem 2.5rem;
+
+      div{
+        width: 100%;
+        padding: .5rem .3rem;
+
+        &.number{
+          width: 5ch;
+          flex-shrink: 0;
+        }
+      }
     }
   }
 }

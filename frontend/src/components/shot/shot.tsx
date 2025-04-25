@@ -11,19 +11,20 @@ import {CSS} from '@dnd-kit/utilities';
 
 export default function Shot({shot, dndTarget, position}: {shot: ShotDto, dndTarget: boolean, position: number}) {
     // @ts-ignore
-    const {
-        attributes,
-            listeners,
-            setNodeRef,
-            setActivatorNodeRef,
-            transform,
-            transition,
-    } = useSortable({id: shot.id});
+    const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: shot.id});
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
+
+    const numberToShotLetter = (number: number) => {
+        let result = wuText.numberToLetter(number)
+        for (let i = 0; i < Math.floor(number / 26); i++) {
+            result += wuText.numberToLetter(number)
+        }
+        return result;
+    }
 
     return (
         <div className={`shot ${dndTarget && "dndTarget"}`} ref={setNodeRef} style={style}>
@@ -36,7 +37,7 @@ export default function Shot({shot, dndTarget, position}: {shot: ShotDto, dndTar
                 <GripVertical/>
             </div>
             <div className="shotAttribute number">
-                <p>{wuText.numberToLetter(position)}</p>
+                <p>{numberToShotLetter(position)}</p>
             </div>
             {(shot.attributes as [AnyShotAttribute])?.map((attr) => (
                 <ShotAttribute attribute={attr} key={attr.id}></ShotAttribute>
