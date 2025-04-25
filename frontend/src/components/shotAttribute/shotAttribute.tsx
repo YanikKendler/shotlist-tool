@@ -49,10 +49,10 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
                 ))
                 break
             case "ShotTextAttributeDTO":
-                setTextValue(attribute.textValue || "")
+                if(textValue == "") setTextValue(attribute.textValue || "")
                 break
         }
-    }, [attribute]);
+    }, []);
 
     useEffect(() => {
         if (textInputRef.current && textInputRef.current.textContent !== textValue) {
@@ -127,6 +127,8 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
         setTextValue(cleaned)
 
         debouncedUpdateAttributeValue({textValue: cleaned})
+
+        console.log("updated text value", cleaned)
     }
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
@@ -140,6 +142,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
     }
 
     const updateAttributeValue = async (value: ShotAttributeValueCollection) => {
+        console.log("updating attribute value", value)
         const {data, errors} = await client.mutate({
             mutation : gql`
                 mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
