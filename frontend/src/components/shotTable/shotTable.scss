@@ -24,4 +24,10 @@
       cursor: text;
     }
   }
+
+  p.error{
+    color: var(--text-30);
+    text-align: center;
+    margin-top: 2rem;
+  }
 }

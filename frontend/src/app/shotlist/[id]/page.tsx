@@ -1,19 +1,22 @@
 'use client'
 
 import gql from "graphql-tag"
-import React, {use, useState} from "react"
-import {useQuery} from "@apollo/client"
+import React, {use, useEffect, useState} from "react"
+import {useApolloClient, useQuery} from "@apollo/client"
 import {SceneAttributeParser} from "@/util/AttributeParser"
 import Scene from "@/components/scene/scene"
-import {SceneDto} from "../../../../lib/graphql/generated"
+import {SceneDto, ShotAttributeDefinitionBase, ShotlistDto} from "../../../../lib/graphql/generated"
 import {useSearchParams} from "next/navigation"
 import ShotTable from "@/components/shotTable/shotTable"
-import {House, Plus} from "lucide-react"
+import {FileSliders, House, Plus} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
 import { ScrollArea } from "radix-ui"
+import {query} from "@/ApolloClient"
 
-export default function Shotlist({params,}: { params: Promise<{ id: string }> }) {
+export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
+    const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
+
     const { id } = use(params)
 
     const searchParams = useSearchParams()
@@ -21,55 +24,129 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
 
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
 
-    const { loading, error, data } = useQuery(gql`
-        query shotlist($id: String!){
-            shotlist(id: $id){
-                id
-                name
-                scenes{
-                    id
-                    position
-                    attributes{
+    const client = useApolloClient()
+
+    useEffect(() => {
+        loadShotlist()
+    }, [id])
+
+    const loadShotlist = async () => {
+        const { data, errors, loading } = await client.query({query: gql`
+                query shotlist($id: String!){
+                    shotlist(id: $id){
                         id
-                        definition{id, name, position}
+                        name
+                        scenes{
+                            id
+                            position
+                            attributes{
+                                id
+                                definition{id, name, position}
 
-                        ... on SceneSingleSelectAttributeDTO{
-                            singleSelectValue{id,name}
-                        }
+                                ... on SceneSingleSelectAttributeDTO{
+                                    singleSelectValue{id,name}
+                                }
 
-                        ... on SceneMultiSelectAttributeDTO{
-                            multiSelectValue{id,name}
+                                ... on SceneMultiSelectAttributeDTO{
+                                    multiSelectValue{id,name}
+                                }
+                                ... on SceneTextAttributeDTO{
+                                    textValue
+                                }
+                            }
                         }
-                        ... on SceneTextAttributeDTO{
-                            textValue
+                        sceneAttributeDefinitions{
+                            id
+                            name
+                            position
+                        }
+                        shotAttributeDefinitions{
+                            id
+                            name
+                            position
                         }
                     }
-                }
-                sceneAttributeDefinitions{
-                    id
-                    name
-                    position
-                }
-                shotAttributeDefinitions{
-                    id
-                    name
-                    position
-                }
-            }
-        }`,
-        { variables: {id: id} }
-    )
+                }`, variables: {id: id}})
+
+        setShotlist({data: data.shotlist, loading: loading, error: errors})
+    }
 
     const selectScene = (sceneId: string) => {
         setSelectedSceneId(sceneId)
     }
 
-    if(loading) return <div>loading..</div>
-    if(error) return <div>error: {error.name}, message: {error.message}</div>
+    const removeScene = (sceneId: string) => {
+        if(!shotlist.data.scenes) return
 
-    if(!data || !data.shotlist) return <div><p>Sorry, we could not find that Shotlist</p><Link href={`../dashboard`}>Back to Home</Link></div>
+        let currentScenes = shotlist.data.scenes as SceneDto[]
+        let newScenes: SceneDto[] = currentScenes.filter((scene: SceneDto) => scene.id != sceneId)
 
-    if(selectedSceneId == "" && data.shotlist.scenes[0]?.id != undefined) setSelectedSceneId(data.shotlist.scenes[0].id)
+        setShotlist({
+            ...shotlist,
+            data: {
+                ...shotlist.data,
+                scenes: newScenes
+            }
+        })
+
+        setSelectedSceneId("")
+    }
+
+    const createScene = async () => {
+        const { data, errors } = await client.mutate({
+            mutation: gql`
+                mutation createScene($shotlistId: String!) {
+                    createScene(shotlistId: $shotlistId){
+                        id
+                        position
+                        attributes{
+                            id
+                            definition{id, name, position}
+
+                            ... on SceneSingleSelectAttributeDTO{
+                                singleSelectValue{id,name}
+                            }
+
+                            ... on SceneMultiSelectAttributeDTO{
+                                multiSelectValue{id,name}
+                            }
+                            ... on SceneTextAttributeDTO{
+                                textValue
+                            }
+                        }
+                    }
+                }
+            `,
+            variables: { shotlistId: id },
+        });
+
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        let currentScenes = shotlist.data.scenes as SceneDto[]
+        let newScenes: SceneDto[] = []
+        if(currentScenes) newScenes = [...currentScenes]
+        newScenes.push(data.createScene)
+
+        setShotlist({
+            ...shotlist,
+            data: {
+                ...shotlist.data,
+                scenes: newScenes
+            }
+        })
+
+        setSelectedSceneId(data.createScene.id)
+    }
+
+    if(shotlist.loading) return <div>loading..</div>
+    if(shotlist.error) return <div>error: {shotlist.error.name}, message: {shotlist.error.message}</div>
+
+    if(!shotlist.data) return <div><p>Sorry, we could not find that Shotlist</p><Link href={`../dashboard`}>Back to Home</Link></div>
+
+    if(selectedSceneId == "" && shotlist?.data?.scenes && shotlist.data.scenes[0]?.id != undefined) setSelectedSceneId(shotlist?.data?.scenes[0].id)
 
     return (
         <main className="shotlist">
@@ -78,28 +155,30 @@ export default function Shotlist({params,}: { params: Promise<{ id: string }> })
                     <div className="top">
                         <Link href={`../dashboard`}><House strokeWidth={2.5}/></Link>
                         <p>/</p>
-                        <input type="text" defaultValue={data.shotlist.name}/>
+                        <input type="text" defaultValue={shotlist.data.name || ""}/>
                     </div>
                     <div className="scenes">
-                        {data.shotlist.scenes.map((scene: SceneDto) => (
-                            <Scene key={scene.id} scene={scene} expanded={selectedSceneId == scene.id} onSelect={selectScene}/>
+                        {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
+                            <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
                         ))}
-                        <button>New scene <Plus></Plus></button>
-                    </div>
-                    <div className="bottom">
-
+                        <button className={"create"} onClick={createScene}>New scene <Plus/></button>
+                        <div className="bottom">
+                            <button>Shotlist Options <FileSliders size={20}/></button>
+                        </div>
                     </div>
                 </div>
-                <div className="bottom"></div>
+                <div className="bottom">
+                    <Link className="shotlistTool" href={"../dashboard"}>shotlist.tools</Link>
+                </div>
             </div>
             <div className="content">
                 <div className="header">
                     <div className="number"><p>#</p></div>
-                    {data.shotlist.shotAttributeDefinitions.map((attr: any) => (
+                    {(shotlist.data?.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
                         <div key={attr.id}><p>{attr.name}</p></div>
                     ))}
                 </div>
-                <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={data.shotlist.shotAttributeDefinitions}></ShotTable>
+                <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
             </div>
         </main>
     )

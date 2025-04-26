@@ -6,10 +6,17 @@
   --accent-90: hsl(19, 81%, 86%);
   --accent-95: hsl(19, 81%, 92%);
 
-  --text: hsl(0, 0%, 0%);
-  --contrast: hsl(0, 0%, 100%);
+  --bad: hsl(0, 70%, 60%);
 
+  --text: hsl(0, 0%, 0%);
+  --text-10: hsl(0, 0%, 10%);
+  --text-20: hsl(0, 0%, 20%);
+  --text-30: hsl(0, 0%, 30%);
+  --text-40: hsl(0, 0%, 40%);
+
+  --contrast: hsl(0, 0%, 100%);
   --hover-bg-10: hsla(0, 0%, 50%, 10%);
+  --hover-bg-bad-10: hsla(0, 70%, 60%, 10%);
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -81,6 +88,7 @@ button, a{
   padding: .5rem;
   transition: color .15s ease-in-out, background-color .15s ease-in-out;
   cursor: pointer;
+  gap: .5rem;
 
   &:focus-visible{
 
@@ -88,6 +96,11 @@ button, a{
 
   &:active{
     transform: translate(0, 1px) scale(0.995);
+  }
+
+  &.bad:hover{
+    background-color: var(--hover-bg-bad-10);
+    color: var(--bad);
   }
 }
 

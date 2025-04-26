@@ -1,6 +1,8 @@
 main.shotlist{
   --sidebar-bg: hsl(20, 29%, 94%);
   --home-button-bg: hsl(14, 21%, 88%);
+  --bottom-button-bg: hsl(12, 9%, 88%);
+  --bottom-button-border: hsl(0, 0%, 64%);
   --link-seperator-color: hsl(0, 0%, 34.5%);
   --scene-create-color: hsl(0, 0%, 42%);
 
@@ -12,12 +14,16 @@ main.shotlist{
   .sidebar{
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     .content{
       display: flex;
       flex-direction: column;
       padding: .2rem .5rem;
       gap: .5rem;
+      height: 100%;
+      overflow-x: hidden;
+      position: relative;
 
       .top{
         display: flex;
@@ -51,15 +57,46 @@ main.shotlist{
         display: flex;
         flex-direction: column;
         gap: .2rem;
+        padding-bottom: 3rem;
+        overflow-y: auto;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
 
-        button{
+        &::-webkit-scrollbar {
+          display: none; /*Chrome, Safari and Opera */
+        }
+
+        button.create{
           color: var(--scene-create-color);
 
           &:hover{
             background-color: var(--hover-bg-10);
           }
         }
+
+        .bottom{
+          position: absolute;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: .3rem;
+          left: .5rem;
+          right: .5rem;
+
+          button{
+            background-color: var(--bottom-button-bg);
+            border: 1px solid var(--bottom-button-border);
+            width: 100%;
+          }
+        }
       }
+    }
+
+    >.bottom{
+      margin-top: auto;
+      height: fit-content;
+      background-color: var(--bottom-button-bg);
+      border-top: 1px solid var(--bottom-button-border);
     }
   }
 
@@ -75,10 +112,14 @@ main.shotlist{
       div{
         width: 100%;
         padding: .5rem .3rem;
+        font-weight: bold;
+        font-size: .95rem;
 
         &.number{
           width: 5ch;
           flex-shrink: 0;
+          text-align: center;
+          color: var(--text-40);
         }
       }
     }

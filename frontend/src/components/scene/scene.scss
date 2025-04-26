@@ -1,6 +1,7 @@
 
 .sidebarScene{
   --scene-hover-border: hsla(18, 58%, 71%, 1);
+  --delete-scene-color: hsl(0,0%,60%);
 
   display: flex;
   flex-direction: column;
@@ -45,5 +46,23 @@
     max-height: 0px;
     overflow: hidden;
     transition: max-height .5s .2s ease-out;
+  }
+
+  button.delete{
+    width: 100%;
+    justify-content: center;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--delete-scene-color);
+    padding: 0.4rem 0.5rem;
+    margin-top: .3rem;
+
+    svg{
+      translate: 0 -1px;
+    }
+
+    &:hover{
+      background-color: var(--hover-bg-10);
+    }
   }
 }

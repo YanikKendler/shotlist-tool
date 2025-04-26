@@ -31,6 +31,9 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
         Scene scene = findById(id);
         if (scene != null) {
             delete(scene);
+
+            scene.shotlist.scenes.stream().filter(s -> s.position > scene.position).forEach(s -> s.position--);
+
             return scene;
         }
         return null;

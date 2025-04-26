@@ -17,9 +17,7 @@ import {
     useSensors
 } from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
-import {ShotAttributeValueCollection} from "@/util/Types"
 import ShotService from "@/service/ShotService"
-import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 
 export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}) {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
@@ -27,9 +25,12 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
     const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
 
+    const client = useApolloClient()
+
     useEffect(() => {
-        loadShots()
-    }, [])
+        if(sceneId != "")
+            loadShots()
+    }, [sceneId]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -48,13 +49,11 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
             attributeElement.querySelector("input")?.focus()
             attributeElement.querySelector("p")?.focus()
         }
+
+        setFocusAttributeAt(-1)
     }, [shots]);
 
-    const client = useApolloClient()
-
     const loadShots = async () => {
-        console.log("loading shots")
-
         const { data, errors, loading } = await client.query({
             query : gql`
                 query shots($sceneId: String!){
@@ -80,7 +79,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 }
             `,
             variables: { sceneId: sceneId },
-            fetchPolicy: "no-cache"
+            fetchPolicy: "no-cache",
         })
 
         console.log(data.shots)
@@ -94,6 +93,22 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 mutation createShot($sceneId: String!) {
                     createShot(sceneId: $sceneId){
                         id
+                        position
+                        attributes{
+                            id
+                            definition{id, name, position}
+
+                            ... on ShotSingleSelectAttributeDTO{
+                                singleSelectValue{id,name}
+                            }
+
+                            ... on ShotMultiSelectAttributeDTO{
+                                multiSelectValue{id,name}
+                            }
+                            ... on ShotTextAttributeDTO{
+                                textValue
+                            }
+                        }
                     }
                 }
             `,
@@ -107,13 +122,14 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
 
         setFocusAttributeAt(attributePosition+1)
 
-        loadShots()
+        setShots({data: [...shots.data, data.createShot], error: shots.error, loading: shots.loading})
     }
 
-    if(shots.error) return <div>loading..</div>
-    if(shots.error) {
+    if(!sceneId || sceneId == "") return <div className="shotTable"><p className={"error"}>No Scene selected</p></div>
+    if(shots.loading) return <div className="shotTable"><p className={"error"}>loading...</p></div>
+    if (shots.error) {
         console.error(shots.error)
-        return <div>shotTable error: {shots.error.name}, message: {shots.error.message}</div>
+        return <div className="shotTable"><p className={"error"}>shotTable error: {shots.error.name}, message: {shots.error.message}</p></div>
     }
 
     function handleDragStart(event: any) {

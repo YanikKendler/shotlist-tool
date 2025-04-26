@@ -21,9 +21,9 @@ public class Scene extends PanacheEntityBase {
     @ManyToOne
     @JsonIgnore
     public Shotlist shotlist;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     public Set<SceneAttributeBase> attributes = new HashSet<>();
-    @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "scene", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     public Set<Shot> shots = new HashSet<>();
     public int position;
     public LocalDateTime createdAt;

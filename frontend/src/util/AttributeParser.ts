@@ -12,6 +12,18 @@ export abstract class SceneAttributeParser {
         }
         return ""
     }
+
+    static isEmpty(attribute: AnySceneAttribute): boolean{
+        switch (attribute.__typename) {
+            case "SceneTextAttributeDTO":
+                return attribute.textValue === ""
+            case "SceneSingleSelectAttributeDTO":
+                return attribute.singleSelectValue === null
+            case "SceneMultiSelectAttributeDTO":
+                return !attribute.multiSelectValue || attribute.multiSelectValue.length === 0
+        }
+        return true
+    }
 }
 
 export abstract class ShotAttributeDefinitionParser {
