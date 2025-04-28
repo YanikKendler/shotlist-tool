@@ -11,7 +11,7 @@ import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
 import {Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
-import {useConfirmDialog} from "@/components/confirmDialog/confirmDialoge"
+import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
 
 export default function Scene({scene, position, expanded, onSelect, onDelete}: {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void}) {
     const [overflowVisible, setOverflowVisible] = useState(false);

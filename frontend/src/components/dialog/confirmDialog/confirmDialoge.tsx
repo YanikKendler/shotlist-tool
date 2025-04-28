@@ -44,8 +44,8 @@ export function useConfirmDialog() {
     const ConfirmDialog = (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
             <Dialog.Portal>
-                <Dialog.Overlay className={"confirmDialogOverlay"}/>
-                <Dialog.Content aria-describedby={"confirm action dialog"} className={"confirmDialogContent"}>
+                <Dialog.Overlay className={"confirmDialogOverlay dialogOverlay"}/>
+                <Dialog.Content aria-describedby={"confirm action dialog"} className={"confirmDialogContent dialogContent"}>
                     <Dialog.Title className={"title"}>{settings?.title || "Are you sure?"}</Dialog.Title>
                     <p className={"description"}>{settings.message}</p>
                     <div className={"buttons"}>

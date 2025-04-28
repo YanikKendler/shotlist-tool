@@ -198,6 +198,9 @@ export default function Select(
             theme={selectTheme}
             styles={styles}
             menuPlacement="auto"
+/*
+            menuIsOpen={true}
+*/
         />
     );
 }

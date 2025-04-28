@@ -1,6 +1,6 @@
 
 .sidebarScene{
-  --scene-hover-border: hsla(18, 58%, 71%, 1);
+  --scene-hover-border: #E0A389;
   --delete-scene-color: hsl(0,0%,60%);
 
   display: flex;
@@ -13,8 +13,11 @@
 
   &:not(.expanded):hover{
     border-color: var(--scene-hover-border);
-    color: var(--accent);
     cursor: pointer;
+
+    .name{
+      color: var(--accent);
+    }
   }
 
   &.expanded{
@@ -33,6 +36,7 @@
     display: flex;
     gap: .5rem;
     color: var(--text);
+    transition: name .2s;
 
     .number{
       font-weight: 700;

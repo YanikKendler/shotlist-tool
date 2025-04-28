@@ -1,4 +1,8 @@
 :root {
+  --accent-20: hsl(18, 100%, 20%);
+  --accent-30: hsl(18, 100%, 30%);
+  --accent-40: hsl(18, 100%, 40%);
+  --accent-44: hsl(18, 100%, 44%);
   --accent: hsl(18, 100%, 47%);
   --accent-60: hsl(18, 100%, 60%);
   --accent-70: hsl(18, 100%, 70%);
@@ -16,6 +20,8 @@
 
   --contrast: hsl(0, 0%, 100%);
   --hover-bg-10: hsla(0, 0%, 50%, 10%);
+  --hover-bg-20: hsla(0, 0%, 50%, 20%);
+  --hover-bg-30: hsla(0, 0%, 50%, 30%);
   --hover-bg-bad-10: hsla(0, 70%, 60%, 10%);
 }
 
@@ -131,5 +137,49 @@ button, a{
   }
   to {
     height: 0;
+  }
+}
+
+// Style radix dialog
+
+.dialogOverlay{
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialogContent{
+  background-color: var(--contrast);
+  border-radius: .5rem;
+  padding: 1rem;
+  width: 90%;
+  max-width: 400px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
 }

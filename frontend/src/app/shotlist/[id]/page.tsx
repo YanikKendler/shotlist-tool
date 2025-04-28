@@ -13,18 +13,20 @@ import Link from "next/link"
 import './shotlist.scss'
 import { ScrollArea } from "radix-ui"
 import {query} from "@/ApolloClient"
+import useShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
-    const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
-
     const { id } = use(params)
 
     const searchParams = useSearchParams()
     const sceneId = searchParams.get('sceneId')
 
+    const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
 
     const client = useApolloClient()
+
+    const {openShotlistOptionsDialog, ShotlistOptionsDialog} = useShotlistOptionsDialog()
 
     useEffect(() => {
         loadShotlist()
@@ -153,7 +155,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
             <div className="sidebar">
                 <div className="content">
                     <div className="top">
-                        <Link href={`../dashboard`}><House strokeWidth={2.5}/></Link>
+                        <Link href={`../dashboard`}><House strokeWidth={2.5} size={20}/></Link>
                         <p>/</p>
                         <input type="text" defaultValue={shotlist.data.name || ""}/>
                     </div>
@@ -163,7 +165,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                         ))}
                         <button className={"create"} onClick={createScene}>New scene <Plus/></button>
                         <div className="bottom">
-                            <button>Shotlist Options <FileSliders size={20}/></button>
+                            <button onClick={openShotlistOptionsDialog}>Shotlist Options <FileSliders size={18}/></button>
                         </div>
                     </div>
                 </div>
@@ -180,6 +182,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                 </div>
                 <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
             </div>
+            {ShotlistOptionsDialog}
         </main>
     )
 }

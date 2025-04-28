@@ -1,22 +1,4 @@
-.confirmDialogOverlay{
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-}
-
 .confirmDialogContent{
-  background-color: var(--contrast);
-  border-radius: .5rem;
-  padding: 1rem;
-  width: 90%;
-  max-width: 400px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1001;
-
   .title{
     font-size: 1.5rem;
     font-weight: 600;

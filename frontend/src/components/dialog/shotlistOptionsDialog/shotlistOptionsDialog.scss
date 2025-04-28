@@ -1,0 +1,23 @@
+.shotlistOptionsDialogContent{
+  --close-button-bg: hsl(0, 0%, 93%);
+
+  max-width: 800px;
+  height: 50%;
+  max-height: 500px;
+
+  > .content{
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .closeButton{
+      position: absolute;
+      top: 0rem;
+      right: 0rem;
+      padding: .2rem;
+      background-color: var(--close-button-bg);
+      border-radius: 1rem;
+    }
+  }
+}
+
