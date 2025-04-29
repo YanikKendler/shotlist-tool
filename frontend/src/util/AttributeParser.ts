@@ -1,4 +1,6 @@
-import {AnySceneAttribute} from "@/util/Types"
+import {AnySceneAttribute, AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
+import {ChevronDown, List, Type} from "lucide-react"
+import {JSX} from "react"
 
 export abstract class SceneAttributeParser {
     static toValueString(attribute: AnySceneAttribute): string{
@@ -27,5 +29,31 @@ export abstract class SceneAttributeParser {
 }
 
 export abstract class ShotAttributeDefinitionParser {
+    static toIcon(attribute: AnyShotAttributeDefinition){
+        switch (attribute.__typename) {
+            case "ShotTextAttributeDefinitionDTO":
+                return Type
+            case "ShotSingleSelectAttributeDefinitionDTO":
+                return ChevronDown
+            case "ShotMultiSelectAttributeDefinitionDTO":
+                return List
+            default:
+                return Type
+        }
+    }
+}
 
+export abstract class SceneAttributeDefinitionParser {
+    static toIcon(attribute: AnySceneAttributeDefinition){
+        switch (attribute.__typename) {
+            case "SceneTextAttributeDefinitionDTO":
+                return Type
+            case "SceneSingleSelectAttributeDefinitionDTO":
+                return ChevronDown
+            case "SceneMultiSelectAttributeDefinitionDTO":
+                return List
+            default:
+                return Type
+        }
+    }
 }

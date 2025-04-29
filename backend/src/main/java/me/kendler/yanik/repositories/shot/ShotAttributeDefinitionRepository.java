@@ -7,19 +7,60 @@ import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
 import me.kendler.yanik.dto.shot.ShotAttributeDefinitionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotMultiSelectAttributeDefinitionDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotSingleSelectAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
-import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinition;
+import me.kendler.yanik.model.shot.attributeDefinitions.*;
+import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
+import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
+import me.kendler.yanik.model.shot.attributes.ShotTextAttribute;
 import me.kendler.yanik.repositories.ShotlistRepository;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Transactional
 public class ShotAttributeDefinitionRepository implements PanacheRepository<ShotAttributeDefinitionBase> {
     @Inject
     ShotlistRepository shotlistRepository;
+
+
+    public List<ShotAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
+        Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlistRepository.findById(shotlistId).shotAttributeDefinitions;
+
+        List<ShotSelectAttributeOptionDefinition> options = ShotSelectAttributeOptionDefinition.find("shotAttributeDefinition in ?1", attributeDefinitions).list();
+
+        List<ShotAttributeDefinitionBaseDTO> attributeDefinitionDTOs = new ArrayList<>();
+
+        attributeDefinitions.forEach(definition -> {
+            switch (definition) {
+                case ShotSingleSelectAttributeDefinition singleSelectAttribute -> {
+                    attributeDefinitionDTOs.add(new ShotSingleSelectAttributeDefinitionDTO(
+                            definition.id,
+                            definition.name,
+                            definition.position,
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
+                    ));
+                }
+                case ShotMultiSelectAttributeDefinition multiSelectAttribute -> {
+                    attributeDefinitionDTOs.add(new ShotMultiSelectAttributeDefinitionDTO(
+                            definition.id,
+                            definition.name,
+                            definition.position,
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
+                    ));
+                }
+                default -> {
+                    attributeDefinitionDTOs.add(definition.toDTO());
+                }
+            }
+        });
+
+        return attributeDefinitionDTOs.stream().sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition)).collect(Collectors.toList());
+    }
 
     public ShotAttributeDefinitionBase create(ShotAttributeDefinitionCreateDTO createDTO) {
         if(createDTO == null) {

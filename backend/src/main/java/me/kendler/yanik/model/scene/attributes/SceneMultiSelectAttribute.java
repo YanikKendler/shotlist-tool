@@ -25,7 +25,7 @@ public class SceneMultiSelectAttribute extends SceneAttributeBase{
     public SceneAttributeBaseDTO toDTO() {
         return new SceneMultiSelectAttributeDTO(
             id,
-            definition,
+            definition.toDTO(),
             value
         );
     }

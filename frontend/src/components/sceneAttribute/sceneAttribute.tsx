@@ -8,7 +8,7 @@ import {
     SceneAttributeValueCollection
 } from "@/util/Types"
 import React, {
-    useCallback,
+    useCallback, useContext,
     useEffect,
     useMemo,
     useRef,
@@ -17,9 +17,10 @@ import React, {
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './sceneAttribute.scss'
-import {useSelectRefresh} from "@/components/SelectRefreshContext"
+import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 import Select, {selectSceneStyles} from "@/components/select/select"
+import {ShotlistContext} from "@/context/ShotlistContext"
 
 export default function SceneAttribute({attribute}: {attribute: AnySceneAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -31,6 +32,8 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
     const { refreshMap, triggerRefresh } = useSelectRefresh();
 
     const client = useApolloClient()
+
+    const shotlistContext = useContext(ShotlistContext)
 
     useEffect(() => {
         if (!attribute) return;
@@ -180,6 +183,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         placeholder={attribute.definition?.name || ""}
                         value={singleSelectValue}
                         shotOrScene={"scene"}
+                        editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectSceneStyles}
                     ></Select>
                 </div>
@@ -196,6 +200,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         placeholder={attribute.definition?.name || ""}
                         value={multiSelectValue}
                         shotOrScene={"scene"}
+                        editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectSceneStyles}
                     ></Select>
                 </div>

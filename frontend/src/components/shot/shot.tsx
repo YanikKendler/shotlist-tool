@@ -9,7 +9,7 @@ import {GripVertical} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 
-export default function Shot({shot, dndTarget, position}: {shot: ShotDto, dndTarget: boolean, position: number}) {
+export default function Shot({shot, position}: {shot: ShotDto, position: number}) {
     // @ts-ignore
     const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: shot.id});
 
@@ -27,7 +27,7 @@ export default function Shot({shot, dndTarget, position}: {shot: ShotDto, dndTar
     }
 
     return (
-        <div className={`shot ${dndTarget && "dndTarget"}`} ref={setNodeRef} style={style}>
+        <div className={"shot"} ref={setNodeRef} style={style}>
             <div
                 className="grip"
                 ref={setActivatorNodeRef}

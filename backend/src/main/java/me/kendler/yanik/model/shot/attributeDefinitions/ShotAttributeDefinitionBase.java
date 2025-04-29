@@ -2,7 +2,7 @@ package me.kendler.yanik.model.shot.attributeDefinitions;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
-import me.kendler.yanik.dto.shot.ShotAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
@@ -33,11 +33,5 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
 
     abstract public ShotAttributeBase createAttribute(Shot shot);
 
-    @Override
-    public String toString() {
-        return "ShotAttributeDefinition{" +
-                ", name='" + name + '\'' +
-                ", position=" + position +
-                '}';
-    }
+    public abstract ShotAttributeDefinitionBaseDTO toDTO();
 }

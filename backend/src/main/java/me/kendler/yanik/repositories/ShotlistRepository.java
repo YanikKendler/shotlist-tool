@@ -9,9 +9,11 @@ import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.shot.Shot;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped

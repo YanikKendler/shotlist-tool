@@ -25,7 +25,7 @@ public class ShotMultiSelectAttribute extends ShotAttributeBase {
     public ShotAttributeBaseDTO toDTO() {
         return new ShotMultiSelectAttributeDTO(
             id,
-            definition,
+            definition.toDTO(),
             value
         );
     }

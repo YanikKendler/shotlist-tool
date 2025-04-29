@@ -2,7 +2,7 @@
 
 import {AnyShotAttribute, ShotAttributeValueCollection, SelectOption} from "@/util/Types"
 import React, {
-    useCallback,
+    useCallback, useContext,
     useEffect,
     useMemo,
     useRef,
@@ -11,10 +11,11 @@ import React, {
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
-import {useSelectRefresh} from "@/components/SelectRefreshContext"
+import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 import Select, {selectShotStyles} from "@/components/select/select"
 import ShotService from "@/service/ShotService"
+import {ShotlistContext} from "@/context/ShotlistContext"
 
 const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -26,6 +27,8 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
     const { refreshMap, triggerRefresh } = useSelectRefresh();
 
     const client = useApolloClient()
+
+    const shotlistContext = useContext(ShotlistContext)
 
     useEffect(() => {
         if (!attribute) return;
@@ -155,6 +158,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
                         placeholder={attribute.definition?.name || ""}
                         value={singleSelectValue}
                         shotOrScene={"shot"}
+                        editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectShotStyles}
                     ></Select>
                 </div>
@@ -171,6 +175,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
                         placeholder={attribute.definition?.name || ""}
                         value={multiSelectValue}
                         shotOrScene={"shot"}
+                        editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectShotStyles}
                     ></Select>
                 </div>

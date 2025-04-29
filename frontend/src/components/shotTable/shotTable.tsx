@@ -171,7 +171,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                     strategy={verticalListSortingStrategy}
                 >
                     {shots.data.map((shot: any, index) => (
-                        <Shot shot={shot} key={shot.id} dndTarget={false} position={index}/>
+                        <Shot shot={shot} key={shot.id} position={index}/>
                     ))}
                 </SortableContext>
                 {/*<DragOverlay>

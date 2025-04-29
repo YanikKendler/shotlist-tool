@@ -5,12 +5,14 @@ import jakarta.ws.rs.*;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
 import me.kendler.yanik.dto.scene.SceneAttributeEditDTO;
 import me.kendler.yanik.dto.shot.*;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
+import me.kendler.yanik.repositories.ShotlistRepository;
 import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeDefinitionRepository;
 import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
@@ -21,6 +23,7 @@ import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @GraphQLApi
@@ -56,8 +59,8 @@ public class ShotResource {
     ShotAttributeDefinitionRepository shotAttributeDefinitionRepository;
 
     @Query
-    public List<ShotAttributeDefinitionBase> getShotAttributeDefinitions(UUID shotlistId){
-        return shotAttributeDefinitionRepository.list("shotlist.id", shotlistId);
+    public List<ShotAttributeDefinitionBaseDTO> getShotAttributeDefinitions(UUID shotlistId){
+        return shotAttributeDefinitionRepository.getAll(shotlistId);
     }
 
     @Mutation

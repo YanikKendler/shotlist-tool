@@ -11,10 +11,6 @@ div.shot{
     --shot-background: var(--second-cell-bg);
   }
 
-  &.dndTarget{
-    background-color: red;
-  }
-
   .grip{
     opacity: 0;
     color: var(--grip-color);

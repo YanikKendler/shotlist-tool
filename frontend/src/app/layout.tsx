@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import "./globals.scss"
 import React from "react"
 import {ApolloWrapper} from "@/ApolloWrapper"
-import SelectRefreshProvider from "@/components/SelectRefreshContext"
+import SelectRefreshProvider from "@/context/SelectRefreshContext"
 
 export const metadata: Metadata = {
   title: "Shotlist Tool",

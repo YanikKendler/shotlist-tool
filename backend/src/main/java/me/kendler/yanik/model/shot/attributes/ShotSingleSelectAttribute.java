@@ -23,7 +23,7 @@ public class ShotSingleSelectAttribute extends ShotAttributeBase {
     public ShotAttributeBaseDTO toDTO() {
         return new ShotSingleSelectAttributeDTO(
             id,
-            definition,
+            definition.toDTO(),
             value
         );
     }

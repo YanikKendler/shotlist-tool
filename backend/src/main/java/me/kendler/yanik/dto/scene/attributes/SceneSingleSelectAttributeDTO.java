@@ -1,11 +1,12 @@
 package me.kendler.yanik.dto.scene.attributes;
 
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 
 public record SceneSingleSelectAttributeDTO(
         Long id,
-        SceneAttributeDefinitionBase definition,
+        SceneAttributeDefinitionBaseDTO definition,
         SceneSelectAttributeOptionDefinition singleSelectValue
 ) implements SceneAttributeBaseDTO{
     @Override
@@ -14,7 +15,7 @@ public record SceneSingleSelectAttributeDTO(
     }
 
     @Override
-    public SceneAttributeDefinitionBase getDefinition() {
+    public SceneAttributeDefinitionBaseDTO getDefinition() {
         return definition;
     }
 }

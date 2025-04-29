@@ -1,5 +1,6 @@
 .shotlistOptionsDialogContent{
-  --close-button-bg: hsl(0, 0%, 93%);
+  --close-button-bg: hsl(0, 0%, 90%);
+  --attribute-type-bg: hsl(0, 0%, 90%);
 
   max-width: 800px;
   height: 50%;
@@ -12,11 +13,58 @@
 
     .closeButton{
       position: absolute;
-      top: 0rem;
-      right: 0rem;
+      top: 0;
+      right: 0;
       padding: .2rem;
       background-color: var(--close-button-bg);
       border-radius: 1rem;
+    }
+
+    .dialogPageTabRoot{
+      display: flex;
+      height: 100%;
+      width: 100%;
+
+      > .tabs{
+        display: flex;
+        flex-direction: column;
+        padding-top: 2rem;
+        gap: .5rem;
+
+        button {
+          justify-content: left;
+          gap: .75rem;
+          padding-block: .3rem;
+          font-size: .9rem;
+          font-weight: 600;
+
+          &[data-state="active"] {
+            background-color: var(--accent-90);
+            color: var(--accent-30);
+          }
+        }
+      }
+
+      .Separator{
+        margin-inline: 1rem;
+      }
+    }
+
+    .attributeTypeTabRoot{
+      > .tabs{
+        display: flex;
+        gap: .5rem;
+
+        button {
+          font-size: .9rem;
+          background-color: var(--attribute-type-bg);
+
+          &[data-state="active"] {
+            background-color: var(--accent-90);
+            color: var(--accent-30);
+          }
+        }
+      }
     }
   }
 }

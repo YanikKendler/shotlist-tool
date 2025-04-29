@@ -1,5 +1,6 @@
 package me.kendler.yanik.dto.scene.attributes;
 
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 
@@ -7,7 +8,7 @@ import java.util.Set;
 
 public record SceneMultiSelectAttributeDTO(
         Long id,
-        SceneAttributeDefinitionBase definition,
+        SceneAttributeDefinitionBaseDTO definition,
         Set<SceneSelectAttributeOptionDefinition> multiSelectValue
 ) implements SceneAttributeBaseDTO{
     @Override
@@ -16,7 +17,7 @@ public record SceneMultiSelectAttributeDTO(
     }
 
     @Override
-    public SceneAttributeDefinitionBase getDefinition() {
+    public SceneAttributeDefinitionBaseDTO getDefinition() {
         return definition;
     }
 }

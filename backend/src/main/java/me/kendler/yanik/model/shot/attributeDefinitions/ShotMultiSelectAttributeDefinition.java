@@ -3,6 +3,8 @@ package me.kendler.yanik.model.shot.attributeDefinitions;
 import java.util.*;
 
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotMultiSelectAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.SceneAttributeType;
 import me.kendler.yanik.model.shot.Shot;
@@ -26,5 +28,15 @@ public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionB
     @Override
     public ShotAttributeBase createAttribute(Shot shot) {
         return new ShotMultiSelectAttribute(this, shot);
+    }
+
+    @Override
+    public ShotAttributeDefinitionBaseDTO toDTO() {
+        return new ShotMultiSelectAttributeDefinitionDTO(
+            id,
+            name,
+            position,
+            null
+        );
     }
 }

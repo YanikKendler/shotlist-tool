@@ -23,7 +23,7 @@ public class SceneSingleSelectAttribute extends SceneAttributeBase{
     public SceneAttributeBaseDTO toDTO() {
         return new SceneSingleSelectAttributeDTO(
             id,
-            definition,
+            definition.toDTO(),
             value
         );
     }

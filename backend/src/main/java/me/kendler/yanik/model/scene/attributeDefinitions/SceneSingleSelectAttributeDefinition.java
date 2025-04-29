@@ -3,6 +3,9 @@ package me.kendler.yanik.model.scene.attributeDefinitions;
 import java.util.*;
 
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneMultiSelectAttributeDefinitionDTO;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneSingleSelectAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.SceneAttributeType;
@@ -25,5 +28,15 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
     @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneSingleSelectAttribute(this, scene);
+    }
+
+    @Override
+    public SceneAttributeDefinitionBaseDTO toDTO() {
+        return new SceneSingleSelectAttributeDefinitionDTO(
+                id,
+                name,
+                position,
+                null
+        );
     }
 }

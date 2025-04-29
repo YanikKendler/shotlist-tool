@@ -21,7 +21,7 @@ public class ShotTextAttribute extends ShotAttributeBase {
     public ShotAttributeBaseDTO toDTO() {
         return new ShotTextAttributeDTO(
             id,
-            definition,
+            definition.toDTO(),
             value
         );
     }

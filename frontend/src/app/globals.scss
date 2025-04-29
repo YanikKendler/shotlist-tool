@@ -1,6 +1,6 @@
 :root {
-  --accent-20: hsl(18, 100%, 20%);
-  --accent-30: hsl(18, 100%, 30%);
+  --accent-20: hsl(18, 95%, 20%);
+  --accent-30: hsl(18, 95%, 30%);
   --accent-40: hsl(18, 100%, 40%);
   --accent-44: hsl(18, 100%, 44%);
   --accent: hsl(18, 100%, 47%);
@@ -8,7 +8,8 @@
   --accent-70: hsl(18, 100%, 70%);
   --accent-80: hsl(18, 100%, 75%);
   --accent-90: hsl(19, 81%, 86%);
-  --accent-95: hsl(19, 81%, 92%);
+  --accent-92: hsl(19, 81%, 92%);
+  --accent-95: hsl(19, 81%, 95%);
 
   --bad: hsl(0, 70%, 60%);
 
@@ -17,6 +18,7 @@
   --text-20: hsl(0, 0%, 20%);
   --text-30: hsl(0, 0%, 30%);
   --text-40: hsl(0, 0%, 40%);
+  --text-90: hsl(0, 0%, 90%);
 
   --contrast: hsl(0, 0%, 100%);
   --hover-bg-10: hsla(0, 0%, 50%, 10%);
@@ -92,7 +94,7 @@ button, a{
   font-size: 1rem;
   border-radius: .4rem;
   padding: .5rem;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border .15s ease-in-out;
   cursor: pointer;
   gap: .5rem;
 
@@ -181,5 +183,22 @@ button, a{
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+// Style radix Separator
+
+.Separator {
+  background-color: var(--text-90);
+
+  &[data-orientation="horizontal"] {
+    height: 1px;
+    width: 100%;
+    margin-block: .5rem;
+  }
+  &[data-orientation="vertical"] {
+    width: 1px;
+    height: 100%;
+    margin-inline: .5rem;
   }
 }

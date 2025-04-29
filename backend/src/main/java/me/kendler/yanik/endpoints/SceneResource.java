@@ -2,10 +2,12 @@ package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.*;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
+import me.kendler.yanik.repositories.ShotlistRepository;
 import me.kendler.yanik.repositories.scene.SceneAttributeDefinitionRepository;
 import me.kendler.yanik.repositories.scene.SceneAttributeRepository;
 import me.kendler.yanik.repositories.scene.SceneRepository;
@@ -15,6 +17,7 @@ import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @GraphQLApi
@@ -45,8 +48,8 @@ public class SceneResource {
     SceneAttributeDefinitionRepository sceneAttributeDefinitionRepository;
 
     @Query
-    public List<SceneAttributeDefinitionBase> getSceneAttributeDefinitions(UUID shotlistId){
-        return sceneAttributeDefinitionRepository.list("shotlist.id", shotlistId);
+    public List<SceneAttributeDefinitionBaseDTO> getSceneAttributeDefinitions(UUID shotlistId){
+        return sceneAttributeDefinitionRepository.getAll(shotlistId);
     }
 
     @Mutation

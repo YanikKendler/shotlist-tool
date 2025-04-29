@@ -4,7 +4,7 @@ import "./select.scss"
 import {SelectOption} from "@/util/Types"
 import AsyncCreatableSelect from "react-select/async-creatable"
 import React, {useCallback, useEffect} from "react"
-import {useSelectRefresh} from "@/components/SelectRefreshContext"
+import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {
     components,
     GroupBase,
@@ -21,7 +21,7 @@ export const selectTheme: ThemeConfig = (theme) => ({
     colors: {
         ...theme.colors,
         primary: 'var(--accent)',
-        primary25: 'var(--accent-95)',
+        primary25: 'var(--accent-90)',
         primary50: 'var(--accent-80)',
         primary75: 'var(--accent-60',
     },
@@ -99,7 +99,7 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
 }
 
 export default function Select(
-    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, styles = selectBaseStyles}:
+    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, editAction, styles = selectBaseStyles}:
     {
         definitionId: number,
         value: SelectOption | SelectOption[] | undefined,
@@ -109,6 +109,7 @@ export default function Select(
         placeholder: string,
         isMulti: boolean
         shotOrScene: "shot" | "scene"
+        editAction: () => void
         styles?: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>>
 }) {
     const { refreshMap } = useSelectRefresh();
@@ -125,7 +126,7 @@ export default function Select(
                     <div className="content">
                         {props.children}
                     </div>
-                    <div className="bottom">
+                    <div className="bottom" onClick={editAction}>
                         <p>Edit Attributes</p>
                         <Pen size={18} strokeWidth={2} />
                     </div>

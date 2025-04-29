@@ -1,6 +1,9 @@
 package me.kendler.yanik.model.scene.attributeDefinitions;
 
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneMultiSelectAttributeDefinitionDTO;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneTextAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.SceneAttributeType;
@@ -23,5 +26,14 @@ public class SceneTextAttributeDefinition extends SceneAttributeDefinitionBase {
     @Override
     public SceneAttributeBase createAttribute(Scene scene) {
         return new SceneTextAttribute(this, scene);
+    }
+
+    @Override
+    public SceneAttributeDefinitionBaseDTO toDTO() {
+        return new SceneTextAttributeDefinitionDTO(
+                id,
+                name,
+                position
+        );
     }
 }

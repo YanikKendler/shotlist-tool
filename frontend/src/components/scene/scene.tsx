@@ -47,7 +47,7 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
 
         const { errors } = await client.mutate({
             mutation: gql`
-                mutation createShotOption($sceneId: String!) {
+                mutation deleteScene($sceneId: String!) {
                     deleteScene(id: $sceneId) {
                         id
                     }

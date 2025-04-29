@@ -3,6 +3,8 @@ package me.kendler.yanik.model.scene.attributeDefinitions;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
+import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.SceneAttributeType;
@@ -38,11 +40,5 @@ public abstract class SceneAttributeDefinitionBase extends PanacheEntity {
 
     abstract public SceneAttributeBase createAttribute(Scene scene);
 
-    @Override
-    public String toString() {
-        return "SceneAttributeDefinition{" +
-                ", name='" + name + '\'' +
-                ", position=" + position +
-                '}';
-    }
+    public abstract SceneAttributeDefinitionBaseDTO toDTO();
 }
