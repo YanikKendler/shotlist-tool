@@ -9,13 +9,19 @@ export const metadata: Metadata = {
   description: "A free and open source, no-ai, clean and simple shotlist creation tool for filmmakers"
 }
 
+import { Inter } from 'next/font/google'
+
+const inter = Inter({
+    subsets: ['latin']
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
         <ApolloWrapper>
             <SelectRefreshProvider>

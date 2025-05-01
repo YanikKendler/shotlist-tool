@@ -13,7 +13,7 @@ import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
 @Table(name = "shotattribute")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ShotAttributeBase extends PanacheEntity {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public ShotAttributeDefinitionBase definition;
 
     public ShotAttributeBase() { }

@@ -12,7 +12,9 @@ import me.kendler.yanik.dto.shot.attributeDefinitions.ShotMultiSelectAttributeDe
 import me.kendler.yanik.dto.shot.attributeDefinitions.ShotSingleSelectAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
+import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.*;
+import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
 import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
 import me.kendler.yanik.model.shot.attributes.ShotTextAttribute;
@@ -27,6 +29,8 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
     @Inject
     ShotlistRepository shotlistRepository;
 
+    @Inject
+    ShotAttributeRepository shotAttributeRepository;
 
     public List<ShotAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
         Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlistRepository.findById(shotlistId).shotAttributeDefinitions;
@@ -107,11 +111,19 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         }
         if(attribute.position != editDTO.position()){
             Shotlist shotlist = getEntityManager()
-                                    .createQuery("select s from Shotlist s where :attribute in s.shotAttributeDefinitions", Shotlist.class)
+                                    .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d = :attribute", Shotlist.class)
                                     .setParameter("attribute", attribute)
                                     .getSingleResult();
-            shotlist.shotAttributeDefinitions.stream().filter(a -> a.position < attribute.position && a.position >= editDTO.position()).forEach(a -> a.position++);
-            shotlist.shotAttributeDefinitions.stream().filter(a -> a.position > attribute.position && a.position <= editDTO.position()).forEach(a -> a.position--);
+
+
+            shotlist.shotAttributeDefinitions.stream()
+                    .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
+                    .forEach(a -> a.position++);
+            shotlist.shotAttributeDefinitions.stream()
+                    .filter(a -> a.position > attribute.position && a.position <= editDTO.position())
+                    .forEach(a -> a.position--);
+
+            attribute.position = editDTO.position();
         }
         return attribute;
     }
@@ -120,7 +132,22 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         ShotAttributeDefinitionBase attributeDefinition = findById(id);
 
         if(attributeDefinition != null) {
-            delete(attributeDefinition);
+            getEntityManager().createQuery("select s from Shot s join s.attributes sab where sab.definition.id = :definition", Shot.class)
+                    .setParameter("definition", attributeDefinition.id)
+                    .getResultList()
+                    .forEach(shot -> {
+                        Optional<ShotAttributeBase> attribute = shot.attributes.stream().filter(a -> a.definition.id.equals(attributeDefinition.id)).findFirst();
+
+                        if(attribute.isPresent()) {
+                            shot.attributes.remove(attribute.get());
+                            shotAttributeRepository.delete(attribute.get());
+                        }
+                    });
+
+           /*getEntityManager().createQuery("delete from ShotAttributeBase sab where sab.definition.id = :definition")
+                    .setParameter("definition", attributeDefinition.id)
+                    .executeUpdate();*/
+
             return attributeDefinition;
         }
         return null;

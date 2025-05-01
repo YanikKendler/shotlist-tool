@@ -34,7 +34,7 @@
         button {
           justify-content: left;
           gap: .75rem;
-          padding-block: .3rem;
+          padding-block: .5rem;
           font-size: .9rem;
           font-weight: 600;
 
@@ -48,6 +48,17 @@
       .Separator{
         margin-inline: 1rem;
       }
+
+      > .content{
+        width: 100%;
+
+        .definitions{
+          display: flex;
+          flex-direction: column;
+          gap: .5rem;
+          margin-top: 1rem;
+        }
+      }
     }
 
     .attributeTypeTabRoot{
@@ -58,6 +69,7 @@
         button {
           font-size: .9rem;
           background-color: var(--attribute-type-bg);
+          padding-block: .4rem;
 
           &[data-state="active"] {
             background-color: var(--accent-90);

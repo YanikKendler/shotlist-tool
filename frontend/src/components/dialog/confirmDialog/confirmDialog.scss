@@ -1,4 +1,10 @@
+.confirmDialogOverlay{
+  z-index: 2000;
+}
+
 .confirmDialogContent{
+  z-index: 2001;
+
   .title{
     font-size: 1.5rem;
     font-weight: 600;

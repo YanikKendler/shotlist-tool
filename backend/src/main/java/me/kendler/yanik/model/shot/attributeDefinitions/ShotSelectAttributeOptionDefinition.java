@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Entity
 public class ShotSelectAttributeOptionDefinition extends PanacheEntity {
     public String name = "";
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public ShotAttributeDefinitionBase shotAttributeDefinition;
 
     public ShotSelectAttributeOptionDefinition() { }

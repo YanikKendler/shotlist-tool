@@ -1,7 +1,7 @@
 'use client'
 
 import gql from "graphql-tag"
-import React, {createContext, use, useContext, useEffect, useState} from "react"
+import React, {createContext, use, useContext, useEffect, useRef, useState} from "react"
 import {useApolloClient, useQuery} from "@apollo/client"
 import {SceneAttributeParser} from "@/util/AttributeParser"
 import Scene from "@/components/scene/scene"
@@ -12,7 +12,7 @@ import {
     ShotlistDto
 } from "../../../../lib/graphql/generated"
 import {useSearchParams} from "next/navigation"
-import ShotTable from "@/components/shotTable/shotTable"
+import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
 import {FileSliders, House, Plus} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
@@ -22,6 +22,7 @@ import useShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/
 import ErrorPage from "@/components/errorPage/errorPage"
 import { ShotlistContext } from "@/context/ShotlistContext"
 import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
+import shotTable from "@/components/shotTable/shotTable"
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -33,13 +34,17 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
 
+    const shotTableRef = useRef<ShotTableRef>(null);
+
     const client = useApolloClient()
 
     useEffect(() => {
         loadShotlist()
     }, [id])
 
-    const loadShotlist = async () => {
+    const loadShotlist = async (noCache: boolean = false) => {
+        console.log("load shotlist")
+
         const { data, errors, loading } = await client.query({query: gql`
                 query shotlist($id: String!){
                     shotlist(id: $id){
@@ -75,7 +80,9 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                             position
                         }
                     }
-                }`, variables: {id: id}})
+                }`,
+            variables: {id: id},
+            fetchPolicy: noCache ? "no-cache" : "cache-first"})
 
         setShotlist({data: data.shotlist, loading: loading, error: errors})
     }
@@ -195,13 +202,13 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                             <div key={attr.id}><p>{attr.name}</p></div>
                         ))}
                     </div>
-                    <ShotTable sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
+                    <ShotTable ref={shotTableRef} sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
                 </div>
                 <ShotlistOptionsDialog
                     isOpen={optionsDialogOpen}
                     setIsOpen={setOptionsDialogOpen}
                     shotlistId={shotlist.data.id || ""}
-                    refreshShotlist={loadShotlist}
+                    refreshShotlist={() => {loadShotlist(true), shotTableRef.current?.loadShots()}}
                 ></ShotlistOptionsDialog>
             </main>
         </ShotlistContext.Provider>

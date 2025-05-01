@@ -122,6 +122,11 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         if(attributeDefinition != null) {
             delete(attributeDefinition);
+
+            getEntityManager().createQuery("delete from SceneAttributeBase where definition = :definition")
+                    .setParameter("definition", attributeDefinition)
+                    .executeUpdate();
+
             return attributeDefinition;
         }
         return null;

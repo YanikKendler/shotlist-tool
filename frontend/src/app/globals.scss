@@ -46,9 +46,7 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -84,6 +82,7 @@ img{
 input, button{
   background-color: transparent;
   box-sizing: border-box;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border .15s ease-in-out, outline .15s ease-in-out;
 }
 
 button, a{
@@ -97,6 +96,7 @@ button, a{
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border .15s ease-in-out;
   cursor: pointer;
   gap: .5rem;
+  user-select: none;
 
   &:focus-visible{
 

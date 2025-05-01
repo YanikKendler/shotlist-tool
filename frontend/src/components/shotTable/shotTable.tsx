@@ -5,7 +5,7 @@ import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
 import "./shotTable.scss"
 import {ShotAttributeDefinitionBase} from "../../../lib/graphql/generated"
-import React, {useEffect, useRef, useState} from "react"
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
 import {ScrollArea} from "radix-ui"
 import {
     closestCenter,
@@ -19,7 +19,11 @@ import {
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import ShotService from "@/service/ShotService"
 
-export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}) {
+export type ShotTableRef = {
+    loadShots: () => void;
+};
+
+const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}, ref) => {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
     const [activeId, setActiveId] = useState(null);
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
@@ -82,10 +86,12 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
             fetchPolicy: "no-cache",
         })
 
-        console.log(data.shots)
-
         setShots({data: data.shots, loading: loading, error: errors})
     }
+
+    useImperativeHandle(ref, () => ({
+        loadShots,
+    }));
 
     const createShot = async (attributePosition: number) => {
         const { data, errors } = await client.mutate({
@@ -167,7 +173,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={shots.data}
+                    items={shots.data.map(shot => shot.id)}
                     strategy={verticalListSortingStrategy}
                 >
                     {shots.data.map((shot: any, index) => (
@@ -190,5 +196,7 @@ export default function ShotTable({sceneId, shotAttributeDefinitions}: {sceneId:
                 ))}
             </div>
         </div>
-    );
-}
+    )
+})
+
+export default ShotTable

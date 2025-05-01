@@ -5,17 +5,27 @@ import React, {useContext, useEffect, useState} from 'react';
 import "./shotlistOptionsDialog.scss"
 import {Separator, Tabs, VisuallyHidden} from "radix-ui"
 import {FileDown, List, Users, X} from "lucide-react"
-import {ShotlistDto} from "../../../../lib/graphql/generated"
 import ShotAttributeDefinition from "@/components/attributeDefinition/shotAttributeDefinition"
 import {AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
+import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
+import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
+import {apolloClient} from "@/ApolloWrapper"
+import {SceneDto, ShotAttributeDefinitionBase} from "../../../../lib/graphql/generated"
 
 export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {
     const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[]>([]);
     const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[]>([]);
 
     const client = useApolloClient()
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     useEffect(() => {
         loadData()
@@ -68,6 +78,45 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
         setShotAttributeDefinitions(data.shotAttributeDefinitions)
     }
 
+    const removeAttributeDefinition = (definitionId: number) => {
+        if(!shotAttributeDefinitions || shotAttributeDefinitions.length == 0) return
+
+        let newShotDefinitions: AnyShotAttributeDefinition[] = shotAttributeDefinitions.filter((shotDefinition: AnyShotAttributeDefinition) => shotDefinition.id != definitionId)
+
+        setShotAttributeDefinitions(newShotDefinitions)
+    }
+
+    function handleDragEnd(event: any) {
+        const {active, over} = event;
+
+        if (active.id !== over.id) {
+            setShotAttributeDefinitions((definition) => {
+                const oldIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === active.id);
+                const newIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === over.id);
+
+                apolloClient.mutate({
+                    mutation: gql`
+                        mutation updateShotDefinition($id: BigInteger!, $position: Int!) {
+                            updateShotAttributeDefinition(editDTO:{
+                                id: $id,
+                                position: $position
+                            }){
+                                id
+                                position
+                            }
+                        }
+                    `,
+                    variables: {id: active.id, position: newIndex},
+                }).then((response) => {
+                    refreshShotlist()
+                })
+
+
+                return arrayMove(shotAttributeDefinitions, oldIndex, newIndex)
+            });
+        }
+    }
+
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
             <Dialog.Portal>
@@ -102,7 +151,6 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                 orientation="vertical"
                             />
                             <Tabs.Content value={"attributes"} className={"content"}>
-
                                 <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={"shot"}>
                                     <Tabs.List className={"tabs"}>
                                         <Tabs.Trigger value={"shot"}>
@@ -113,14 +161,34 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                         </Tabs.Trigger>
                                     </Tabs.List>
                                     <Tabs.Content value={"shot"} className={"content"}>
-                                        {shotAttributeDefinitions.map((attribute) => (
-                                            <ShotAttributeDefinition attribute={attribute} key={attribute.id}/>
-                                        ))}
+                                        <DndContext
+                                            sensors={sensors}
+                                            collisionDetection={closestCenter}
+                                            onDragEnd={handleDragEnd}
+                                        >
+                                            <SortableContext
+                                                items={shotAttributeDefinitions.map(def => def.id)}
+                                                strategy={verticalListSortingStrategy}
+                                            >
+                                                <div className="definitions">
+                                                    {shotAttributeDefinitions.map((attribute) => (
+                                                        <ShotAttributeDefinition
+                                                            definition={attribute}
+                                                            key={attribute.id}
+                                                            onDelete={removeAttributeDefinition}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </SortableContext>
+                                        </DndContext>
+
                                     </Tabs.Content>
                                     <Tabs.Content value={"scene"} className={"content"}>
-                                        {sceneAttributeDefinitions.map((attribute) => (
-                                            <ShotAttributeDefinition attribute={attribute as AnyShotAttributeDefinition} key={attribute.id}/>
-                                        ))}
+                                        <div className="definitions">
+                                            {sceneAttributeDefinitions.map((attribute) => (
+                                                <ShotAttributeDefinition definition={attribute as AnyShotAttributeDefinition} key={attribute.id} onDelete={() => {}}/>
+                                            ))}
+                                        </div>
                                     </Tabs.Content>
                                 </Tabs.Root>
                             </Tabs.Content>
