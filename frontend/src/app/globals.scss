@@ -1,4 +1,5 @@
 :root {
+  --accent-10: hsl(18, 95%, 10%);
   --accent-20: hsl(18, 95%, 20%);
   --accent-30: hsl(18, 95%, 30%);
   --accent-40: hsl(18, 100%, 40%);
@@ -18,6 +19,8 @@
   --text-20: hsl(0, 0%, 20%);
   --text-30: hsl(0, 0%, 30%);
   --text-40: hsl(0, 0%, 40%);
+  --text-50: hsl(0, 0%, 50%);
+  --text-60: hsl(0, 0%, 60%);
   --text-90: hsl(0, 0%, 90%);
 
   --contrast: hsl(0, 0%, 100%);
@@ -25,6 +28,15 @@
   --hover-bg-20: hsla(0, 0%, 50%, 20%);
   --hover-bg-30: hsla(0, 0%, 50%, 30%);
   --hover-bg-bad-10: hsla(0, 70%, 60%, 10%);
+
+  --sidebar-bg: hsl(20, 20%, 96%);
+  --home-button-bg: hsl(14, 21%, 92%);
+  --home-button-border: hsl(0, 0%, 60%);
+  --home-button-hover-border: hsl(0, 0%, 20%);
+  --sidebar-bottom-button-bg: hsl(12, 9%, 92%);
+  --sidebar-bottom-button-border: hsl(0, 0%, 74%);
+
+  --popup-border: hsl(0, 0%, 82%);
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -97,6 +109,7 @@ button, a{
   cursor: pointer;
   gap: .5rem;
   user-select: none;
+  margin: 0;
 
   &:focus-visible{
 
@@ -109,6 +122,7 @@ button, a{
   &.bad:hover{
     background-color: var(--hover-bg-bad-10);
     color: var(--bad);
+    border-color: var(--bad);
   }
 }
 
@@ -201,4 +215,15 @@ button, a{
     height: 100%;
     margin-inline: .5rem;
   }
+}
+
+// Style radix popover
+
+.PopoverContent{
+  z-index: 3000;
+
+  background-color: var(--contrast);
+  padding: .5rem;
+  border-radius: .5rem;
+  border: 1px solid var(--popup-border);
 }

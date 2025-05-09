@@ -64,13 +64,13 @@ public class ShotResource {
     }
 
     @Mutation
-    public ShotAttributeDefinitionBase createShotAttributeDefinition(ShotAttributeDefinitionCreateDTO createDTO){
-        return  shotAttributeDefinitionRepository.create(createDTO);
+    public ShotAttributeDefinitionBaseDTO createShotAttributeDefinition(ShotAttributeDefinitionCreateDTO createDTO){
+        return shotAttributeDefinitionRepository.create(createDTO).toDTO();
     }
 
     @Mutation
     public ShotAttributeDefinitionBase deleteShotAttributeDefinition(Long id){
-        return shotAttributeDefinitionRepository.delete(id);
+        return shotAttributeDefinitionRepository.remove(id);
     }
 
     @Mutation
@@ -108,7 +108,7 @@ public class ShotResource {
     }
 
     @Mutation
-    public ShotSelectAttributeOptionDefinition createShotSelectAttributeOption(ShotSelectAttributeCreateDTO createDTO){
+    public ShotSelectAttributeOptionDefinition createShotSelectAttributeOption(ShotSelectAttributeOptionCreateDTO createDTO) {
         return shotSelectAttributeOptionDefinitionRepository.create(createDTO);
     }
 

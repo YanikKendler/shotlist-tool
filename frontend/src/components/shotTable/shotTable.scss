@@ -3,7 +3,7 @@
   --second-cell-bg: hsl(0, 0%, 96%);
   --cell-placeholder: hsl(0, 0%, 50%);
   --preview-cell-border: hsl(0, 0%, 87%);
-  --preview-cell-color: hsl(0, 0%, 50%);
+  --preview-cell-hover-bg: hsl(0, 0%, 98%);
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -20,8 +20,13 @@
     .shotAttribute{
       border-color: var(--preview-cell-border);
       padding-inline: .3rem;
-      color: var(--preview-cell-color);
-      cursor: text;
+      color: var(--text-60);
+      transition: color .1s;
+
+      &:not(:first-of-type):hover{
+        cursor: text;
+        color: var(--text-40);
+      }
     }
   }
 

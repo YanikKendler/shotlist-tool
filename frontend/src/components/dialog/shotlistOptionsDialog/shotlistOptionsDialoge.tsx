@@ -1,22 +1,32 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./shotlistOptionsDialog.scss"
-import {Separator, Tabs, VisuallyHidden} from "radix-ui"
-import {FileDown, List, Users, X} from "lucide-react"
+import {Popover, Separator, Tabs, VisuallyHidden} from "radix-ui"
+import {ChevronDown, FileDown, List, Plus, Type, Users, X} from "lucide-react"
 import ShotAttributeDefinition from "@/components/attributeDefinition/shotAttributeDefinition"
-import {AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
+import {
+    AnySceneAttributeDefinition,
+    AnyShotAttributeDefinition,
+    ShotSingleOrMultiSelectAttributeDefinition
+} from "@/util/Types"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import {apolloClient} from "@/ApolloWrapper"
-import {SceneDto, ShotAttributeDefinitionBase} from "../../../../lib/graphql/generated"
+import {ShotAttributeType, ShotSelectAttributeOptionDefinition} from "../../../../lib/graphql/generated"
+import Image from "next/image"
+import {wuGeneral} from "@yanikkendler/web-utils"
+import {set} from "immutable"
 
 export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {
-    const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[]>([]);
-    const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[]>([]);
+    const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[] | null>(null);
+    const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[] | null>(null);
+    // used for refreshing the shotlist on dialog close, only when any data has been edited
+    const [stringifiedAttributeData, setStringifiedAttributeData] = useState<string>("");
+    const [dataChanged, setDataChanged] = useState(false);
 
     const client = useApolloClient()
 
@@ -29,7 +39,14 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
 
     useEffect(() => {
         loadData()
-    }, [shotlistId]);
+        setDataChanged(false)
+    }, [shotlistId, isOpen]);
+
+    useEffect(() => {
+        if (isOpen) {
+            setStringifiedAttributeData(JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions))
+        }
+    }, [isOpen]);
 
     const loadData = async () => {
         const { data, errors, loading } = await client.query({query: gql`
@@ -72,13 +89,19 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                             }
                         }
                     }
-                }`, variables: {shotlistId: shotlistId}})
+                }`,
+            variables: {shotlistId: shotlistId},
+            fetchPolicy: "no-cache",
+            },
+        )
 
         setSceneAttributeDefinitions(data.sceneAttributeDefinitions)
         setShotAttributeDefinitions(data.shotAttributeDefinitions)
+
+        setStringifiedAttributeData(JSON.stringify(data.shotAttributeDefinitions) + JSON.stringify(data.sceneAttributeDefinitions))
     }
 
-    const removeAttributeDefinition = (definitionId: number) => {
+    function removeShotAttributeDefinition(definitionId: number) {
         if(!shotAttributeDefinitions || shotAttributeDefinitions.length == 0) return
 
         let newShotDefinitions: AnyShotAttributeDefinition[] = shotAttributeDefinitions.filter((shotDefinition: AnyShotAttributeDefinition) => shotDefinition.id != definitionId)
@@ -86,10 +109,37 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
         setShotAttributeDefinitions(newShotDefinitions)
     }
 
+    async function createShotAttributeDefinition(type: ShotAttributeType) {
+        const {data, errors} = await client.mutate({
+            mutation: gql`
+                mutation createShotSelectAttributeOption($shotlistId: String!, $attributeType: ShotAttributeType!) {
+                    createShotAttributeDefinition(createDTO: {
+                        shotlistId: $shotlistId,
+                        type: $attributeType
+                    }) {
+                        id
+                        name
+                        position
+                    }
+                }
+            `,
+            variables: {shotlistId: shotlistId, attributeType: type},
+        });
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setShotAttributeDefinitions([
+            ...shotAttributeDefinitions || [],
+            data.createShotAttributeDefinition
+        ])
+    }
+
     function handleDragEnd(event: any) {
         const {active, over} = event;
 
-        if (active.id !== over.id) {
+        if (active.id !== over.id && shotAttributeDefinitions) {
             setShotAttributeDefinitions((definition) => {
                 const oldIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === active.id);
                 const newIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === over.id);
@@ -107,18 +157,26 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                         }
                     `,
                     variables: {id: active.id, position: newIndex},
-                }).then((response) => {
-                    refreshShotlist()
                 })
-
 
                 return arrayMove(shotAttributeDefinitions, oldIndex, newIndex)
             });
         }
     }
 
+    function runRefreshShotlistCheck(){
+        let currentAttributeData = JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions)
+
+        if(dataChanged || currentAttributeData != stringifiedAttributeData) {
+            refreshShotlist()
+        }
+    }
+
     return (
-        <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog.Root open={isOpen} onOpenChange={(isOpen: boolean) => {
+            setIsOpen(isOpen)
+            runRefreshShotlistCheck()
+        }}>
             <Dialog.Portal>
                 <Dialog.Overlay className={"shotlistOptionsDialogOverlay dialogOverlay"}/>
                 <Dialog.Content aria-describedby={"confirm action dialog"} className={"shotlistOptionsDialogContent dialogContent"}>
@@ -128,10 +186,13 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                     </VisuallyHidden.Root>
 
                     <div className="content">
-                        <button className={"closeButton"} onClick={() => setIsOpen(false)}>
+                        <button className={"closeButton"} onClick={() => {
+                            setIsOpen(false)
+                            runRefreshShotlistCheck()
+                        }}>
                             <X size={18}/>
                         </button>
-                        <Tabs.Root className={"dialogPageTabRoot"} defaultValue={"attributes"}>
+                        <Tabs.Root className={"optionsDialogPageTabRoot"} defaultValue={"attributes"}>
                             <Tabs.List className={"tabs"}>
                                 <Tabs.Trigger value={"attributes"}>
                                     <List size={18} strokeWidth={2}/>
@@ -161,34 +222,49 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                         </Tabs.Trigger>
                                     </Tabs.List>
                                     <Tabs.Content value={"shot"} className={"content"}>
-                                        <DndContext
-                                            sensors={sensors}
-                                            collisionDetection={closestCenter}
-                                            onDragEnd={handleDragEnd}
-                                        >
-                                            <SortableContext
-                                                items={shotAttributeDefinitions.map(def => def.id)}
-                                                strategy={verticalListSortingStrategy}
-                                            >
-                                                <div className="definitions">
-                                                    {shotAttributeDefinitions.map((attribute) => (
-                                                        <ShotAttributeDefinition
-                                                            definition={attribute}
-                                                            key={attribute.id}
-                                                            onDelete={removeAttributeDefinition}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </SortableContext>
-                                        </DndContext>
-
+                                        {!shotAttributeDefinitions ?
+                                            <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
+                                            <>
+                                                <DndContext
+                                                    sensors={sensors}
+                                                    collisionDetection={closestCenter}
+                                                    onDragEnd={handleDragEnd}
+                                                >
+                                                    <SortableContext
+                                                        items={shotAttributeDefinitions?.map(def => def.id) || []}
+                                                        strategy={verticalListSortingStrategy}
+                                                    >
+                                                        <div className="definitions">
+                                                            {shotAttributeDefinitions?.map((attribute) => (
+                                                                <ShotAttributeDefinition
+                                                                    attributeDefinition={attribute}
+                                                                    key={attribute.id}
+                                                                    onDelete={removeShotAttributeDefinition}
+                                                                    dataChanged={() => setDataChanged(true)}
+                                                                />
+                                                            ))}
+                                                            {shotAttributeDefinitions?.length == 0 &&
+                                                                <div className={"noResults"}>
+                                                                    No attributes defined yet :(
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </SortableContext>
+                                                </DndContext>
+                                                <Popover.Root>
+                                                    <Popover.Trigger className={"add"}>Add attribute <Plus/></Popover.Trigger>
+                                                    <Popover.Portal>
+                                                        <Popover.Content className="PopoverContent addAttributeDefinitionPopup" sideOffset={5} align={"start"}>
+                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotTextAttribute)}><Type size={16}/>Text</button>
+                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotSingleSelectAttribute)}><ChevronDown size={16}/>Single select</button>
+                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotMultiSelectAttribute)}><List size={16}/>Multi select</button>
+                                                        </Popover.Content>
+                                                    </Popover.Portal>
+                                                </Popover.Root>
+                                            </>
+                                        }
                                     </Tabs.Content>
                                     <Tabs.Content value={"scene"} className={"content"}>
-                                        <div className="definitions">
-                                            {sceneAttributeDefinitions.map((attribute) => (
-                                                <ShotAttributeDefinition definition={attribute as AnyShotAttributeDefinition} key={attribute.id} onDelete={() => {}}/>
-                                            ))}
-                                        </div>
                                     </Tabs.Content>
                                 </Tabs.Root>
                             </Tabs.Content>

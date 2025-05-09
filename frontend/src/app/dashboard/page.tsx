@@ -4,6 +4,9 @@ import gql from "graphql-tag"
 import Link from "next/link"
 import {useQuery, useSuspenseQuery} from "@apollo/client"
 import "./dashboard.scss"
+import LoadingPage from "@/components/loadingPage/loadingPage"
+import React from "react"
+import ErrorPage from "@/components/errorPage/errorPage"
 
 export default function Dashboard() {
   const { error, loading, data } = useQuery(gql`
@@ -14,8 +17,15 @@ export default function Dashboard() {
         }
     }`);
 
-    if(loading) return <div>loading..</div>
-    if(error) return <div>error: {error.name}, message: {error.message}</div>
+    if(error) return <ErrorPage settings={{
+        title: 'Data could not be loaded',
+        description: error.message,
+        link: {
+            text: 'Dashboard',
+            href: '../dashboard'
+        }
+    }}/>
+    if(loading) return <LoadingPage/>
 
     return (
       <main className="dashboard">

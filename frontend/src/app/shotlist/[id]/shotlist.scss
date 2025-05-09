@@ -1,9 +1,4 @@
 main.shotlist{
-  --sidebar-bg: hsl(20, 29%, 94%);
-  --home-button-bg: hsl(14, 21%, 88%);
-  --bottom-button-bg: hsl(12, 9%, 88%);
-  --bottom-button-border: hsl(0, 0%, 64%);
-  --link-seperator-color: hsl(0, 0%, 34.5%);
   --scene-create-color: hsl(0, 0%, 42%);
 
   display: flex;
@@ -15,6 +10,7 @@ main.shotlist{
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-width: 30vw;
 
     .content{
       display: flex;
@@ -28,7 +24,6 @@ main.shotlist{
       .top{
         display: flex;
         gap: .2rem;
-        justify-content: center;
         align-items: center;
 
         a{
@@ -36,17 +31,19 @@ main.shotlist{
           padding: .15rem;
           aspect-ratio: 1;
           border-radius: 0.25rem;
-          border: 1px solid #999;
+          border: 1px solid var(--home-button-border);
+          color: var(--text-20);
 
           &:hover{
-            color: var(--accent-44);
+            color: var(--text);
             background-color: var(--hover-bg-20);
+            border-color: var(--home-button-hover-border);
           }
         }
 
         p{
           font-size: 1.25rem;
-          color: var(--link-seperator-color);
+          color: var(--text-30);
           font-weight: 600;
         }
 
@@ -55,6 +52,7 @@ main.shotlist{
           font-weight: 600;
           border: none;
           color: var(--text);
+          width: 100%;
         }
       }
 
@@ -89,8 +87,8 @@ main.shotlist{
           right: .5rem;
 
           button{
-            background-color: var(--bottom-button-bg);
-            border: 1px solid var(--bottom-button-border);
+            background-color: var(--sidebar-bottom-button-bg);
+            border: 1px solid var(--sidebar-bottom-button-border);
             width: 100%;
             font-size: .9rem;
             padding: .4rem;
@@ -102,8 +100,8 @@ main.shotlist{
     >.bottom{
       margin-top: auto;
       height: fit-content;
-      background-color: var(--bottom-button-bg);
-      border-top: 1px solid var(--bottom-button-border);
+      background-color: var(--sidebar-bottom-button-bg);
+      border-top: 1px solid var(--sidebar-bottom-button-border);
       font-weight: bold;
 
       a{

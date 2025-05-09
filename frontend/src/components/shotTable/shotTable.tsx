@@ -18,9 +18,11 @@ import {
 } from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import ShotService from "@/service/ShotService"
+import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
+import {AnyShotAttributeDefinition} from "@/util/Types"
 
 export type ShotTableRef = {
-    loadShots: () => void;
+    refresh: () => void;
 };
 
 const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}, ref) => {
@@ -88,10 +90,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
 
         setShots({data: data.shots, loading: loading, error: errors})
     }
-
-    useImperativeHandle(ref, () => ({
-        loadShots,
-    }));
 
     const createShot = async (attributePosition: number) => {
         const { data, errors } = await client.mutate({
@@ -186,14 +184,21 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
             </DndContext>
 
             <div className="shot new">
-                <div className="shotAttribute number">
+                <div className="shotAttribute number first">
                     <span>#</span>
                 </div>
-                {shotAttributeDefinitions.map((shotAttributeDefinition, index) => (
-                    <div className="shotAttribute" key={shotAttributeDefinition.id} onClick={() => createShot(index)}>
-                        <p>{shotAttributeDefinition.name}</p>
-                    </div>
-                ))}
+                {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                    let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                    return (
+                        <div className={`shotAttribute ${index == shotAttributeDefinitions.length-1 ? "last" : ""}`} key={shotAttributeDefinition.id}
+                             onClick={() => createShot(index)}>
+                            <p>{shotAttributeDefinition.name}</p>
+                            <div className="icon">
+                                <Icon size={18} />
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

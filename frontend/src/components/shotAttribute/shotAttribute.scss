@@ -6,13 +6,14 @@ div.shotAttribute{
   align-items: center;
   width: 100%;
   flex-grow: 0;
+  position: relative;
 
-  &:first-of-type{
+  &.first{
     border-top-left-radius: .3rem;
     border-bottom-left-radius: .3rem;
   }
 
-  &:last-of-type{
+  &.last{
     border-top-right-radius: .3rem;
     border-bottom-right-radius: .3rem;
   }
@@ -57,5 +58,14 @@ div.shotAttribute{
   .select{
     width: 100%;
     height: 100%;
+  }
+
+  .icon{
+    position: absolute;
+    right: .3rem;
+    top: 50%;
+    margin-top: .1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 }

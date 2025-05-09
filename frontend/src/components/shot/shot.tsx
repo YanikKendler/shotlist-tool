@@ -36,11 +36,11 @@ export default function Shot({shot, position}: {shot: ShotDto, position: number}
             >
                 <GripVertical/>
             </div>
-            <div className="shotAttribute number">
+            <div className="shotAttribute first number">
                 <p>{numberToShotLetter(position)}</p>
             </div>
-            {(shot.attributes as [AnyShotAttribute])?.map((attr) => (
-                <ShotAttribute attribute={attr} key={attr.id}></ShotAttribute>
+            {(shot.attributes as [AnyShotAttribute])?.map((attr, index) => (
+                <ShotAttribute className={index == shot.attributes!.length-1 ? "last" : ""} attribute={attr} key={attr.id}></ShotAttribute>
             ))}
         </div>
     );

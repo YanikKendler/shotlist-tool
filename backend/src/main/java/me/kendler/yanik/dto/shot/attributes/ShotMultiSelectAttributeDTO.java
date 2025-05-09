@@ -4,12 +4,13 @@ import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBas
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 
+import java.util.List;
 import java.util.Set;
 
 public record ShotMultiSelectAttributeDTO(
     Long id,
     ShotAttributeDefinitionBaseDTO definition,
-    Set<ShotSelectAttributeOptionDefinition> multiSelectValue
+    List<ShotSelectAttributeOptionDefinition> multiSelectValue
 ) implements ShotAttributeBaseDTO {
     @Override
     public Long getId() {

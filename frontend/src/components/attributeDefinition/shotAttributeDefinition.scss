@@ -27,7 +27,6 @@ div.shotAttributeDefinition{
     padding: .5rem;
     border: 1px solid var(--input-border);
     border-radius: .3rem;
-    font-weight: 500;
 
     &:hover{
       border-color: var(--input-hover-border);
@@ -53,6 +52,77 @@ div.shotAttributeDefinition{
 
     &.delete{
       margin-left: auto;
+    }
+  }
+}
+
+.editAttributeOptionsPopup{
+  --input-border: hsl(0, 0%, 82%);
+
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+
+  .option{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding-block: .25rem;
+
+    p{
+      width: 2ch;
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-30);
+    }
+
+    input{
+      border-radius: 0;
+      border: none;
+      border-bottom: 2px solid var(--input-border);
+      padding: .3rem;
+      width: 100%;
+      font-size: .95rem;
+
+      &:focus-visible{
+        outline: none;
+        border-color: var(--accent);
+      }
+    }
+
+    button{
+      position: absolute;
+      right: .5rem;
+      aspect-ratio: 1;
+      border: 1px solid var(--input-border);
+      padding: .3rem;
+      display: none;
+      background-color: var(--contrast);
+      outline: 5px solid var(--contrast);
+      margin: 0;
+
+      &:hover{
+        background-color: var(--contrast);
+        color: var(--bad);
+        border-color: var(--bad);
+      }
+    }
+
+    &:hover{
+      button{
+        display: flex;
+      }
+    }
+  }
+
+  button{
+    justify-content: left;
+    padding: .5rem .15rem;
+    color: var(--text-40);
+    margin-top: .5rem;
+
+    &:hover{
+      background-color: var(--hover-bg-10);
     }
   }
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
@@ -88,7 +89,8 @@ public class Shotlist extends PanacheEntityBase {
                     .sorted(Comparator.comparingInt(definition -> definition.position))
                     .collect(Collectors.toList()),
             this.shotAttributeDefinitions.stream()
-                    .sorted(Comparator.comparingInt(definition -> definition.position))
+                    .map(ShotAttributeDefinitionBase::toDTO)
+                    .sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition))
                     .collect(Collectors.toList()),
             this.name,
             this.createdAt,

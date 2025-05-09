@@ -23,6 +23,7 @@ import ErrorPage from "@/components/errorPage/errorPage"
 import { ShotlistContext } from "@/context/ShotlistContext"
 import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 import shotTable from "@/components/shotTable/shotTable"
+import LoadingPage from "@/components/loadingPage/loadingPage"
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -33,6 +34,8 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
+
+    const [reloadKey, setReloadKey] = useState(0)
 
     const shotTableRef = useRef<ShotTableRef>(null);
 
@@ -157,8 +160,15 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
         setSelectedSceneId(data.createScene.id)
     }
 
-    if(shotlist.loading) return <div>loading..</div>
-    if(shotlist.error) return <div>error: {shotlist.error.name}, message: {shotlist.error.message}</div>
+    if(shotlist.error) return <ErrorPage settings={{
+        title: 'Data could not be loaded',
+        description: shotlist.error.message,
+        link: {
+            text: 'Dashboard',
+            href: '../dashboard'
+        }
+    }}/>
+    if(shotlist.loading) return <LoadingPage/>
 
     if(!shotlist.data) return <ErrorPage settings={{
         title: '404',
@@ -173,7 +183,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
 
     return (
         <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true)}}>
-            <main className="shotlist">
+            <main className="shotlist" key={reloadKey}>
                 <div className="sidebar">
                     <div className="content">
                         <div className="top">
@@ -204,13 +214,17 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                     </div>
                     <ShotTable ref={shotTableRef} sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
                 </div>
-                <ShotlistOptionsDialog
-                    isOpen={optionsDialogOpen}
-                    setIsOpen={setOptionsDialogOpen}
-                    shotlistId={shotlist.data.id || ""}
-                    refreshShotlist={() => {loadShotlist(true), shotTableRef.current?.loadShots()}}
-                ></ShotlistOptionsDialog>
             </main>
+            <ShotlistOptionsDialog
+                isOpen={optionsDialogOpen}
+                setIsOpen={setOptionsDialogOpen}
+                shotlistId={shotlist.data.id || ""}
+                refreshShotlist={() => {
+                    console.log("refresshhh")
+                    loadShotlist(true)
+                    setReloadKey(reloadKey + 1)
+                }}
+            ></ShotlistOptionsDialog>
         </ShotlistContext.Provider>
     )
 }

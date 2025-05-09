@@ -46,7 +46,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                             definition.id,
                             definition.name,
                             definition.position,
-                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).sorted(Comparator.comparing(option -> option.name.toLowerCase())).toList()
                     ));
                 }
                 case ShotMultiSelectAttributeDefinition multiSelectAttribute -> {
@@ -54,7 +54,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                             definition.id,
                             definition.name,
                             definition.position,
-                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).sorted(Comparator.comparing(option -> option.name.toLowerCase())).toList()
                     ));
                 }
                 default -> {
@@ -63,7 +63,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             }
         });
 
-        return attributeDefinitionDTOs.stream().sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition)).collect(Collectors.toList());
+        return attributeDefinitionDTOs.stream().sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition)).toList();
     }
 
     public ShotAttributeDefinitionBase create(ShotAttributeDefinitionCreateDTO createDTO) {
@@ -98,6 +98,13 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
         persist(attributeDefinition);
 
+        ShotAttributeDefinitionBase finalAttributeDefinition = attributeDefinition;
+        shotlist.scenes.forEach(scene -> {
+            scene.shots.forEach(shot -> {
+                shotAttributeRepository.persist(finalAttributeDefinition.createAttribute(shot));
+            });
+        });
+
         return attributeDefinition;
     }
 
@@ -109,7 +116,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         if(editDTO.name() != null && !editDTO.name().isEmpty()) {
             attribute.name = editDTO.name();
         }
-        if(attribute.position != editDTO.position()){
+        if(editDTO.position() != null && attribute.position != editDTO.position()){
             Shotlist shotlist = getEntityManager()
                                     .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d = :attribute", Shotlist.class)
                                     .setParameter("attribute", attribute)
@@ -128,12 +135,12 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         return attribute;
     }
 
-    public ShotAttributeDefinitionBase delete(Long id){
+    public ShotAttributeDefinitionBase remove(Long id){
         ShotAttributeDefinitionBase attributeDefinition = findById(id);
 
         if(attributeDefinition != null) {
-            getEntityManager().createQuery("select s from Shot s join s.attributes sab where sab.definition.id = :definition", Shot.class)
-                    .setParameter("definition", attributeDefinition.id)
+            /*getEntityManager().createQuery("select s from Shot s join s.attributes sab where sab.definition.id = :definitionId", Shot.class)
+                    .setParameter("definitionId", attributeDefinition.id)
                     .getResultList()
                     .forEach(shot -> {
                         Optional<ShotAttributeBase> attribute = shot.attributes.stream().filter(a -> a.definition.id.equals(attributeDefinition.id)).findFirst();
@@ -142,13 +149,31 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                             shot.attributes.remove(attribute.get());
                             shotAttributeRepository.delete(attribute.get());
                         }
-                    });
+                    });*/
 
-           /*getEntityManager().createQuery("delete from ShotAttributeBase sab where sab.definition.id = :definition")
-                    .setParameter("definition", attributeDefinition.id)
-                    .executeUpdate();*/
+            List<ShotAttributeBase> relevantAttributes = getEntityManager()
+                    .createQuery("select sa from ShotAttributeBase sa where sa.definition.id = :definitionId", ShotAttributeBase.class)
+                    .setParameter("definitionId", id)
+                    .getResultList();
 
-            return attributeDefinition;
+            List<Shot> relevantShots = getEntityManager()
+                    .createQuery("select s from Shot s join s.attributes sab where sab.definition.id = :definitionId", Shot.class)
+                    .setParameter("definitionId", id)
+                    .getResultList();
+
+            relevantShots.forEach(shot -> {
+                relevantAttributes.forEach(shot.attributes::remove);
+            });
+
+            Shotlist relevantShotlist = getEntityManager()
+                    .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
+                    .setParameter("definitionId", id)
+                    .getSingleResult();
+
+
+            relevantShotlist.shotAttributeDefinitions.remove(attributeDefinition);
+
+            delete(attributeDefinition);
         }
         return null;
     }

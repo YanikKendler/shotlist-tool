@@ -1,12 +1,13 @@
 import {AnySceneAttribute, AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
 import {ChevronDown, List, Type} from "lucide-react"
 import {JSX} from "react"
+import {wuText} from "@yanikkendler/web-utils"
 
 export abstract class SceneAttributeParser {
     static toValueString(attribute: AnySceneAttribute): string{
         switch (attribute.__typename) {
             case "SceneTextAttributeDTO":
-                return <string>attribute.textValue
+                return wuText.truncateText(<string>attribute.textValue, 15, "..")
             case "SceneSingleSelectAttributeDTO":
                 return <string>attribute.singleSelectValue?.name
             case "SceneMultiSelectAttributeDTO":

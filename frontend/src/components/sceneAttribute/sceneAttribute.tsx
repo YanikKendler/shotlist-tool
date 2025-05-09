@@ -21,6 +21,7 @@ import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
 import Select, {selectSceneStyles} from "@/components/select/select"
 import {ShotlistContext} from "@/context/ShotlistContext"
+import {ChevronDown, List, Type} from "lucide-react"
 
 export default function SceneAttribute({attribute}: {attribute: AnySceneAttribute}){
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -96,7 +97,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
             mutation: gql`
                 mutation createSceneOption($definitionId: BigInteger!, $name: String!) {
                     createSceneSelectAttributeOption(createDTO:{
-                        selectAttributeId: $definitionId,
+                        attributeDefinitionId: $definitionId,
                         name: $name
                     }){
                         id
@@ -107,17 +108,19 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
             variables: { definitionId: attribute.definition?.id, name: inputValue },
         });
 
-        setSingleSelectValue({
-            label: data.createSceneSelectAttributeOption.name,
-            value: data.createSceneSelectAttributeOption.id
-        })
-        setMultiSelectValue([
-            ...multiSelectValue || [],
-            {
+        if(attribute.__typename == "SceneSingleSelectAttributeDTO")
+            updateSingleSelectValue({
                 label: data.createSceneSelectAttributeOption.name,
                 value: data.createSceneSelectAttributeOption.id
-            }
-        ])
+            })
+        if(attribute.__typename == "SceneMultiSelectAttributeDTO")
+            updateMultiSelectValue([
+                ...multiSelectValue || [],
+                {
+                    label: data.createSceneSelectAttributeOption.name,
+                    value: data.createSceneSelectAttributeOption.id
+                }
+            ])
 
         triggerRefresh("shot", attribute.definition?.id);
     }
@@ -170,10 +173,12 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
 
     const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(updateAttributeValue), []);
 
+    let content: React.JSX.Element = <></>
+
     switch (attribute.__typename) {
         case "SceneSingleSelectAttributeDTO":
-            return (
-                <div className="sceneAttribute">
+            content = (
+                <>
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={false}
@@ -186,11 +191,15 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectSceneStyles}
                     ></Select>
-                </div>
+                    <div className="icon">
+                        <ChevronDown size={18} strokeWidth={2}/>
+                    </div>
+                </>
             )
+            break
         case "SceneMultiSelectAttributeDTO":
-            return (
-                <div className="sceneAttribute">
+            content = (
+                <>
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={true}
@@ -203,12 +212,16 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectSceneStyles}
                     ></Select>
-                </div>
+                    <div className="icon">
+                        <List size={18} strokeWidth={2}/>
+                    </div>
+                </>
             )
+            break
         case "SceneTextAttributeDTO":
-            return (
-                <div className="sceneAttribute">
-                    <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
+            content = (
+                <>
+                <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
                         <p
                             className={"text"}
                             ref={textInputRef}
@@ -223,7 +236,15 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
 
                         {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || ""}</p>}
                     </div>
-                </div>
+                    {wuConstants.Regex.empty.test(textValue) && (
+                        <div className="icon">
+                            <Type size={18} strokeWidth={2} />
+                        </div>
+                    )}
+                </>
             )
+            break
     }
+
+    return <div className="sceneAttribute">{content}</div>
 }

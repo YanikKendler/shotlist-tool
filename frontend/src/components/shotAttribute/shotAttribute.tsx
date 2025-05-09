@@ -2,7 +2,7 @@
 
 import {AnyShotAttribute, ShotAttributeValueCollection, SelectOption} from "@/util/Types"
 import React, {
-    useCallback, useContext,
+    useContext,
     useEffect,
     useMemo,
     useRef,
@@ -12,12 +12,13 @@ import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
-import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
+import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
 import Select, {selectShotStyles} from "@/components/select/select"
 import ShotService from "@/service/ShotService"
 import {ShotlistContext} from "@/context/ShotlistContext"
+import {ChevronDown, List, Type} from "lucide-react"
 
-const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute: AnyShotAttribute}){
+const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: {attribute: AnyShotAttribute, className?: string}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -92,7 +93,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
             mutation: gql`
                 mutation createShotOption($definitionId: BigInteger!, $name: String!) {
                     createShotSelectAttributeOption(createDTO:{
-                        selectAttributeId: $definitionId,
+                        attributeDefinitionId: $definitionId,
                         name: $name
                     }){
                         id
@@ -103,17 +104,20 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
             variables: { definitionId: attribute.definition?.id, name: inputValue },
         });
 
-        setSingleSelectValue({
-            label: data.createShotSelectAttributeOption.name,
-            value: data.createShotSelectAttributeOption.id
-        })
-        setMultiSelectValue([
-            ...multiSelectValue || [],
-            {
+        if(attribute.__typename == "ShotMultiSelectAttributeDTO")
+            updateMultiSelectValue([
+                ...multiSelectValue || [],
+                {
+                    label: data.createShotSelectAttributeOption.name,
+                    value: data.createShotSelectAttributeOption.id
+                }
+            ])
+
+        if(attribute.__typename == "ShotSingleSelectAttributeDTO")
+            updateSingleSelectValue({
                 label: data.createShotSelectAttributeOption.name,
                 value: data.createShotSelectAttributeOption.id
-            }
-        ])
+            })
 
         triggerRefresh("shot", attribute.definition?.id);
     }
@@ -145,10 +149,12 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
 
     const debouncedUpdateAttributeValue = useMemo(() => wuGeneral.debounce(ShotService.updateAttribute), []);
 
+    let content: React.JSX.Element = <></>
+
     switch (attribute.__typename) {
         case "ShotSingleSelectAttributeDTO":
-            return (
-                <div className="shotAttribute">
+            content = (
+                <>
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={false}
@@ -161,11 +167,17 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
                         editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectShotStyles}
                     ></Select>
-                </div>
+                    {!singleSelectValue &&
+                        <div className="icon">
+                            <ChevronDown size={18} strokeWidth={2}/>
+                        </div>
+                    }
+                </>
             )
+            break
         case "ShotMultiSelectAttributeDTO":
-            return (
-                <div className="shotAttribute">
+            content = (
+                <>
                     <Select
                         definitionId={attribute.definition?.id}
                         isMulti={true}
@@ -178,11 +190,17 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
                         editAction={shotlistContext.openShotlistOptionsDialog}
                         styles={selectShotStyles}
                     ></Select>
-                </div>
+                    {(!multiSelectValue || multiSelectValue?.length == 0) &&
+                        <div className="icon">
+                            <List size={18} strokeWidth={2}/>
+                        </div>
+                    }
+                </>
             )
+            break
         case "ShotTextAttributeDTO":
-            return (
-                <div className="shotAttribute">
+            content = (
+                <>
                     <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
                         <p
                             className={"text"}
@@ -198,9 +216,17 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute}: {attribute:
 
                         {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || ""}</p>}
                     </div>
-                </div>
+                    {wuConstants.Regex.empty.test(textValue) && (
+                        <div className="icon">
+                            <Type size={18} strokeWidth={2} />
+                        </div>
+                    )}
+                </>
             )
+            break
     }
+
+    return <div className={`shotAttribute ${className || ""}`}>{content}</div>
 })
 
 export default ShotAttribute;

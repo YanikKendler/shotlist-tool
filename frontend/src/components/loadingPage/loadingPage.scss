@@ -1,0 +1,25 @@
+.loadingPage{
+  width: 100%;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+
+
+  .content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img{
+      color: var(--accent);
+      width: 60px;
+    }
+
+    p{
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 2rem;
+    }
+  }
+}

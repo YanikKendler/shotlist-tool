@@ -46,7 +46,6 @@ export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
     singleValue: (baseStyles) => ({
         ...baseStyles,
         color: "var(--text)",
-        fontWeight: "500",
     }),
     valueContainer: (baseStyles) => ({
         ...baseStyles,
@@ -77,15 +76,10 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
         border: "none",
         boxShadow: "none",
         outline: "none",
-        borderBottom: `2px solid ${state.isFocused ? 'var(--accent)' : 'var(--scene-underline-color)'}`,
         backgroundColor: "transparent",
         zIndex: state.isFocused ? 100 : 0,
         cursor: 'text',
-        transition: 'border-color 0.2s ease',
         borderRadius: "0",
-        '&:hover': {
-            borderColor: state.isFocused ? 'var(--accent)' : 'var(--scene-underline-color)',
-        },
     }),
     valueContainer: (baseStyles) => ({
         ...baseStyles,
@@ -95,7 +89,11 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
     multiValue: (baseStyles) => ({
         ...baseStyles,
         backgroundColor: "var(--multi-value-background)",
-    })
+    }),
+    menu: (baseStyles) => ({
+        ...baseStyles,
+        marginTop: "2px",
+    }),
 }
 
 export default function Select(
@@ -175,10 +173,14 @@ export default function Select(
                 Menu: CustomSelectMenu,
                 MultiValue: CustomMultiValue,
                 ValueContainer: CustomValueContainer,
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
             }
         else
             return {
                 Menu: CustomSelectMenu,
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
             }
     }
 

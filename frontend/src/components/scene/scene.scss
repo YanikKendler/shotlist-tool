@@ -1,6 +1,6 @@
 
 .sidebarScene{
-  --scene-hover-border: #E0A389;
+  --scene-hover-border: hsla(18, 100%, 47%, 0.35);
   --delete-scene-color: hsl(0,0%,60%);
 
   display: flex;
@@ -36,7 +36,14 @@
     display: flex;
     gap: .5rem;
     color: var(--text);
-    transition: name .2s;
+    transition: color .2s;
+
+    .text{
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: 100%;
+      overflow: hidden;
+    }
 
     .number{
       font-weight: 700;
@@ -67,6 +74,7 @@
 
     &:hover{
       background-color: var(--hover-bg-10);
+      color: var(--text-40);
     }
   }
 }

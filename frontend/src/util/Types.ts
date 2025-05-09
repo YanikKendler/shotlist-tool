@@ -15,6 +15,9 @@ export type AnyShotAttribute = ShotTextAttributeDto | ShotSingleSelectAttributeD
 export type AnyShotAttributeDefinition = ShotTextAttributeDefinitionDto | ShotSingleSelectAttributeDefinitionDto | ShotMultiSelectAttributeDefinitionDto
 export type AnySceneAttributeDefinition = SceneTextAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto | SceneSingleSelectAttributeDefinitionDto
 
+export type ShotSingleOrMultiSelectAttributeDefinition = ShotSingleSelectAttributeDefinitionDto | ShotMultiSelectAttributeDefinitionDto
+export type SceneSingleOrMultiSelectAttributeDefinition = SceneSingleSelectAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto
+
 export type AnyAttributeDefinition = AnyShotAttributeDefinition | AnySceneAttributeDefinition
 
 export interface SelectOption {

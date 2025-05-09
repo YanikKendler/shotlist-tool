@@ -4,11 +4,13 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import me.kendler.yanik.dto.shot.ShotSelectAttributeCreateDTO;
+import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionSearchDTO;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
 
 import java.util.List;
 
@@ -18,9 +20,18 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
     @Inject
     ShotAttributeDefinitionRepository shotAttributeDefinitionRepository;
 
-    public ShotSelectAttributeOptionDefinition create(ShotSelectAttributeCreateDTO createDTO){
-        ShotAttributeDefinitionBase shotAttributeDefinition = shotAttributeDefinitionRepository.findById(createDTO.selectAttributeId());
-        ShotSelectAttributeOptionDefinition shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(createDTO.name(), shotAttributeDefinition);
+    public ShotSelectAttributeOptionDefinition create(ShotSelectAttributeOptionCreateDTO createDTO){
+        ShotAttributeDefinitionBase shotAttributeDefinition = shotAttributeDefinitionRepository.findById(createDTO.attributeDefinitionId());
+
+        ShotSelectAttributeOptionDefinition shotSelectAttributeOptionDefinition;
+
+        if (shotAttributeDefinition.name != null && !shotAttributeDefinition.name.isEmpty()) {
+            shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(createDTO.name(), shotAttributeDefinition);
+        }
+        else {
+            shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(shotAttributeDefinition);
+        }
+
         persist(shotSelectAttributeOptionDefinition);
         return shotSelectAttributeOptionDefinition;
     }
@@ -46,6 +57,19 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
     public ShotSelectAttributeOptionDefinition delete(Long id){
         ShotSelectAttributeOptionDefinition shotSelectAttributeOptionDefinition = findById(id);
         if(shotSelectAttributeOptionDefinition != null) {
+            switch (shotSelectAttributeOptionDefinition.shotAttributeDefinition){
+                case ShotMultiSelectAttributeDefinition attributeDefinition: {
+                    break;
+                }
+                case ShotSingleSelectAttributeDefinition attributeDefinition: {
+                    getEntityManager().createQuery("update ShotSingleSelectAttribute sa set sa.value = null where sa.definition = :definition")
+                            .setParameter("definition", attributeDefinition)
+                            .executeUpdate();
+                    break;
+                }
+                default:
+                    throw new IllegalStateException("Unexpected value: " + shotSelectAttributeOptionDefinition.shotAttributeDefinition);
+            }
             delete(shotSelectAttributeOptionDefinition);
         }
         return shotSelectAttributeOptionDefinition;
