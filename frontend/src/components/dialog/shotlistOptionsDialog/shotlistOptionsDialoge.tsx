@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 import "./shotlistOptionsDialog.scss"
 import {Popover, Separator, Tabs, VisuallyHidden} from "radix-ui"
 import {ChevronDown, FileDown, List, Plus, Type, Users, X} from "lucide-react"
-import ShotAttributeDefinition from "@/components/attributeDefinition/shotAttributeDefinition"
+import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
 import {
     AnySceneAttributeDefinition,
     AnyShotAttributeDefinition,
@@ -16,10 +16,15 @@ import {useApolloClient} from "@apollo/client"
 import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import {apolloClient} from "@/ApolloWrapper"
-import {ShotAttributeType, ShotSelectAttributeOptionDefinition} from "../../../../lib/graphql/generated"
+import {
+    SceneAttributeType,
+    ShotAttributeType,
+    ShotSelectAttributeOptionDefinition
+} from "../../../../lib/graphql/generated"
 import Image from "next/image"
 import {wuGeneral} from "@yanikkendler/web-utils"
 import {set} from "immutable"
+import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
 
 export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {
     const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[] | null>(null);
@@ -136,7 +141,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
         ])
     }
 
-    function handleDragEnd(event: any) {
+    function handleShotDragEnd(event: any) {
         const {active, over} = event;
 
         if (active.id !== over.id && shotAttributeDefinitions) {
@@ -160,7 +165,73 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                 })
 
                 return arrayMove(shotAttributeDefinitions, oldIndex, newIndex)
-            });
+            })
+        }
+    }
+
+    function removeSceneAttributeDefinition(definitionId: number) {
+        if(!sceneAttributeDefinitions || sceneAttributeDefinitions.length == 0) return
+
+        let newSceneDefinitions: AnySceneAttributeDefinition[] = sceneAttributeDefinitions.filter((sceneDefinition: AnySceneAttributeDefinition) => sceneDefinition.id != definitionId)
+
+        setSceneAttributeDefinitions(newSceneDefinitions)
+    }
+
+    async function createSceneAttributeDefinition(type: SceneAttributeType) {
+        const {data, errors} = await client.mutate({
+            mutation: gql`
+                mutation createSceneSelectAttributeOption($shotlistId: String!, $attributeType: SceneAttributeType!) {
+                    createSceneAttributeDefinition(createDTO: {
+                        shotlistId: $shotlistId,
+                        type: $attributeType
+                    }) {
+                        id
+                        name
+                        position
+                    }
+                }
+            `,
+            variables: {shotlistId: shotlistId, attributeType: type},
+        });
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setSceneAttributeDefinitions([
+            ...sceneAttributeDefinitions || [],
+            data.createSceneAttributeDefinition
+        ])
+    }
+
+    function handleSceneDragEnd(event: any) {
+        const {active, over} = event;
+
+
+        if (active.id !== over.id && sceneAttributeDefinitions) {
+            setSceneAttributeDefinitions((definition) => {
+                const oldIndex = sceneAttributeDefinitions.findIndex((definition) => definition.id === active.id);
+                const newIndex = sceneAttributeDefinitions.findIndex((definition) => definition.id === over.id);
+
+                apolloClient.mutate({
+                    mutation: gql`
+                        mutation updateSceneDefinition($id: BigInteger!, $position: Int!) {
+                            updateSceneAttributeDefinition(editDTO:{
+                                id: $id,
+                                position: $position
+                            }){
+                                id
+                                position
+                            }
+                        }
+                    `,
+                    variables: {id: active.id, position: newIndex},
+                }).then(result => {
+                    console.log(result)
+                })
+
+                return arrayMove(sceneAttributeDefinitions, oldIndex, newIndex)
+            })
         }
     }
 
@@ -228,7 +299,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                                 <DndContext
                                                     sensors={sensors}
                                                     collisionDetection={closestCenter}
-                                                    onDragEnd={handleDragEnd}
+                                                    onDragEnd={handleShotDragEnd}
                                                 >
                                                     <SortableContext
                                                         items={shotAttributeDefinitions?.map(def => def.id) || []}
@@ -265,6 +336,47 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                         }
                                     </Tabs.Content>
                                     <Tabs.Content value={"scene"} className={"content"}>
+                                        {!sceneAttributeDefinitions ?
+                                            <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
+                                            <>
+                                                <DndContext
+                                                    sensors={sensors}
+                                                    collisionDetection={closestCenter}
+                                                    onDragEnd={handleSceneDragEnd}
+                                                >
+                                                    <SortableContext
+                                                        items={sceneAttributeDefinitions?.map(def => def.id) || []}
+                                                        strategy={verticalListSortingStrategy}
+                                                    >
+                                                        <div className="definitions">
+                                                            {sceneAttributeDefinitions?.map((attribute) => (
+                                                                <SceneAttributeDefinition
+                                                                    attributeDefinition={attribute}
+                                                                    key={attribute.id}
+                                                                    onDelete={removeSceneAttributeDefinition}
+                                                                    dataChanged={() => setDataChanged(true)}
+                                                                />
+                                                            ))}
+                                                            {sceneAttributeDefinitions?.length == 0 &&
+                                                                <div className={"noResults"}>
+                                                                    No attributes defined yet :(
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </SortableContext>
+                                                </DndContext>
+                                                <Popover.Root>
+                                                    <Popover.Trigger className={"add"}>Add attribute <Plus/></Popover.Trigger>
+                                                    <Popover.Portal>
+                                                        <Popover.Content className="PopoverContent addAttributeDefinitionPopup" sideOffset={5} align={"start"}>
+                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneTextAttribute)}><Type size={16}/>Text</button>
+                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneSingleSelectAttribute)}><ChevronDown size={16}/>Single select</button>
+                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneMultiSelectAttribute)}><List size={16}/>Multi select</button>
+                                                        </Popover.Content>
+                                                    </Popover.Portal>
+                                                </Popover.Root>
+                                            </>
+                                        }
                                     </Tabs.Content>
                                 </Tabs.Root>
                             </Tabs.Content>

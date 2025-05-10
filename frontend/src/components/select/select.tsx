@@ -35,10 +35,6 @@ export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
         paddingInline: ".5rem",
         fontSize: ".9rem"
     }),
-    multiValueRemove: (baseStyles) => ({
-        ...baseStyles,
-        cursor: 'pointer',
-    }),
     menu: (baseStyles) => ({
         ...baseStyles,
         marginTop: 0,
@@ -50,6 +46,18 @@ export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
     valueContainer: (baseStyles) => ({
         ...baseStyles,
         padding: "2px .1rem"
+    }),
+    multiValue: (baseStyles) => ({
+        ...baseStyles,
+        borderRadius: "0.3rem",
+    }),
+    multiValueRemove: (baseStyles) => ({
+        ...baseStyles,
+        transition: 'background-color 0.1s, color 0.1s',
+        '&:hover': {
+            backgroundColor: "var(--hover-bg-bad-10)",
+            cursor: 'pointer',
+        },
     }),
 }
 
@@ -67,6 +75,11 @@ export const selectShotStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
         },
         height: "inherit"
     }),
+    multiValue: (baseStyles) => ({
+        ...baseStyles,
+        borderRadius: "0.3rem",
+        backgroundColor: "var(--select-menu-multivalue-bg)"
+    }),
 }
 
 export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
@@ -80,6 +93,7 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
         zIndex: state.isFocused ? 100 : 0,
         cursor: 'text',
         borderRadius: "0",
+        fontSize: ".95rem",
     }),
     valueContainer: (baseStyles) => ({
         ...baseStyles,
@@ -88,11 +102,19 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
     }),
     multiValue: (baseStyles) => ({
         ...baseStyles,
-        backgroundColor: "var(--multi-value-background)",
+        marginBottom: "0px",
+        borderRadius: "0.3rem",
     }),
     menu: (baseStyles) => ({
         ...baseStyles,
-        marginTop: "2px",
+        marginTop: "3px",
+    }),
+    option: (baseStyles) => ({
+        ...baseStyles,
+        cursor: 'pointer',
+        borderRadius: ".3rem",
+        paddingInline: ".5rem",
+        fontSize: ".85rem"
     }),
 }
 
@@ -121,12 +143,12 @@ export default function Select(
         return (
             <components.Menu {...props}>
                 <div className="customSelectMenu" style={{backgroundColor: shotOrScene == "shot" ? "var(--select-menu-bg)" : "var(--select-menu-scene-bg)"}}>
-                    <div className="content">
+                    <div className="content" style={{padding: shotOrScene == "shot" ? ".3rem" : ".2rem"}}>
                         {props.children}
                     </div>
                     <div className="bottom" onClick={editAction}>
                         <p>Edit Attributes</p>
-                        <Pen size={18} strokeWidth={2} />
+                        <Pen size={16} strokeWidth={2} />
                     </div>
                 </div>
             </components.Menu>

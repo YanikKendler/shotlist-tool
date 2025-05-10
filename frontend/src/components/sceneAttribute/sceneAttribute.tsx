@@ -18,12 +18,13 @@ import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './sceneAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
-import {wuConstants, wuGeneral} from "@yanikkendler/web-utils"
+import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
 import Select, {selectSceneStyles} from "@/components/select/select"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
+import {SceneSingleSelectAttributeDto} from "../../../lib/graphql/generated"
 
-export default function SceneAttribute({attribute}: {attribute: AnySceneAttribute}){
+export default function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -138,16 +139,23 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
         setTextValue(cleaned)
 
         debouncedUpdateAttributeValue({textValue: cleaned})
+
+        let newValue = {...attribute, textValue: cleaned}
+        attributeUpdated(newValue)
     }
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
         setSingleSelectValue(value || undefined)
         updateAttributeValue({singleSelectValue: Number(value?.value)})
+        let newValue = {...attribute, singleSelectValue: {id: value?.value, name: value?.label}}
+        attributeUpdated(newValue)
     }
 
     const updateMultiSelectValue = (value: SelectOption[] | null) => {
         setMultiSelectValue(value || [])
         updateAttributeValue({multiSelectValue: value?.map((option) => Number(option.value))})
+        let newValue = {...attribute, multiSelectValue: value?.map((option) => ({id: option.value, name: option.label}))}
+        attributeUpdated(newValue)
     }
 
     const updateAttributeValue = async (value: SceneAttributeValueCollection) => {
@@ -185,7 +193,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         loadOptions={loadOptions}
                         onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
                         onCreate={createOption}
-                        placeholder={attribute.definition?.name || ""}
+                        placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"scene"}
                         editAction={shotlistContext.openShotlistOptionsDialog}
@@ -206,7 +214,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                         loadOptions={loadOptions}
                         onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
                         onCreate={createOption}
-                        placeholder={attribute.definition?.name || ""}
+                        placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"scene"}
                         editAction={shotlistContext.openShotlistOptionsDialog}
@@ -234,7 +242,7 @@ export default function SceneAttribute({attribute}: {attribute: AnySceneAttribut
                             }}
                         />
 
-                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || ""}</p>}
+                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || "Unnamed"}</p>}
                     </div>
                     {wuConstants.Regex.empty.test(textValue) && (
                         <div className="icon">

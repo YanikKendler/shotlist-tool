@@ -33,10 +33,10 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
     @Override
     public SceneAttributeDefinitionBaseDTO toDTO() {
         return new SceneSingleSelectAttributeDefinitionDTO(
-                id,
-                name,
-                position,
-                null
+            id,
+            name,
+            position,
+            null
         );
     }
 }

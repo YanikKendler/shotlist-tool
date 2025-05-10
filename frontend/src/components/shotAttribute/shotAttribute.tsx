@@ -161,7 +161,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         loadOptions={loadOptions}
                         onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
                         onCreate={createOption}
-                        placeholder={attribute.definition?.name || ""}
+                        placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"shot"}
                         editAction={shotlistContext.openShotlistOptionsDialog}
@@ -184,7 +184,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         loadOptions={loadOptions}
                         onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
                         onCreate={createOption}
-                        placeholder={attribute.definition?.name || ""}
+                        placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"shot"}
                         editAction={shotlistContext.openShotlistOptionsDialog}
@@ -214,7 +214,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                             }}
                         />
 
-                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || ""}</p>}
+                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || "Unnamed"}</p>}
                     </div>
                     {wuConstants.Regex.empty.test(textValue) && (
                         <div className="icon">

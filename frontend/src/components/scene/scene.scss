@@ -1,6 +1,6 @@
 
 .sidebarScene{
-  --scene-hover-border: hsla(18, 100%, 47%, 0.35);
+  --scene-hover-border: hsla(0, 0%, 80%);
   --delete-scene-color: hsl(0,0%,60%);
 
   display: flex;
@@ -11,12 +11,18 @@
   border: 2px solid transparent;
   transition: border .2s, color .2s;
 
-  &:not(.expanded):hover{
-    border-color: var(--scene-hover-border);
-    cursor: pointer;
+  &:not(.expanded) {
+    .name {
+      color: var(--text-30);
+    }
 
-    .name{
-      color: var(--accent);
+    &:hover {
+      border-color: var(--scene-hover-border);
+      cursor: pointer;
+
+      .name {
+        color: var(--text);
+      }
     }
   }
 
@@ -50,13 +56,10 @@
     }
   }
 
-  .attributes{
+  .CollapsibleContent{
     display: flex;
     flex-direction: column;
     gap: .2rem;
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height .5s .2s ease-out;
   }
 
   button.delete{
@@ -66,7 +69,7 @@
     font-weight: 600;
     color: var(--delete-scene-color);
     padding: 0.4rem 0.5rem;
-    margin-top: .3rem;
+    margin-top: .5rem;
 
     svg{
       translate: 0 -1px;

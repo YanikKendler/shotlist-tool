@@ -1,11 +1,10 @@
 div.sceneAttribute{
   --scene-placeholder-color: hsl(0, 0%, 57%);
-  --scene-underline-color: hsl(0, 0%, 65%);
+  --scene-underline-color: hsl(0, 0%, 80%);
   --multi-value-background: hsl(0, 0%, 80%);
 
   display: flex;
   align-items: center;
-
   border-bottom: 2px solid var(--scene-underline-color);
   transition: border-color 0.2s ease, outline-color 0.2s ease;
 
@@ -26,12 +25,11 @@ div.sceneAttribute{
     .text{
       width: 100%;
       height: fit-content;
-      color: var(--text);
       padding: .3rem .2rem;
-      font-size: 1rem;
       vertical-align: middle;
       border: none;
       outline: none;
+      font-size: .95rem;
     }
 
     .placeholder{

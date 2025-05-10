@@ -7,10 +7,12 @@ import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionSearchDTO;
+import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
+import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
 
 import java.util.List;
 
@@ -59,6 +61,14 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
         if(shotSelectAttributeOptionDefinition != null) {
             switch (shotSelectAttributeOptionDefinition.shotAttributeDefinition){
                 case ShotMultiSelectAttributeDefinition attributeDefinition: {
+                    List<ShotMultiSelectAttribute> relevantAttributes = getEntityManager()
+                            .createQuery("select sa from ShotMultiSelectAttribute sa where sa.definition = :definition", ShotMultiSelectAttribute.class)
+                            .setParameter("definition", attributeDefinition)
+                            .getResultList();
+
+                    for (ShotMultiSelectAttribute relevantAttribute : relevantAttributes) {
+                        relevantAttribute.value.remove(shotSelectAttributeOptionDefinition);
+                    }
                     break;
                 }
                 case ShotSingleSelectAttributeDefinition attributeDefinition: {

@@ -24,6 +24,7 @@ import { ShotlistContext } from "@/context/ShotlistContext"
 import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 import shotTable from "@/components/shotTable/shotTable"
 import LoadingPage from "@/components/loadingPage/loadingPage"
+import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -46,8 +47,6 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     }, [id])
 
     const loadShotlist = async (noCache: boolean = false) => {
-        console.log("load shotlist")
-
         const { data, errors, loading } = await client.query({query: gql`
                 query shotlist($id: String!){
                     shotlist(id: $id){
@@ -184,43 +183,45 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     return (
         <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true)}}>
             <main className="shotlist" key={reloadKey}>
-                <div className="sidebar">
-                    <div className="content">
-                        <div className="top">
-                            <Link href={`../dashboard`}><House strokeWidth={2.5} size={20}/></Link>
-                            <p>/</p>
-                            <input type="text" defaultValue={shotlist.data.name || ""}/>
-                        </div>
-                        <div className="scenes">
-                            {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
-                            ))}
-                            <button className={"create"} onClick={createScene}>New scene <Plus/></button>
-                            <div className="bottom">
-                                <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
+                <PanelGroup autoSaveId={id} direction="horizontal" className={"PanelGroup"}>
+                    <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
+                        <div className="content">
+                            <div className="top">
+                                <Link href={`../dashboard`}><House strokeWidth={2.5} size={20}/></Link>
+                                <p>/</p>
+                                <input type="text" defaultValue={shotlist.data.name || ""}/>
+                            </div>
+                            <div className="scenes">
+                                {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
+                                    <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
+                                ))}
+                                <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
+                                <div className="bottom">
+                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="bottom">
-                        <Link className="shotlistTool" href={"../dashboard"}>shotlist.tools</Link>
-                    </div>
-                </div>
-                <div className="content">
-                    <div className="header">
-                        <div className="number"><p>#</p></div>
-                        {(shotlist.data?.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
-                            <div key={attr.id}><p>{attr.name}</p></div>
-                        ))}
-                    </div>
-                    <ShotTable ref={shotTableRef} sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
-                </div>
+                        <div className="bottom">
+                            <Link className="shotlistTool" href={"../dashboard"}>shotlist.tools</Link>
+                        </div>
+                    </Panel>
+                    <PanelResizeHandle className="PanelResizeHandle"/>
+                    <Panel className="content">
+                        <div className="header">
+                            <div className="number"><p>#</p></div>
+                            {(shotlist.data?.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
+                                <div key={attr.id}><p>{attr.name || "Unkown"}</p></div>
+                            ))}
+                        </div>
+                        <ShotTable ref={shotTableRef} sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
+                    </Panel>
+                </PanelGroup>
             </main>
             <ShotlistOptionsDialog
                 isOpen={optionsDialogOpen}
                 setIsOpen={setOptionsDialogOpen}
                 shotlistId={shotlist.data.id || ""}
                 refreshShotlist={() => {
-                    console.log("refresshhh")
                     loadShotlist(true)
                     setReloadKey(reloadKey + 1)
                 }}

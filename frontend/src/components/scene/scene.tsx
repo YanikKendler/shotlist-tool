@@ -12,10 +12,11 @@ import {Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
+import {set} from "immutable"
 
 export default function Scene({scene, position, expanded, onSelect, onDelete}: {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void}) {
     const [overflowVisible, setOverflowVisible] = useState(false);
-    const [sceneTitle, setSceneTitle] = useState<string>("")
+    const [sceneAttributes, setSceneAttributes] = useState<AnySceneAttribute[]>(scene.attributes as AnySceneAttribute[]);
 
     const { confirm, ConfirmDialog } = useConfirmDialog();
 
@@ -23,27 +24,21 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
 
     useEffect(() => {
         if (!expanded) {
-            setOverflowVisible(false); // Immediately hide overflow before closing animation
+            setOverflowVisible(false)
         }
         else {
             setTimeout(() => {
-                setOverflowVisible(true); // Show overflow after the opening animation
+                setOverflowVisible(true)
             },300)
         }
     }, [expanded]);
 
-    useEffect(() => {
-        if(!scene.attributes) return
-        if(scene.attributes.length === 0) return
-
-        if(scene.attributes.every(attr => SceneAttributeParser.isEmpty(attr as any)))
-            setSceneTitle("New Scene")
-        else
-            setSceneTitle(scene.attributes.map(attr => SceneAttributeParser.toValueString(attr as any)).join(" • ") || "New Scene")
+    useEffect(()=>{
+        setSceneAttributes(scene.attributes as AnySceneAttribute[])
     }, [scene.attributes]);
 
     const deleteScene = async () => {
-        if(!await confirm({message: `The scene "${sceneTitle}" and all of its shots will be lost forever.`, buttons: {confirm: {className: "bad"}}})) return
+        if(!await confirm({message: `The scene #${position+1} and all of its shots will be lost forever. You cannot undo this.`, buttons: {confirm: {className: "bad"}}})) return
 
         const { errors } = await client.mutate({
             mutation: gql`
@@ -70,7 +65,14 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
         <div className={`sidebarScene ${expanded ? 'expanded' : ''}`} onClick={() => {onSelect(scene.id as string)}}>
             <div className="name">
                 <p className="number">{position+1}</p>
-                <p className="text">{sceneTitle}</p>
+                <p className="text">{
+                    sceneAttributes.every(attr => SceneAttributeParser.isEmpty(attr))
+                    ? "New Scene"
+                    : sceneAttributes
+                        .filter(attr => !SceneAttributeParser.isEmpty(attr))
+                        .map(attr => SceneAttributeParser.toValueString(attr))
+                        .join(" • ")
+                }</p>
             </div>
 
             <Collapsible.Root open={expanded}>
@@ -78,8 +80,16 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                     className="CollapsibleContent"
                     style={{ overflow: overflowVisible ? "visible" : "hidden",}}
                 >
-                    {(scene.attributes as [AnySceneAttribute])?.map(attr => (
-                        <SceneAttribute attribute={attr} key={attr.id}></SceneAttribute>
+                    {sceneAttributes.map((attr, index) => (
+                        <SceneAttribute
+                            key={attr.id}
+                            attribute={attr}
+                            attributeUpdated={(attribute: AnySceneAttribute) => {
+                                let newAttributes = [...sceneAttributes]
+                                newAttributes[index] = attribute
+                                setSceneAttributes(newAttributes)
+                            }}
+                        ></SceneAttribute>
                     ))}
                     <button className={"delete"} onClick={deleteScene}>delete scene <Trash size={16} strokeWidth={3}/></button>
                 </Collapsible.Content>

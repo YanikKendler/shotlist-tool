@@ -6,7 +6,7 @@ export default function LoadingPage() {
     return (
         <div className="loadingPage">
             <div className="content">
-                <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/>
+                <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75} priority={true}/>
                 <p>loading data</p>
             </div>
         </div>

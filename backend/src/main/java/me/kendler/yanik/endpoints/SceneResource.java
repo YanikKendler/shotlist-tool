@@ -51,8 +51,8 @@ public class SceneResource {
     }
 
     @Mutation
-    public SceneAttributeDefinitionBase createSceneAttributeDefinition(SceneAttributeDefinitionCreateDTO createDTO){
-        return sceneAttributeDefinitionRepository.create(createDTO);
+    public SceneAttributeDefinitionBaseDTO createSceneAttributeDefinition(SceneAttributeDefinitionCreateDTO createDTO){
+        return sceneAttributeDefinitionRepository.create(createDTO).toDTO();
     }
 
     @Mutation

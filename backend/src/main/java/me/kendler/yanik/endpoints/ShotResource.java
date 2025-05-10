@@ -70,7 +70,7 @@ public class ShotResource {
 
     @Mutation
     public ShotAttributeDefinitionBase deleteShotAttributeDefinition(Long id){
-        return shotAttributeDefinitionRepository.remove(id);
+        return shotAttributeDefinitionRepository.delete(id);
     }
 
     @Mutation

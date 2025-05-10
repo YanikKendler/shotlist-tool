@@ -12,7 +12,7 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOpt
 
 @Entity
 public class SceneMultiSelectAttribute extends SceneAttributeBase{
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<SceneSelectAttributeOptionDefinition> value = new HashSet<>();
 
     public SceneMultiSelectAttribute() { super(); }

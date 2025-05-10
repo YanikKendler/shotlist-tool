@@ -11,7 +11,7 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitio
 @Table(name = "sceneattribute")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class SceneAttributeBase extends PanacheEntity {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public SceneAttributeDefinitionBase definition;
 
     public SceneAttributeBase() { }

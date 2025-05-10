@@ -122,7 +122,6 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                                     .setParameter("attribute", attribute)
                                     .getSingleResult();
 
-
             shotlist.shotAttributeDefinitions.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
                     .forEach(a -> a.position++);
@@ -135,22 +134,10 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         return attribute;
     }
 
-    public ShotAttributeDefinitionBase remove(Long id){
+    public ShotAttributeDefinitionBase delete(Long id){
         ShotAttributeDefinitionBase attributeDefinition = findById(id);
 
         if(attributeDefinition != null) {
-            /*getEntityManager().createQuery("select s from Shot s join s.attributes sab where sab.definition.id = :definitionId", Shot.class)
-                    .setParameter("definitionId", attributeDefinition.id)
-                    .getResultList()
-                    .forEach(shot -> {
-                        Optional<ShotAttributeBase> attribute = shot.attributes.stream().filter(a -> a.definition.id.equals(attributeDefinition.id)).findFirst();
-
-                        if(attribute.isPresent()) {
-                            shot.attributes.remove(attribute.get());
-                            shotAttributeRepository.delete(attribute.get());
-                        }
-                    });*/
-
             List<ShotAttributeBase> relevantAttributes = getEntityManager()
                     .createQuery("select sa from ShotAttributeBase sa where sa.definition.id = :definitionId", ShotAttributeBase.class)
                     .setParameter("definitionId", id)
@@ -174,6 +161,8 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             relevantShotlist.shotAttributeDefinitions.remove(attributeDefinition);
 
             delete(attributeDefinition);
+
+            return attributeDefinition;
         }
         return null;
     }

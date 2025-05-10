@@ -54,6 +54,7 @@
 
       > .content{
         width: 100%;
+        height: 100%;
 
         .definitions{
           display: flex;
@@ -71,6 +72,10 @@
     }
 
     .attributeTypeTabRoot{
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
       > .tabs{
         display: flex;
         gap: .5rem;
@@ -85,6 +90,13 @@
             color: var(--accent-30);
           }
         }
+      }
+
+      > .content{
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 100%;
+        padding-bottom: 3rem;
       }
     }
   }

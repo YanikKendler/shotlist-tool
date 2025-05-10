@@ -20,6 +20,7 @@ import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSor
 import ShotService from "@/service/ShotService"
 import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
 import {AnyShotAttributeDefinition} from "@/util/Types"
+import {wuText} from "@yanikkendler/web-utils"
 
 export type ShotTableRef = {
     refresh: () => void;
@@ -192,7 +193,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                     return (
                         <div className={`shotAttribute ${index == shotAttributeDefinitions.length-1 ? "last" : ""}`} key={shotAttributeDefinition.id}
                              onClick={() => createShot(index)}>
-                            <p>{shotAttributeDefinition.name}</p>
+                            <p>{shotAttributeDefinition.name || "Unnamed"}</p>
                             <div className="icon">
                                 <Icon size={18} />
                             </div>

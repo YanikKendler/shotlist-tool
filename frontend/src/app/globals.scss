@@ -37,6 +37,12 @@
   --sidebar-bottom-button-border: hsl(0, 0%, 74%);
 
   --popup-border: hsl(0, 0%, 82%);
+  --select-menu-border: hsl(0, 0%, 75%);
+  --select-menu-multivalue-bg: hsl(0, 0%, 95%);
+
+  --drag-handle-hover: hsl(0, 0%, 80%);
+
+  --sidebar-width: 400px;
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -226,4 +232,15 @@ button, a{
   padding: .5rem;
   border-radius: .5rem;
   border: 1px solid var(--popup-border);
+}
+
+//Style react-resizable-panels
+
+.PanelResizeHandle{
+  outline: 1px solid transparent;
+  transition: outline-color .1s;
+
+  &[data-resize-handle-state="hover"], &[data-resize-handle-state="drag"]{
+    outline-color: var(--drag-handle-hover);
+  }
 }
