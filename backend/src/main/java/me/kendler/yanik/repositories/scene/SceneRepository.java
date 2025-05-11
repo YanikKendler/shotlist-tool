@@ -6,8 +6,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.scene.SceneDTO;
+import me.kendler.yanik.dto.scene.SceneEditDTO;
+import me.kendler.yanik.dto.shot.ShotEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.repositories.ShotlistRepository;
 
 import java.util.UUID;
@@ -23,6 +26,19 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
         Scene scene = new Scene(shotlist);
         persist(scene);
+
+        return scene;
+    }
+
+    public Scene update(SceneEditDTO editDTO) {
+        Scene scene = findById(editDTO.id());
+
+        if(scene.position != editDTO.position()){
+            scene.shotlist.scenes.stream().filter(s -> s.position < scene.position && s.position >= editDTO.position()).forEach(a -> a.position++);
+            scene.shotlist.scenes.stream().filter(s -> s.position > scene.position && s.position <= editDTO.position()).forEach(a -> a.position--);
+        }
+
+        scene.position = editDTO.position();
 
         return scene;
     }

@@ -5,20 +5,28 @@ import {SceneDto} from "../../../lib/graphql/generated"
 import "./scene.scss"
 import {useEffect, useState} from "react"
 import { Collapsible } from "radix-ui"
-import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import SceneAttribute from "@/components/sceneAttribute/sceneAttribute"
 import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
-import {Trash} from "lucide-react"
+import {GripVertical, Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
-import {set} from "immutable"
+import {useSortable} from "@dnd-kit/sortable"
+import {CSS} from '@dnd-kit/utilities';
 
 export default function Scene({scene, position, expanded, onSelect, onDelete}: {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void}) {
     const [overflowVisible, setOverflowVisible] = useState(false);
     const [sceneAttributes, setSceneAttributes] = useState<AnySceneAttribute[]>(scene.attributes as AnySceneAttribute[]);
 
     const { confirm, ConfirmDialog } = useConfirmDialog();
+
+    // @ts-ignore
+    const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: scene.id});
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+        transition,
+    };
 
     const client = useApolloClient()
 
@@ -31,6 +39,9 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                 setOverflowVisible(true)
             },300)
         }
+
+        console.log(position, expanded)
+        /*debugger*/
     }, [expanded]);
 
     useEffect(()=>{
@@ -62,23 +73,36 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
     if(!scene || !scene.id) return (<p>scene not found</p>)
 
     return (
-        <div className={`sidebarScene ${expanded ? 'expanded' : ''}`} onClick={() => {onSelect(scene.id as string)}}>
+        <div
+            className={`sidebarScene ${expanded ? 'expanded' : ''}`}
+            onClick={() => {onSelect(scene.id as string)}}
+            ref={setNodeRef}
+            style={style}
+        >
             <div className="name">
-                <p className="number">{position+1}</p>
+                <p className="number">{position + 1}</p>
                 <p className="text">{
                     sceneAttributes.every(attr => SceneAttributeParser.isEmpty(attr))
-                    ? "New Scene"
-                    : sceneAttributes
-                        .filter(attr => !SceneAttributeParser.isEmpty(attr))
-                        .map(attr => SceneAttributeParser.toValueString(attr))
-                        .join(" • ")
+                        ? "New Scene"
+                        : sceneAttributes
+                            .filter(attr => !SceneAttributeParser.isEmpty(attr))
+                            .map(attr => SceneAttributeParser.toValueString(attr))
+                            .join(" • ")
                 }</p>
+                <div
+                    className="grip"
+                    ref={setActivatorNodeRef}
+                    {...listeners}
+                    {...attributes}
+                >
+                    <GripVertical size={20}/>
+                </div>
             </div>
 
             <Collapsible.Root open={expanded}>
                 <Collapsible.Content
                     className="CollapsibleContent"
-                    style={{ overflow: overflowVisible ? "visible" : "hidden",}}
+                    style={{overflow: overflowVisible ? "visible" : "hidden",}}
                 >
                     {sceneAttributes.map((attr, index) => (
                         <SceneAttribute

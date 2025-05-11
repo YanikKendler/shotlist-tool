@@ -28,7 +28,6 @@ export type ShotTableRef = {
 
 const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}, ref) => {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
-    const [activeId, setActiveId] = useState(null);
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
     const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
 
@@ -44,7 +43,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
-    );
+    )
 
     useEffect(() => {
         if(focusAttributeAt < 0) return
@@ -58,7 +57,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         }
 
         setFocusAttributeAt(-1)
-    }, [shots]);
+    }, [shots])
 
     const loadShots = async () => {
         const { data, errors, loading } = await client.query({
@@ -137,12 +136,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         return <div className="shotTable"><p className={"error"}>shotTable error: {shots.error.name}, message: {shots.error.message}</p></div>
     }
 
-    function handleDragStart(event: any) {
-        const {active} = event;
-
-        setActiveId(active.id);
-    }
-
     function handleDragEnd(event: any) {
         const {active, over} = event;
 
@@ -159,8 +152,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                 return {data: arrayMove(shots.data, oldIndex, newIndex), error: shots.error, loading: shots.loading};
             });
         }
-
-        setActiveId(null);
     }
 
     return (
@@ -168,7 +159,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
-                onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext

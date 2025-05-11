@@ -3,6 +3,8 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.*;
 import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
+import me.kendler.yanik.dto.shot.ShotDTO;
+import me.kendler.yanik.dto.shot.ShotEditDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
@@ -36,6 +38,11 @@ public class SceneResource {
     @Mutation
     public SceneDTO deleteScene(UUID id) {
         return sceneRepository.delete(id).toDTO();
+    }
+
+    @Mutation
+    public SceneDTO updateScene(SceneEditDTO editDTO) {
+        return sceneRepository.update(editDTO).toDTO();
     }
 
     /*

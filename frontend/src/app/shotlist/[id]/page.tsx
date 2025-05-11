@@ -25,6 +25,18 @@ import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/sho
 import shotTable from "@/components/shotTable/shotTable"
 import LoadingPage from "@/components/loadingPage/loadingPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
+import {
+    closestCenter,
+    DndContext,
+    DragOverlay,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core"
+import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
+import {apolloClient} from "@/ApolloWrapper"
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -41,6 +53,13 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const shotTableRef = useRef<ShotTableRef>(null);
 
     const client = useApolloClient()
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     useEffect(() => {
         loadShotlist()
@@ -159,6 +178,39 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
         setSelectedSceneId(data.createScene.id)
     }
 
+    function handleDragEnd(event: any) {
+        const {active, over} = event;
+
+        if (active.id !== over.id && shotlist && shotlist.data.scenes && shotlist.data.scenes.length > 0) {
+            setShotlist(() => {
+                const oldIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === active.id);
+                const newIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === over.id);
+
+                apolloClient.mutate({
+                    mutation: gql`
+                        mutation updateScene($id: String!, $position: Int!) {
+                            updateScene(editDTO:{
+                                id: $id,
+                                position: $position
+                            }){
+                                id
+                                position
+                            }
+                        }
+                    `,
+                    variables: {id: active.id, position: newIndex},
+                }).then(result => {
+                    console.log(result)
+                })
+
+                let newData = {...shotlist.data}
+                newData.scenes = arrayMove(newData.scenes || [], oldIndex, newIndex)
+
+                return {data: newData, error: shotlist.error, loading: shotlist.loading}
+            })
+        }
+    }
+
     if(shotlist.error) return <ErrorPage settings={{
         title: 'Data could not be loaded',
         description: shotlist.error.message,
@@ -192,9 +244,21 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                 <input type="text" defaultValue={shotlist.data.name || ""}/>
                             </div>
                             <div className="scenes">
-                                {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                    <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
-                                ))}
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCenter}
+                                    onDragEnd={handleDragEnd}
+                                    modifiers={[restrictToVerticalAxis]}
+                                >
+                                    <SortableContext
+                                        items={(shotlist.data?.scenes as SceneDto[]).map(scene => scene.id) as string[]}
+                                        strategy={verticalListSortingStrategy}
+                                    >
+                                        {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
+                                            <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
+                                        ))}
+                                    </SortableContext>
+                                </DndContext>
                                 <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
                                     <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
