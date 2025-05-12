@@ -8,13 +8,15 @@ import './shot.scss'
 import {ArrowDownRight, CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
-import {Popover} from "radix-ui"
-import React, {useState} from "react"
+import {Popover, Tooltip} from "radix-ui"
+import React, {useContext, useState} from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
+import {ShotlistContext} from "@/context/ShotlistContext"
 
 export default function Shot({shot, position, onDelete}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void}) {
     const [isBeingEdited, setIsBeingEdited] = useState(false);
+    const [tooltipVisible, setTooltipVisible] = useState(false);
 
     // @ts-ignore
     const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: shot.id});
@@ -25,6 +27,8 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
     };
 
     const client = useApolloClient()
+
+    const shotlistContext = useContext(ShotlistContext)
 
     const numberToShotLetter = (number: number) => {
         let result = wuText.numberToLetter(number)
@@ -57,14 +61,27 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
     return (
         <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
             <Popover.Root onOpenChange={setIsBeingEdited}>
-                <Popover.Trigger
-                    className="grip"
-                     ref={setActivatorNodeRef}
-                     {...listeners}
-                     {...attributes}
-                >
-                    <GripVertical/>
-                </Popover.Trigger>
+                <Tooltip.Provider delayDuration={500}>
+                    <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
+                        <Popover.Trigger
+                            className="grip"
+                            ref={setActivatorNodeRef}
+                            {...listeners}
+                            {...attributes}
+                        >
+                            <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                                <GripVertical/>
+                            </Tooltip.Trigger>
+                        </Popover.Trigger>
+                        <Tooltip.Portal>
+                            <Tooltip.Content className={"TooltipContent"}>
+                                <Tooltip.Arrow/>
+                                <p><span className="bold">Click</span> to edit</p>
+                                <p><span className="bold">Drag</span> to reorder</p>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                </Tooltip.Provider>
                 <Popover.Portal>
                     <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
                         <button disabled={true}><CornerDownRight size={18}/> make subshot</button>

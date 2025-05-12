@@ -49,10 +49,10 @@ export function useConfirmDialog() {
                     <Dialog.Title className={"title"}>{settings?.title || "Are you sure?"}</Dialog.Title>
                     <p className={"description"}>{settings.message}</p>
                     <div className={"buttons"}>
-                        <button className={settings?.buttons?.cancel?.className || ""} onClick={handleCancel}>
+                        <button className={settings?.buttons?.cancel?.className || ""} onClick={e => {e.stopPropagation();handleCancel()}}>
                             {settings?.buttons?.cancel?.text || "cancel"}
                         </button>
-                        <button className={settings?.buttons?.confirm?.className || ""} onClick={handleConfirm}>
+                        <button className={settings?.buttons?.confirm?.className || ""} onClick={e => {e.stopPropagation();handleConfirm()}}>
                             {settings?.buttons?.confirm?.text || "confirm"}
                         </button>
                     </div>

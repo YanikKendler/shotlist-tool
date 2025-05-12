@@ -47,6 +47,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
+    const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
 
     const [reloadKey, setReloadKey] = useState(0)
 
@@ -183,6 +184,8 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     }
 
     function handleDragEnd(event: any) {
+        setElementIsBeingDragged(false)
+
         const {active, over} = event;
 
         if (active.id !== over.id && shotlist && shotlist.data.scenes && shotlist.data.scenes.length > 0) {
@@ -237,7 +240,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     if(selectedSceneId == "" && shotlist?.data?.scenes && shotlist.data.scenes[0]?.id != undefined) setSelectedSceneId(shotlist?.data?.scenes[0].id)
 
     return (
-        <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true)}}>
+        <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true), elementIsBeingDragged: elementIsBeingDragged, setElementIsBeingDragged: setElementIsBeingDragged}}>
             <main className="shotlist" key={reloadKey}>
                 <PanelGroup autoSaveId={id} direction="horizontal" className={"PanelGroup"}>
                     <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
@@ -252,6 +255,9 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                     sensors={sensors}
                                     collisionDetection={closestCenter}
                                     onDragEnd={handleDragEnd}
+                                    onDragStart={() => {
+                                        setElementIsBeingDragged(true)
+                                    }}
                                     modifiers={[restrictToVerticalAxis]}
                                 >
                                     <SortableContext

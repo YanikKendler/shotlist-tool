@@ -60,10 +60,11 @@ main.shotlist{
         display: flex;
         flex-direction: column;
         gap: .2rem;
-        padding-bottom: 3rem;
+        padding-bottom: 5rem;
         overflow-y: auto;
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+        height: 100%;
 
         &::-webkit-scrollbar {
           display: none; /*Chrome, Safari and Opera */

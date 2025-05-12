@@ -130,6 +130,16 @@ button, a{
   &[disabled]{
     opacity: 70%;
   }
+
+  &.noPadding{
+    padding: 0;
+  }
+}
+
+span{
+  &.bold{
+    font-weight: bold;
+  }
 }
 
 // Style radix collapsible
@@ -242,5 +252,22 @@ button, a{
 
   &[data-resize-handle-state="hover"], &[data-resize-handle-state="drag"]{
     outline-color: var(--drag-handle-hover);
+  }
+}
+
+// Style radix tooltip
+
+.TooltipContent{
+  background-color: var(--contrast);
+  padding: .4rem;
+  font-size: .95rem;
+  border-radius: .5rem;
+  border: 1px solid var(--popup-border);
+  z-index: 3000;
+  translate: 0 -.2rem;
+  text-align: center;
+
+  svg{
+    fill: var(--popup-border);
   }
 }

@@ -5,7 +5,7 @@ import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
 import "./shotTable.scss"
 import {SceneDto, ShotAttributeDefinitionBase} from "../../../lib/graphql/generated"
-import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
+import React, {forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState} from "react"
 import {ScrollArea} from "radix-ui"
 import {
     closestCenter,
@@ -21,6 +21,8 @@ import ShotService from "@/service/ShotService"
 import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
 import {AnyShotAttributeDefinition} from "@/util/Types"
 import {wuText} from "@yanikkendler/web-utils"
+import {restrictToVerticalAxis} from "@dnd-kit/modifiers"
+import {ShotlistContext} from "@/context/ShotlistContext"
 
 export type ShotTableRef = {
     refresh: () => void;
@@ -32,6 +34,8 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
     const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
 
     const client = useApolloClient()
+
+    const shotlistContext = useContext(ShotlistContext)
 
     useEffect(() => {
         if(sceneId != "")
@@ -153,6 +157,8 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
     }
 
     function handleDragEnd(event: any) {
+        shotlistContext.setElementIsBeingDragged(false)
+
         const {active, over} = event;
 
         if (active.id !== over.id) {
@@ -175,6 +181,10 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
+                onDragStart={() => {
+                    shotlistContext.setElementIsBeingDragged(true)
+                }}
+                modifiers={[restrictToVerticalAxis]}
             >
                 <SortableContext
                     items={shots.data.map(shot => shot.id)}

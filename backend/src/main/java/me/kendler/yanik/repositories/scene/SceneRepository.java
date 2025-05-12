@@ -12,6 +12,7 @@ import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.repositories.ShotlistRepository;
+import me.kendler.yanik.repositories.shot.ShotRepository;
 
 import java.util.UUID;
 
@@ -20,6 +21,9 @@ import java.util.UUID;
 public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotlistRepository shotlistRepository;
+
+    @Inject
+    ShotRepository shotRepository;
 
     public Scene create(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
@@ -46,9 +50,13 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     public Scene delete(UUID id) {
         Scene scene = findById(id);
         if (scene != null) {
-            delete(scene);
-
             scene.shotlist.scenes.stream().filter(s -> s.position > scene.position).forEach(s -> s.position--);
+
+            for (Shot shot : scene.shots) {
+                shotRepository.delete(shot);
+            }
+
+            delete(scene);
 
             return scene;
         }
