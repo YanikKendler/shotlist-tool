@@ -3,11 +3,11 @@
 import {SceneAttributeParser} from "@/util/AttributeParser"
 import {SceneDto} from "../../../lib/graphql/generated"
 import "./scene.scss"
-import {useEffect, useState} from "react"
-import { Collapsible } from "radix-ui"
+import React, {useEffect, useState} from "react"
+import {Collapsible, Popover} from "radix-ui"
 import SceneAttribute from "@/components/sceneAttribute/sceneAttribute"
 import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
-import {GripVertical, Trash} from "lucide-react"
+import {CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
@@ -39,9 +39,6 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                 setOverflowVisible(true)
             },300)
         }
-
-        console.log(position, expanded)
-        /*debugger*/
     }, [expanded]);
 
     useEffect(()=>{
@@ -89,14 +86,21 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                             .map(attr => SceneAttributeParser.toValueString(attr))
                             .join(" • ")
                 }</p>
-                <div
-                    className="grip"
-                    ref={setActivatorNodeRef}
-                    {...listeners}
-                    {...attributes}
-                >
-                    <GripVertical size={20}/>
-                </div>
+                <Popover.Root>
+                    <Popover.Trigger
+                        className="grip"
+                        ref={setActivatorNodeRef}
+                        {...listeners}
+                        {...attributes}
+                    >
+                        <GripVertical size={expanded ? 22 : 20}/>
+                    </Popover.Trigger>
+                    <Popover.Portal>
+                        <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"} side={"right"} sideOffset={12}>
+                            <button className={"bad"} onClick={deleteScene}><Trash size={18}/> delete</button>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
             </div>
 
             <Collapsible.Root open={expanded}>
@@ -104,17 +108,20 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                     className="CollapsibleContent"
                     style={{overflow: overflowVisible ? "visible" : "hidden",}}
                 >
-                    {sceneAttributes.map((attr, index) => (
-                        <SceneAttribute
-                            key={attr.id}
-                            attribute={attr}
-                            attributeUpdated={(attribute: AnySceneAttribute) => {
-                                let newAttributes = [...sceneAttributes]
-                                newAttributes[index] = attribute
-                                setSceneAttributes(newAttributes)
-                            }}
-                        ></SceneAttribute>
-                    ))}
+                    <div className="attributes">
+                        {sceneAttributes.map((attr, index) => (
+                            <SceneAttribute
+                                key={attr.id}
+                                attribute={attr}
+                                attributeUpdated={(attribute: AnySceneAttribute) => {
+                                    let newAttributes = [...sceneAttributes]
+                                    newAttributes[index] = attribute
+                                    setSceneAttributes(newAttributes)
+                                }}
+                            ></SceneAttribute>
+                        ))}
+                    </div>
+
                     <button className={"delete"} onClick={deleteScene}>delete scene <Trash size={16} strokeWidth={3}/></button>
                 </Collapsible.Content>
             </Collapsible.Root>

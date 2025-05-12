@@ -12,12 +12,13 @@ div.shot{
   }
 
   .grip{
-    opacity: 0;
-    color: var(--grip-color);
     position: absolute;
     right: 100%;
     top: 0;
     bottom: 0;
+    padding: 0;
+    opacity: 0;
+    color: var(--grip-color);
     cursor: pointer;
     box-sizing: border-box;
     display: grid;
@@ -60,7 +61,7 @@ div.shot{
   }
 
 
-  &:hover, &:has(*:focus-visible){
+  &:hover, &:has(*:focus-visible), &.active{
     .grip {
       opacity: 1;
     }
@@ -71,4 +72,42 @@ div.shot{
       }
     }
   }
+
+  &.active{
+    --shot-background: var(--accent-95);
+  }
+}
+
+.shotContextOptionsPopup{
+  padding: .3rem;
+
+  button{
+    font-size: .95rem;
+    width: 100%;
+    justify-content: left;
+    padding: .4rem;
+    color: var(--text-20);
+    font-weight: 500;
+
+    svg{
+      color: var(--text-30);
+      transition: color .2s;
+    }
+
+    &:not(.bad):not([disabled]):hover{
+      background-color: var(--hover-bg-10);
+      color: var(--text);
+
+      svg{
+        color: var(--text);
+      }
+    }
+
+    &.bad:hover{
+      svg{
+        color: var(--bad);
+      }
+    }
+  }
+
 }

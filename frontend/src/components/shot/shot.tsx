@@ -1,15 +1,21 @@
 'use client'
 
-import {ShotDto, Shotlist} from "../../../lib/graphql/generated"
+import {ShotDto} from "../../../lib/graphql/generated"
 import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import {AnyShotAttribute} from "@/util/Types"
 import {wuText} from "@yanikkendler/web-utils"
 import './shot.scss'
-import {GripVertical} from "lucide-react"
+import {ArrowDownRight, CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
+import {Popover} from "radix-ui"
+import React, {useState} from "react"
+import gql from "graphql-tag"
+import {useApolloClient} from "@apollo/client"
 
-export default function Shot({shot, position}: {shot: ShotDto, position: number}) {
+export default function Shot({shot, position, onDelete}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void}) {
+    const [isBeingEdited, setIsBeingEdited] = useState(false);
+
     // @ts-ignore
     const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: shot.id});
 
@@ -17,6 +23,8 @@ export default function Shot({shot, position}: {shot: ShotDto, position: number}
         transform: CSS.Transform.toString(transform),
         transition,
     };
+
+    const client = useApolloClient()
 
     const numberToShotLetter = (number: number) => {
         let result = wuText.numberToLetter(number)
@@ -26,16 +34,46 @@ export default function Shot({shot, position}: {shot: ShotDto, position: number}
         return result;
     }
 
+    async function deleteShot(){
+        const { errors } = await client.mutate({
+            mutation: gql`
+                mutation deleteShot($shotId: String!) {
+                    deleteShot(id: $shotId) {
+                        id
+                    }
+                }
+            `,
+            variables: { shotId: shot.id },
+        });
+
+        if(errors) {
+            console.error(errors)
+        }
+        else{
+            onDelete(shot.id as string)
+        }
+    }
+
     return (
-        <div className={"shot"} ref={setNodeRef} style={style}>
-            <div
-                className="grip"
-                ref={setActivatorNodeRef}
-                {...listeners}
-                {...attributes}
-            >
-                <GripVertical/>
-            </div>
+        <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
+            <Popover.Root onOpenChange={setIsBeingEdited}>
+                <Popover.Trigger
+                    className="grip"
+                     ref={setActivatorNodeRef}
+                     {...listeners}
+                     {...attributes}
+                >
+                    <GripVertical/>
+                </Popover.Trigger>
+                <Popover.Portal>
+                    <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
+                        <button disabled={true}><CornerDownRight size={18}/> make subshot</button>
+                        <button disabled={true}><NotepadText size={18}/> notes</button>
+                        <button className={"bad"} onClick={deleteShot}><Trash size={18}/> delete</button>
+                    </Popover.Content>
+                </Popover.Portal>
+            </Popover.Root>
+
             <div className="shotAttribute first number">
                 <p>{numberToShotLetter(position)}</p>
             </div>

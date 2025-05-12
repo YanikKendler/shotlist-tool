@@ -4,7 +4,7 @@ import {useApolloClient, useQuery} from "@apollo/client"
 import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
 import "./shotTable.scss"
-import {ShotAttributeDefinitionBase} from "../../../lib/graphql/generated"
+import {SceneDto, ShotAttributeDefinitionBase} from "../../../lib/graphql/generated"
 import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
 import {ScrollArea} from "radix-ui"
 import {
@@ -39,7 +39,11 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
     }, [sceneId]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -129,6 +133,18 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         setShots({data: [...shots.data, data.createShot], error: shots.error, loading: shots.loading})
     }
 
+    const removeShot = (shotId: string) => {
+        if(!shots) return
+
+        let currentShots = shots.data
+        let newShots= currentShots.filter((shot) => shot.id != shotId)
+
+        setShots({
+            ...shots,
+            data: newShots
+        })
+    }
+
     if(!sceneId || sceneId == "") return <div className="shotTable"><p className={"error"}>No Scene selected</p></div>
     if(shots.loading) return <div className="shotTable"><p className={"error"}>loading...</p></div>
     if (shots.error) {
@@ -146,7 +162,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
 
                 ShotService.updateShot(active.id, newIndex).then(response => {
                     if(response.errors) console.error(response.errors)
-                    console.log(response.data)
                 })
 
                 return {data: arrayMove(shots.data, oldIndex, newIndex), error: shots.error, loading: shots.loading};
@@ -166,7 +181,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                     strategy={verticalListSortingStrategy}
                 >
                     {shots.data.map((shot: any, index) => (
-                        <Shot shot={shot} key={shot.id} position={index}/>
+                        <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot}/>
                     ))}
                 </SortableContext>
                 {/*<DragOverlay>

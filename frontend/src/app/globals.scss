@@ -117,10 +117,6 @@ button, a{
   user-select: none;
   margin: 0;
 
-  &:focus-visible{
-
-  }
-
   &:active{
     transform: translate(0, 1px) scale(0.995);
   }
@@ -129,6 +125,10 @@ button, a{
     background-color: var(--hover-bg-bad-10);
     color: var(--bad);
     border-color: var(--bad);
+  }
+
+  &[disabled]{
+    opacity: 70%;
   }
 }
 

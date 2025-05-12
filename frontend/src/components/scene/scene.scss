@@ -38,6 +38,12 @@
     }
   }
 
+  &:hover{
+    .name .grip{
+      opacity: 1;
+    }
+  }
+
   .name{
     display: flex;
     gap: .5rem;
@@ -54,12 +60,30 @@
     .number{
       font-weight: 700;
     }
+
+    .grip{
+      position: relative;
+      display: flex;
+      align-items: center;
+      border-radius: .3rem;
+      color: var(--text-50);
+      opacity: 0;
+      transition: opacity .2s;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover{
+        color: var(--text-20);
+        background-color: var(--hover-bg-10);
+      }
+    }
   }
 
-  .CollapsibleContent{
+  .attributes{
     display: flex;
     flex-direction: column;
     gap: .2rem;
+    width: 100%;
   }
 
   button.delete{
