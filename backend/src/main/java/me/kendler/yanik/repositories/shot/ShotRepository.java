@@ -20,6 +20,7 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
     public Shot create(UUID sceneId) {
         Scene scene = sceneRepository.findById(sceneId);
         Shot shot = new Shot(scene);
+        scene.shotlist.registerEdit();
         persist(shot);
         return shot;
     }
@@ -34,12 +35,15 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
 
         shot.position = editDTO.position();
 
+        shot.scene.shotlist.registerEdit();
+
         return shot;
     }
 
     public Shot delete(UUID id) {
         Shot shot = findById(id);
         if (shot != null) {
+            shot.scene.shotlist.registerEdit();
             delete(shot);
             return shot;
         }

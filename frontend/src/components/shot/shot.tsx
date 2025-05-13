@@ -60,28 +60,31 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
 
     return (
         <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
+            {/*<p
+                ref={setActivatorNodeRef}
+                {...listeners}
+                {...attributes}
+            >drag</p>*/}
             <Popover.Root onOpenChange={setIsBeingEdited}>
-                <Tooltip.Provider delayDuration={500}>
-                    <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
-                        <Popover.Trigger
-                            className="grip"
-                            ref={setActivatorNodeRef}
-                            {...listeners}
-                            {...attributes}
-                        >
-                            <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
-                                <GripVertical/>
-                            </Tooltip.Trigger>
-                        </Popover.Trigger>
-                        <Tooltip.Portal>
-                            <Tooltip.Content className={"TooltipContent"}>
-                                <Tooltip.Arrow/>
-                                <p><span className="bold">Click</span> to edit</p>
-                                <p><span className="bold">Drag</span> to reorder</p>
-                            </Tooltip.Content>
-                        </Tooltip.Portal>
-                    </Tooltip.Root>
-                </Tooltip.Provider>
+                <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
+                    <Popover.Trigger
+                        className="grip"
+                        ref={setActivatorNodeRef}
+                        {...listeners}
+                        {...attributes}
+                    >
+                        <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                            <GripVertical/>
+                        </Tooltip.Trigger>
+                    </Popover.Trigger>
+                    <Tooltip.Portal>
+                        <Tooltip.Content className={"TooltipContent"}>
+                            <Tooltip.Arrow/>
+                            <p><span className="bold">Click</span> to edit</p>
+                            <p><span className="bold">Drag</span> to reorder</p>
+                        </Tooltip.Content>
+                    </Tooltip.Portal>
+                </Tooltip.Root>
                 <Popover.Portal>
                     <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
                         <button disabled={true}><CornerDownRight size={18}/> make subshot</button>

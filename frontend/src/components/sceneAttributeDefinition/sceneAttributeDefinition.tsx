@@ -42,7 +42,7 @@ export default function SceneAttributeDefinition({attributeDefinition, onDelete,
     async function updateDefinition(newName: string) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation update($id: BigInteger!, $name: String!) {
+                mutation updateSceneAttributeDefinition($id: BigInteger!, $name: String!) {
                     updateSceneAttributeDefinition(editDTO: {
                         id: $id
                         name: $name
@@ -152,7 +152,7 @@ export default function SceneAttributeDefinition({attributeDefinition, onDelete,
     const updateOptionName = async (optionId: number, newName: string) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
-                mutation update($id: BigInteger!, $name: String!) {
+                mutation updateSceneSelectAttributeOption($id: BigInteger!, $name: String!) {
                     updateSceneSelectAttributeOption(editDTO: {
                         id: $id
                         name: $name

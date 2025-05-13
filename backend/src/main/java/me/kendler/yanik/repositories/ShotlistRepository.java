@@ -49,7 +49,7 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
     public Shotlist update(ShotlistEditDTO editDTO){
         Shotlist shotlist = findById(editDTO.id());
         shotlist.name = editDTO.name();
-        persist(shotlist);
+        shotlist.registerEdit();
         return shotlist;
     }
 

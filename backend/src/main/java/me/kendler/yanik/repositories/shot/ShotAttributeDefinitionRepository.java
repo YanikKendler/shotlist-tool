@@ -80,6 +80,8 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         ShotAttributeDefinitionBase attributeDefinition = null;
         Shotlist shotlist = shotlistRepository.findById(createDTO.shotlistId());
 
+        shotlist.registerEdit();
+
         switch (createDTO.type()) {
             case ShotSingleSelectAttribute -> {
                 attributeDefinition = new ShotSingleSelectAttributeDefinition(shotlist);
@@ -113,14 +115,18 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
         }
+
+        Shotlist shotlist = getEntityManager()
+                                .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d = :attribute", Shotlist.class)
+                                .setParameter("attribute", attribute)
+                                .getSingleResult();
+
+        shotlist.registerEdit();
+
         if(editDTO.name() != null && !editDTO.name().isEmpty()) {
             attribute.name = editDTO.name();
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
-            Shotlist shotlist = getEntityManager()
-                                    .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d = :attribute", Shotlist.class)
-                                    .setParameter("attribute", attribute)
-                                    .getSingleResult();
 
             shotlist.shotAttributeDefinitions.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
@@ -157,10 +163,11 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                     .setParameter("definitionId", id)
                     .getSingleResult();
 
-
             relevantShotlist.shotAttributeDefinitions.remove(attributeDefinition);
 
             delete(attributeDefinition);
+
+            relevantShotlist.registerEdit();
 
             return attributeDefinition;
         }

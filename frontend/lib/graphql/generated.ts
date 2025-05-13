@@ -24,10 +24,10 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   createScene?: Maybe<SceneDto>;
-  createSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBase>;
+  createSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBaseDto>;
   createSceneSelectAttributeOption?: Maybe<SceneSelectAttributeOptionDefinition>;
   createShot?: Maybe<ShotDto>;
-  createShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
+  createShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBaseDto>;
   createShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
   createShotlist?: Maybe<ShotlistDto>;
   deleteScene?: Maybe<SceneDto>;
@@ -37,6 +37,7 @@ export type Mutation = {
   deleteShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
   deleteShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
   deleteShotlist?: Maybe<ShotlistDto>;
+  updateScene?: Maybe<SceneDto>;
   updateSceneAttribute?: Maybe<SceneAttributeBase>;
   updateSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBase>;
   updateSceneSelectAttributeOption?: Maybe<SceneSelectAttributeOptionDefinition>;
@@ -62,7 +63,7 @@ export type MutationCreateSceneAttributeDefinitionArgs = {
 
 /** Mutation root */
 export type MutationCreateSceneSelectAttributeOptionArgs = {
-  createDTO?: InputMaybe<SceneSelectAttributeCreateDtoInput>;
+  createDTO?: InputMaybe<SceneSelectAttributeOptionCreateDtoInput>;
 };
 
 
@@ -80,7 +81,7 @@ export type MutationCreateShotAttributeDefinitionArgs = {
 
 /** Mutation root */
 export type MutationCreateShotSelectAttributeOptionArgs = {
-  createDTO?: InputMaybe<ShotSelectAttributeCreateDtoInput>;
+  createDTO?: InputMaybe<ShotSelectAttributeOptionCreateDtoInput>;
 };
 
 
@@ -129,6 +130,12 @@ export type MutationDeleteShotSelectAttributeOptionArgs = {
 /** Mutation root */
 export type MutationDeleteShotlistArgs = {
   id?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** Mutation root */
+export type MutationUpdateSceneArgs = {
+  editDTO?: InputMaybe<SceneEditDtoInput>;
 };
 
 
@@ -290,7 +297,7 @@ export type SceneAttributeDefinitionCreateDtoInput = {
 export type SceneAttributeDefinitionEditDtoInput = {
   id?: InputMaybe<Scalars['BigInteger']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  position: Scalars['Int']['input'];
+  position?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type SceneAttributeEditDtoInput = {
@@ -326,6 +333,11 @@ export type SceneDto = {
   shots?: Maybe<Array<Maybe<ShotDto>>>;
 };
 
+export type SceneEditDtoInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  position: Scalars['Int']['input'];
+};
+
 export type SceneMultiSelectAttributeDto = SceneAttributeBaseDto & {
   __typename?: 'SceneMultiSelectAttributeDTO';
   definition?: Maybe<SceneAttributeDefinitionBaseDto>;
@@ -341,9 +353,9 @@ export type SceneMultiSelectAttributeDefinitionDto = SceneAttributeDefinitionBas
   position: Scalars['Int']['output'];
 };
 
-export type SceneSelectAttributeCreateDtoInput = {
+export type SceneSelectAttributeOptionCreateDtoInput = {
+  attributeDefinitionId?: InputMaybe<Scalars['BigInteger']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  selectAttributeId?: InputMaybe<Scalars['BigInteger']['input']>;
 };
 
 export type SceneSelectAttributeOptionDefinition = {
@@ -434,7 +446,7 @@ export type ShotAttributeDefinitionCreateDtoInput = {
 export type ShotAttributeDefinitionEditDtoInput = {
   id?: InputMaybe<Scalars['BigInteger']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  position: Scalars['Int']['input'];
+  position?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type ShotAttributeEditDtoInput = {
@@ -490,9 +502,9 @@ export type ShotMultiSelectAttributeDefinitionDto = ShotAttributeDefinitionBaseD
   position: Scalars['Int']['output'];
 };
 
-export type ShotSelectAttributeCreateDtoInput = {
+export type ShotSelectAttributeOptionCreateDtoInput = {
+  attributeDefinitionId?: InputMaybe<Scalars['BigInteger']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  selectAttributeId?: InputMaybe<Scalars['BigInteger']['input']>;
 };
 
 export type ShotSelectAttributeOptionDefinition = {
@@ -571,8 +583,10 @@ export type ShotlistDto = {
   name?: Maybe<Scalars['String']['output']>;
   owner?: Maybe<User>;
   sceneAttributeDefinitions?: Maybe<Array<Maybe<SceneAttributeDefinitionBase>>>;
+  sceneCount: Scalars['Int']['output'];
   scenes?: Maybe<Array<Maybe<SceneDto>>>;
-  shotAttributeDefinitions?: Maybe<Array<Maybe<ShotAttributeDefinitionBase>>>;
+  shotAttributeDefinitions?: Maybe<Array<Maybe<ShotAttributeDefinitionBaseDto>>>;
+  shotCount: Scalars['Int']['output'];
   template?: Maybe<Template>;
 };
 
@@ -605,14 +619,14 @@ export type User = {
 export type ShotlistsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ShotlistsQuery = { __typename?: 'Query', shotlists?: Array<{ __typename?: 'ShotlistDTO', id?: string | null, name?: string | null } | null> | null };
+export type ShotlistsQuery = { __typename?: 'Query', shotlists?: Array<{ __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, sceneCount: number, shotCount: number, editedAt?: any | null } | null> | null };
 
 export type ShotlistQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type ShotlistQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, scenes?: Array<{ __typename?: 'SceneDTO', id?: string | null, position: number, attributes?: Array<{ __typename?: 'SceneMultiSelectAttributeDTO', id?: any | null, multiSelectValue?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneSingleSelectAttributeDTO', id?: any | null, singleSelectValue?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneTextAttributeDTO', textValue?: string | null, id?: any | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | null> | null } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneAttributeDefinitionBase', id?: any | null, name?: string | null, position: number } | null> | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotAttributeDefinitionBase', id?: any | null, name?: string | null, position: number } | null> | null } | null };
+export type ShotlistQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, scenes?: Array<{ __typename?: 'SceneDTO', id?: string | null, position: number, attributes?: Array<{ __typename?: 'SceneMultiSelectAttributeDTO', id?: any | null, multiSelectValue?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneSingleSelectAttributeDTO', id?: any | null, singleSelectValue?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneTextAttributeDTO', textValue?: string | null, id?: any | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | null> | null } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneAttributeDefinitionBase', id?: any | null, name?: string | null, position: number } | null> | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null } | null };
 
 export type CreateSceneMutationVariables = Exact<{
   shotlistId: Scalars['String']['input'];
@@ -621,12 +635,52 @@ export type CreateSceneMutationVariables = Exact<{
 
 export type CreateSceneMutation = { __typename?: 'Mutation', createScene?: { __typename?: 'SceneDTO', id?: string | null, position: number, attributes?: Array<{ __typename?: 'SceneMultiSelectAttributeDTO', id?: any | null, multiSelectValue?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneSingleSelectAttributeDTO', id?: any | null, singleSelectValue?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneTextAttributeDTO', textValue?: string | null, id?: any | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | null> | null } | null };
 
+export type UpdateSceneMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  position: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateSceneMutation = { __typename?: 'Mutation', updateScene?: { __typename?: 'SceneDTO', id?: string | null, position: number } | null };
+
 export type DataQueryVariables = Exact<{
   shotlistId: Scalars['String']['input'];
 }>;
 
 
 export type DataQuery = { __typename?: 'Query', shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null };
+
+export type CreateShotAttributeDefinitionMutationVariables = Exact<{
+  shotlistId: Scalars['String']['input'];
+  attributeType: ShotAttributeType;
+}>;
+
+
+export type CreateShotAttributeDefinitionMutation = { __typename?: 'Mutation', createShotAttributeDefinition?: { __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null };
+
+export type UpdateShotDefinitionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  position: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateShotDefinitionMutation = { __typename?: 'Mutation', updateShotAttributeDefinition?: { __typename?: 'ShotAttributeDefinitionBase', id?: any | null, position: number } | null };
+
+export type CreateSceneAttributeDefinitionMutationVariables = Exact<{
+  shotlistId: Scalars['String']['input'];
+  attributeType: SceneAttributeType;
+}>;
+
+
+export type CreateSceneAttributeDefinitionMutation = { __typename?: 'Mutation', createSceneAttributeDefinition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null };
+
+export type UpdateSceneDefinitionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  position: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateSceneDefinitionMutation = { __typename?: 'Mutation', updateSceneAttributeDefinition?: { __typename?: 'SceneAttributeDefinitionBase', id?: any | null, position: number } | null };
 
 export type DeleteSceneMutationVariables = Exact<{
   sceneId: Scalars['String']['input'];
@@ -651,7 +705,7 @@ export type CreateSceneOptionMutationVariables = Exact<{
 
 export type CreateSceneOptionMutation = { __typename?: 'Mutation', createSceneSelectAttributeOption?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null };
 
-export type UpdateMutationVariables = Exact<{
+export type UpdateSceneAttributeMutationVariables = Exact<{
   id: Scalars['BigInteger']['input'];
   textValue?: InputMaybe<Scalars['String']['input']>;
   singleSelectValue?: InputMaybe<Scalars['BigInteger']['input']>;
@@ -659,7 +713,51 @@ export type UpdateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMutation = { __typename?: 'Mutation', updateSceneAttribute?: { __typename?: 'SceneAttributeBase', id?: any | null } | null };
+export type UpdateSceneAttributeMutation = { __typename?: 'Mutation', updateSceneAttribute?: { __typename?: 'SceneAttributeBase', id?: any | null } | null };
+
+export type UpdateSceneAttributeDefinitionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateSceneAttributeDefinitionMutation = { __typename?: 'Mutation', updateSceneAttributeDefinition?: { __typename?: 'SceneAttributeDefinitionBase', id?: any | null } | null };
+
+export type DeleteSceneAttributeDefinitionMutationVariables = Exact<{
+  definitionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type DeleteSceneAttributeDefinitionMutation = { __typename?: 'Mutation', deleteSceneAttributeDefinition?: { __typename?: 'SceneAttributeDefinitionBase', id?: any | null } | null };
+
+export type CreateSceneSelectAttributeOptionMutationVariables = Exact<{
+  definitionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type CreateSceneSelectAttributeOptionMutation = { __typename?: 'Mutation', createSceneSelectAttributeOption?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null };
+
+export type DeleteSceneSelectAttributeOptionMutationVariables = Exact<{
+  optionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type DeleteSceneSelectAttributeOptionMutation = { __typename?: 'Mutation', deleteSceneSelectAttributeOption?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null } | null };
+
+export type UpdateSceneSelectAttributeOptionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateSceneSelectAttributeOptionMutation = { __typename?: 'Mutation', updateSceneSelectAttributeOption?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null } | null };
+
+export type DeleteShotMutationVariables = Exact<{
+  shotId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteShotMutation = { __typename?: 'Mutation', deleteShot?: { __typename?: 'ShotDTO', id?: string | null } | null };
 
 export type SearchShotSelectAttributeOptionsQueryVariables = Exact<{
   definitionId: Scalars['BigInteger']['input'];
@@ -676,6 +774,43 @@ export type CreateShotOptionMutationVariables = Exact<{
 
 
 export type CreateShotOptionMutation = { __typename?: 'Mutation', createShotSelectAttributeOption?: { __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null };
+
+export type UpdateShotAttributeDefinitionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateShotAttributeDefinitionMutation = { __typename?: 'Mutation', updateShotAttributeDefinition?: { __typename?: 'ShotAttributeDefinitionBase', id?: any | null } | null };
+
+export type DeleteShotAttributeDefinitionMutationVariables = Exact<{
+  definitionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type DeleteShotAttributeDefinitionMutation = { __typename?: 'Mutation', deleteShotAttributeDefinition?: { __typename?: 'ShotAttributeDefinitionBase', id?: any | null } | null };
+
+export type CreateShotSelectAttributeOptionMutationVariables = Exact<{
+  definitionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type CreateShotSelectAttributeOptionMutation = { __typename?: 'Mutation', createShotSelectAttributeOption?: { __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null };
+
+export type DeleteShotSelectAttributeOptionMutationVariables = Exact<{
+  optionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type DeleteShotSelectAttributeOptionMutation = { __typename?: 'Mutation', deleteShotSelectAttributeOption?: { __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null } | null };
+
+export type UpdateShotSelectAttributeOptionMutationVariables = Exact<{
+  id: Scalars['BigInteger']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateShotSelectAttributeOptionMutation = { __typename?: 'Mutation', updateShotSelectAttributeOption?: { __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null } | null };
 
 export type ShotsQueryVariables = Exact<{
   sceneId: Scalars['String']['input'];
@@ -697,6 +832,9 @@ export const ShotlistsDocument = gql`
   shotlists {
     id
     name
+    sceneCount
+    shotCount
+    editedAt
   }
 }
     `;
@@ -867,6 +1005,41 @@ export function useCreateSceneMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateSceneMutationHookResult = ReturnType<typeof useCreateSceneMutation>;
 export type CreateSceneMutationResult = Apollo.MutationResult<CreateSceneMutation>;
 export type CreateSceneMutationOptions = Apollo.BaseMutationOptions<CreateSceneMutation, CreateSceneMutationVariables>;
+export const UpdateSceneDocument = gql`
+    mutation updateScene($id: String!, $position: Int!) {
+  updateScene(editDTO: {id: $id, position: $position}) {
+    id
+    position
+  }
+}
+    `;
+export type UpdateSceneMutationFn = Apollo.MutationFunction<UpdateSceneMutation, UpdateSceneMutationVariables>;
+
+/**
+ * __useUpdateSceneMutation__
+ *
+ * To run a mutation, you first call `useUpdateSceneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSceneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSceneMutation, { data, loading, error }] = useUpdateSceneMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useUpdateSceneMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSceneMutation, UpdateSceneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSceneMutation, UpdateSceneMutationVariables>(UpdateSceneDocument, options);
+      }
+export type UpdateSceneMutationHookResult = ReturnType<typeof useUpdateSceneMutation>;
+export type UpdateSceneMutationResult = Apollo.MutationResult<UpdateSceneMutation>;
+export type UpdateSceneMutationOptions = Apollo.BaseMutationOptions<UpdateSceneMutation, UpdateSceneMutationVariables>;
 export const DataDocument = gql`
     query data($shotlistId: String!) {
   shotAttributeDefinitions(shotlistId: $shotlistId) {
@@ -938,6 +1111,152 @@ export type DataQueryHookResult = ReturnType<typeof useDataQuery>;
 export type DataLazyQueryHookResult = ReturnType<typeof useDataLazyQuery>;
 export type DataSuspenseQueryHookResult = ReturnType<typeof useDataSuspenseQuery>;
 export type DataQueryResult = Apollo.QueryResult<DataQuery, DataQueryVariables>;
+export const CreateShotAttributeDefinitionDocument = gql`
+    mutation createShotAttributeDefinition($shotlistId: String!, $attributeType: ShotAttributeType!) {
+  createShotAttributeDefinition(
+    createDTO: {shotlistId: $shotlistId, type: $attributeType}
+  ) {
+    id
+    name
+    position
+  }
+}
+    `;
+export type CreateShotAttributeDefinitionMutationFn = Apollo.MutationFunction<CreateShotAttributeDefinitionMutation, CreateShotAttributeDefinitionMutationVariables>;
+
+/**
+ * __useCreateShotAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useCreateShotAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateShotAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createShotAttributeDefinitionMutation, { data, loading, error }] = useCreateShotAttributeDefinitionMutation({
+ *   variables: {
+ *      shotlistId: // value for 'shotlistId'
+ *      attributeType: // value for 'attributeType'
+ *   },
+ * });
+ */
+export function useCreateShotAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<CreateShotAttributeDefinitionMutation, CreateShotAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateShotAttributeDefinitionMutation, CreateShotAttributeDefinitionMutationVariables>(CreateShotAttributeDefinitionDocument, options);
+      }
+export type CreateShotAttributeDefinitionMutationHookResult = ReturnType<typeof useCreateShotAttributeDefinitionMutation>;
+export type CreateShotAttributeDefinitionMutationResult = Apollo.MutationResult<CreateShotAttributeDefinitionMutation>;
+export type CreateShotAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<CreateShotAttributeDefinitionMutation, CreateShotAttributeDefinitionMutationVariables>;
+export const UpdateShotDefinitionDocument = gql`
+    mutation updateShotDefinition($id: BigInteger!, $position: Int!) {
+  updateShotAttributeDefinition(editDTO: {id: $id, position: $position}) {
+    id
+    position
+  }
+}
+    `;
+export type UpdateShotDefinitionMutationFn = Apollo.MutationFunction<UpdateShotDefinitionMutation, UpdateShotDefinitionMutationVariables>;
+
+/**
+ * __useUpdateShotDefinitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateShotDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateShotDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateShotDefinitionMutation, { data, loading, error }] = useUpdateShotDefinitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useUpdateShotDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateShotDefinitionMutation, UpdateShotDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateShotDefinitionMutation, UpdateShotDefinitionMutationVariables>(UpdateShotDefinitionDocument, options);
+      }
+export type UpdateShotDefinitionMutationHookResult = ReturnType<typeof useUpdateShotDefinitionMutation>;
+export type UpdateShotDefinitionMutationResult = Apollo.MutationResult<UpdateShotDefinitionMutation>;
+export type UpdateShotDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateShotDefinitionMutation, UpdateShotDefinitionMutationVariables>;
+export const CreateSceneAttributeDefinitionDocument = gql`
+    mutation createSceneAttributeDefinition($shotlistId: String!, $attributeType: SceneAttributeType!) {
+  createSceneAttributeDefinition(
+    createDTO: {shotlistId: $shotlistId, type: $attributeType}
+  ) {
+    id
+    name
+    position
+  }
+}
+    `;
+export type CreateSceneAttributeDefinitionMutationFn = Apollo.MutationFunction<CreateSceneAttributeDefinitionMutation, CreateSceneAttributeDefinitionMutationVariables>;
+
+/**
+ * __useCreateSceneAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useCreateSceneAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSceneAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSceneAttributeDefinitionMutation, { data, loading, error }] = useCreateSceneAttributeDefinitionMutation({
+ *   variables: {
+ *      shotlistId: // value for 'shotlistId'
+ *      attributeType: // value for 'attributeType'
+ *   },
+ * });
+ */
+export function useCreateSceneAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSceneAttributeDefinitionMutation, CreateSceneAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSceneAttributeDefinitionMutation, CreateSceneAttributeDefinitionMutationVariables>(CreateSceneAttributeDefinitionDocument, options);
+      }
+export type CreateSceneAttributeDefinitionMutationHookResult = ReturnType<typeof useCreateSceneAttributeDefinitionMutation>;
+export type CreateSceneAttributeDefinitionMutationResult = Apollo.MutationResult<CreateSceneAttributeDefinitionMutation>;
+export type CreateSceneAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<CreateSceneAttributeDefinitionMutation, CreateSceneAttributeDefinitionMutationVariables>;
+export const UpdateSceneDefinitionDocument = gql`
+    mutation updateSceneDefinition($id: BigInteger!, $position: Int!) {
+  updateSceneAttributeDefinition(editDTO: {id: $id, position: $position}) {
+    id
+    position
+  }
+}
+    `;
+export type UpdateSceneDefinitionMutationFn = Apollo.MutationFunction<UpdateSceneDefinitionMutation, UpdateSceneDefinitionMutationVariables>;
+
+/**
+ * __useUpdateSceneDefinitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSceneDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSceneDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSceneDefinitionMutation, { data, loading, error }] = useUpdateSceneDefinitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      position: // value for 'position'
+ *   },
+ * });
+ */
+export function useUpdateSceneDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSceneDefinitionMutation, UpdateSceneDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSceneDefinitionMutation, UpdateSceneDefinitionMutationVariables>(UpdateSceneDefinitionDocument, options);
+      }
+export type UpdateSceneDefinitionMutationHookResult = ReturnType<typeof useUpdateSceneDefinitionMutation>;
+export type UpdateSceneDefinitionMutationResult = Apollo.MutationResult<UpdateSceneDefinitionMutation>;
+export type UpdateSceneDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateSceneDefinitionMutation, UpdateSceneDefinitionMutationVariables>;
 export const DeleteSceneDocument = gql`
     mutation deleteScene($sceneId: String!) {
   deleteScene(id: $sceneId) {
@@ -1018,7 +1337,7 @@ export type SearchSceneSelectAttributeOptionsQueryResult = Apollo.QueryResult<Se
 export const CreateSceneOptionDocument = gql`
     mutation createSceneOption($definitionId: BigInteger!, $name: String!) {
   createSceneSelectAttributeOption(
-    createDTO: {selectAttributeId: $definitionId, name: $name}
+    createDTO: {attributeDefinitionId: $definitionId, name: $name}
   ) {
     id
     name
@@ -1052,8 +1371,8 @@ export function useCreateSceneOptionMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateSceneOptionMutationHookResult = ReturnType<typeof useCreateSceneOptionMutation>;
 export type CreateSceneOptionMutationResult = Apollo.MutationResult<CreateSceneOptionMutation>;
 export type CreateSceneOptionMutationOptions = Apollo.BaseMutationOptions<CreateSceneOptionMutation, CreateSceneOptionMutationVariables>;
-export const UpdateDocument = gql`
-    mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
+export const UpdateSceneAttributeDocument = gql`
+    mutation updateSceneAttribute($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
   updateSceneAttribute(
     editDTO: {id: $id, textValue: $textValue, singleSelectValue: $singleSelectValue, multiSelectValue: $multiSelectValue}
   ) {
@@ -1061,20 +1380,20 @@ export const UpdateDocument = gql`
   }
 }
     `;
-export type UpdateMutationFn = Apollo.MutationFunction<UpdateMutation, UpdateMutationVariables>;
+export type UpdateSceneAttributeMutationFn = Apollo.MutationFunction<UpdateSceneAttributeMutation, UpdateSceneAttributeMutationVariables>;
 
 /**
- * __useUpdateMutation__
+ * __useUpdateSceneAttributeMutation__
  *
- * To run a mutation, you first call `useUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateSceneAttributeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSceneAttributeMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateMutation, { data, loading, error }] = useUpdateMutation({
+ * const [updateSceneAttributeMutation, { data, loading, error }] = useUpdateSceneAttributeMutation({
  *   variables: {
  *      id: // value for 'id'
  *      textValue: // value for 'textValue'
@@ -1083,13 +1402,216 @@ export type UpdateMutationFn = Apollo.MutationFunction<UpdateMutation, UpdateMut
  *   },
  * });
  */
-export function useUpdateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMutation, UpdateMutationVariables>) {
+export function useUpdateSceneAttributeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSceneAttributeMutation, UpdateSceneAttributeMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMutation, UpdateMutationVariables>(UpdateDocument, options);
+        return Apollo.useMutation<UpdateSceneAttributeMutation, UpdateSceneAttributeMutationVariables>(UpdateSceneAttributeDocument, options);
       }
-export type UpdateMutationHookResult = ReturnType<typeof useUpdateMutation>;
-export type UpdateMutationResult = Apollo.MutationResult<UpdateMutation>;
-export type UpdateMutationOptions = Apollo.BaseMutationOptions<UpdateMutation, UpdateMutationVariables>;
+export type UpdateSceneAttributeMutationHookResult = ReturnType<typeof useUpdateSceneAttributeMutation>;
+export type UpdateSceneAttributeMutationResult = Apollo.MutationResult<UpdateSceneAttributeMutation>;
+export type UpdateSceneAttributeMutationOptions = Apollo.BaseMutationOptions<UpdateSceneAttributeMutation, UpdateSceneAttributeMutationVariables>;
+export const UpdateSceneAttributeDefinitionDocument = gql`
+    mutation updateSceneAttributeDefinition($id: BigInteger!, $name: String!) {
+  updateSceneAttributeDefinition(editDTO: {id: $id, name: $name}) {
+    id
+  }
+}
+    `;
+export type UpdateSceneAttributeDefinitionMutationFn = Apollo.MutationFunction<UpdateSceneAttributeDefinitionMutation, UpdateSceneAttributeDefinitionMutationVariables>;
+
+/**
+ * __useUpdateSceneAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSceneAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSceneAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSceneAttributeDefinitionMutation, { data, loading, error }] = useUpdateSceneAttributeDefinitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateSceneAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSceneAttributeDefinitionMutation, UpdateSceneAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSceneAttributeDefinitionMutation, UpdateSceneAttributeDefinitionMutationVariables>(UpdateSceneAttributeDefinitionDocument, options);
+      }
+export type UpdateSceneAttributeDefinitionMutationHookResult = ReturnType<typeof useUpdateSceneAttributeDefinitionMutation>;
+export type UpdateSceneAttributeDefinitionMutationResult = Apollo.MutationResult<UpdateSceneAttributeDefinitionMutation>;
+export type UpdateSceneAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateSceneAttributeDefinitionMutation, UpdateSceneAttributeDefinitionMutationVariables>;
+export const DeleteSceneAttributeDefinitionDocument = gql`
+    mutation deleteSceneAttributeDefinition($definitionId: BigInteger!) {
+  deleteSceneAttributeDefinition(id: $definitionId) {
+    id
+  }
+}
+    `;
+export type DeleteSceneAttributeDefinitionMutationFn = Apollo.MutationFunction<DeleteSceneAttributeDefinitionMutation, DeleteSceneAttributeDefinitionMutationVariables>;
+
+/**
+ * __useDeleteSceneAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useDeleteSceneAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSceneAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSceneAttributeDefinitionMutation, { data, loading, error }] = useDeleteSceneAttributeDefinitionMutation({
+ *   variables: {
+ *      definitionId: // value for 'definitionId'
+ *   },
+ * });
+ */
+export function useDeleteSceneAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSceneAttributeDefinitionMutation, DeleteSceneAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSceneAttributeDefinitionMutation, DeleteSceneAttributeDefinitionMutationVariables>(DeleteSceneAttributeDefinitionDocument, options);
+      }
+export type DeleteSceneAttributeDefinitionMutationHookResult = ReturnType<typeof useDeleteSceneAttributeDefinitionMutation>;
+export type DeleteSceneAttributeDefinitionMutationResult = Apollo.MutationResult<DeleteSceneAttributeDefinitionMutation>;
+export type DeleteSceneAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<DeleteSceneAttributeDefinitionMutation, DeleteSceneAttributeDefinitionMutationVariables>;
+export const CreateSceneSelectAttributeOptionDocument = gql`
+    mutation createSceneSelectAttributeOption($definitionId: BigInteger!) {
+  createSceneSelectAttributeOption(
+    createDTO: {attributeDefinitionId: $definitionId}
+  ) {
+    id
+    name
+  }
+}
+    `;
+export type CreateSceneSelectAttributeOptionMutationFn = Apollo.MutationFunction<CreateSceneSelectAttributeOptionMutation, CreateSceneSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useCreateSceneSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useCreateSceneSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSceneSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSceneSelectAttributeOptionMutation, { data, loading, error }] = useCreateSceneSelectAttributeOptionMutation({
+ *   variables: {
+ *      definitionId: // value for 'definitionId'
+ *   },
+ * });
+ */
+export function useCreateSceneSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSceneSelectAttributeOptionMutation, CreateSceneSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSceneSelectAttributeOptionMutation, CreateSceneSelectAttributeOptionMutationVariables>(CreateSceneSelectAttributeOptionDocument, options);
+      }
+export type CreateSceneSelectAttributeOptionMutationHookResult = ReturnType<typeof useCreateSceneSelectAttributeOptionMutation>;
+export type CreateSceneSelectAttributeOptionMutationResult = Apollo.MutationResult<CreateSceneSelectAttributeOptionMutation>;
+export type CreateSceneSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<CreateSceneSelectAttributeOptionMutation, CreateSceneSelectAttributeOptionMutationVariables>;
+export const DeleteSceneSelectAttributeOptionDocument = gql`
+    mutation deleteSceneSelectAttributeOption($optionId: BigInteger!) {
+  deleteSceneSelectAttributeOption(id: $optionId) {
+    id
+  }
+}
+    `;
+export type DeleteSceneSelectAttributeOptionMutationFn = Apollo.MutationFunction<DeleteSceneSelectAttributeOptionMutation, DeleteSceneSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useDeleteSceneSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useDeleteSceneSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSceneSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSceneSelectAttributeOptionMutation, { data, loading, error }] = useDeleteSceneSelectAttributeOptionMutation({
+ *   variables: {
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useDeleteSceneSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSceneSelectAttributeOptionMutation, DeleteSceneSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSceneSelectAttributeOptionMutation, DeleteSceneSelectAttributeOptionMutationVariables>(DeleteSceneSelectAttributeOptionDocument, options);
+      }
+export type DeleteSceneSelectAttributeOptionMutationHookResult = ReturnType<typeof useDeleteSceneSelectAttributeOptionMutation>;
+export type DeleteSceneSelectAttributeOptionMutationResult = Apollo.MutationResult<DeleteSceneSelectAttributeOptionMutation>;
+export type DeleteSceneSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<DeleteSceneSelectAttributeOptionMutation, DeleteSceneSelectAttributeOptionMutationVariables>;
+export const UpdateSceneSelectAttributeOptionDocument = gql`
+    mutation updateSceneSelectAttributeOption($id: BigInteger!, $name: String!) {
+  updateSceneSelectAttributeOption(editDTO: {id: $id, name: $name}) {
+    id
+  }
+}
+    `;
+export type UpdateSceneSelectAttributeOptionMutationFn = Apollo.MutationFunction<UpdateSceneSelectAttributeOptionMutation, UpdateSceneSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useUpdateSceneSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSceneSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSceneSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSceneSelectAttributeOptionMutation, { data, loading, error }] = useUpdateSceneSelectAttributeOptionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateSceneSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSceneSelectAttributeOptionMutation, UpdateSceneSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSceneSelectAttributeOptionMutation, UpdateSceneSelectAttributeOptionMutationVariables>(UpdateSceneSelectAttributeOptionDocument, options);
+      }
+export type UpdateSceneSelectAttributeOptionMutationHookResult = ReturnType<typeof useUpdateSceneSelectAttributeOptionMutation>;
+export type UpdateSceneSelectAttributeOptionMutationResult = Apollo.MutationResult<UpdateSceneSelectAttributeOptionMutation>;
+export type UpdateSceneSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<UpdateSceneSelectAttributeOptionMutation, UpdateSceneSelectAttributeOptionMutationVariables>;
+export const DeleteShotDocument = gql`
+    mutation deleteShot($shotId: String!) {
+  deleteShot(id: $shotId) {
+    id
+  }
+}
+    `;
+export type DeleteShotMutationFn = Apollo.MutationFunction<DeleteShotMutation, DeleteShotMutationVariables>;
+
+/**
+ * __useDeleteShotMutation__
+ *
+ * To run a mutation, you first call `useDeleteShotMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteShotMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteShotMutation, { data, loading, error }] = useDeleteShotMutation({
+ *   variables: {
+ *      shotId: // value for 'shotId'
+ *   },
+ * });
+ */
+export function useDeleteShotMutation(baseOptions?: Apollo.MutationHookOptions<DeleteShotMutation, DeleteShotMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteShotMutation, DeleteShotMutationVariables>(DeleteShotDocument, options);
+      }
+export type DeleteShotMutationHookResult = ReturnType<typeof useDeleteShotMutation>;
+export type DeleteShotMutationResult = Apollo.MutationResult<DeleteShotMutation>;
+export type DeleteShotMutationOptions = Apollo.BaseMutationOptions<DeleteShotMutation, DeleteShotMutationVariables>;
 export const SearchShotSelectAttributeOptionsDocument = gql`
     query searchShotSelectAttributeOptions($definitionId: BigInteger!, $searchTerm: String!) {
   searchShotSelectAttributeOptions(
@@ -1137,7 +1659,7 @@ export type SearchShotSelectAttributeOptionsQueryResult = Apollo.QueryResult<Sea
 export const CreateShotOptionDocument = gql`
     mutation createShotOption($definitionId: BigInteger!, $name: String!) {
   createShotSelectAttributeOption(
-    createDTO: {selectAttributeId: $definitionId, name: $name}
+    createDTO: {attributeDefinitionId: $definitionId, name: $name}
   ) {
     id
     name
@@ -1171,6 +1693,176 @@ export function useCreateShotOptionMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateShotOptionMutationHookResult = ReturnType<typeof useCreateShotOptionMutation>;
 export type CreateShotOptionMutationResult = Apollo.MutationResult<CreateShotOptionMutation>;
 export type CreateShotOptionMutationOptions = Apollo.BaseMutationOptions<CreateShotOptionMutation, CreateShotOptionMutationVariables>;
+export const UpdateShotAttributeDefinitionDocument = gql`
+    mutation updateShotAttributeDefinition($id: BigInteger!, $name: String!) {
+  updateShotAttributeDefinition(editDTO: {id: $id, name: $name}) {
+    id
+  }
+}
+    `;
+export type UpdateShotAttributeDefinitionMutationFn = Apollo.MutationFunction<UpdateShotAttributeDefinitionMutation, UpdateShotAttributeDefinitionMutationVariables>;
+
+/**
+ * __useUpdateShotAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useUpdateShotAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateShotAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateShotAttributeDefinitionMutation, { data, loading, error }] = useUpdateShotAttributeDefinitionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateShotAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateShotAttributeDefinitionMutation, UpdateShotAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateShotAttributeDefinitionMutation, UpdateShotAttributeDefinitionMutationVariables>(UpdateShotAttributeDefinitionDocument, options);
+      }
+export type UpdateShotAttributeDefinitionMutationHookResult = ReturnType<typeof useUpdateShotAttributeDefinitionMutation>;
+export type UpdateShotAttributeDefinitionMutationResult = Apollo.MutationResult<UpdateShotAttributeDefinitionMutation>;
+export type UpdateShotAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateShotAttributeDefinitionMutation, UpdateShotAttributeDefinitionMutationVariables>;
+export const DeleteShotAttributeDefinitionDocument = gql`
+    mutation deleteShotAttributeDefinition($definitionId: BigInteger!) {
+  deleteShotAttributeDefinition(id: $definitionId) {
+    id
+  }
+}
+    `;
+export type DeleteShotAttributeDefinitionMutationFn = Apollo.MutationFunction<DeleteShotAttributeDefinitionMutation, DeleteShotAttributeDefinitionMutationVariables>;
+
+/**
+ * __useDeleteShotAttributeDefinitionMutation__
+ *
+ * To run a mutation, you first call `useDeleteShotAttributeDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteShotAttributeDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteShotAttributeDefinitionMutation, { data, loading, error }] = useDeleteShotAttributeDefinitionMutation({
+ *   variables: {
+ *      definitionId: // value for 'definitionId'
+ *   },
+ * });
+ */
+export function useDeleteShotAttributeDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteShotAttributeDefinitionMutation, DeleteShotAttributeDefinitionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteShotAttributeDefinitionMutation, DeleteShotAttributeDefinitionMutationVariables>(DeleteShotAttributeDefinitionDocument, options);
+      }
+export type DeleteShotAttributeDefinitionMutationHookResult = ReturnType<typeof useDeleteShotAttributeDefinitionMutation>;
+export type DeleteShotAttributeDefinitionMutationResult = Apollo.MutationResult<DeleteShotAttributeDefinitionMutation>;
+export type DeleteShotAttributeDefinitionMutationOptions = Apollo.BaseMutationOptions<DeleteShotAttributeDefinitionMutation, DeleteShotAttributeDefinitionMutationVariables>;
+export const CreateShotSelectAttributeOptionDocument = gql`
+    mutation createShotSelectAttributeOption($definitionId: BigInteger!) {
+  createShotSelectAttributeOption(
+    createDTO: {attributeDefinitionId: $definitionId}
+  ) {
+    id
+    name
+  }
+}
+    `;
+export type CreateShotSelectAttributeOptionMutationFn = Apollo.MutationFunction<CreateShotSelectAttributeOptionMutation, CreateShotSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useCreateShotSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useCreateShotSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateShotSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createShotSelectAttributeOptionMutation, { data, loading, error }] = useCreateShotSelectAttributeOptionMutation({
+ *   variables: {
+ *      definitionId: // value for 'definitionId'
+ *   },
+ * });
+ */
+export function useCreateShotSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateShotSelectAttributeOptionMutation, CreateShotSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateShotSelectAttributeOptionMutation, CreateShotSelectAttributeOptionMutationVariables>(CreateShotSelectAttributeOptionDocument, options);
+      }
+export type CreateShotSelectAttributeOptionMutationHookResult = ReturnType<typeof useCreateShotSelectAttributeOptionMutation>;
+export type CreateShotSelectAttributeOptionMutationResult = Apollo.MutationResult<CreateShotSelectAttributeOptionMutation>;
+export type CreateShotSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<CreateShotSelectAttributeOptionMutation, CreateShotSelectAttributeOptionMutationVariables>;
+export const DeleteShotSelectAttributeOptionDocument = gql`
+    mutation deleteShotSelectAttributeOption($optionId: BigInteger!) {
+  deleteShotSelectAttributeOption(id: $optionId) {
+    id
+  }
+}
+    `;
+export type DeleteShotSelectAttributeOptionMutationFn = Apollo.MutationFunction<DeleteShotSelectAttributeOptionMutation, DeleteShotSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useDeleteShotSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useDeleteShotSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteShotSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteShotSelectAttributeOptionMutation, { data, loading, error }] = useDeleteShotSelectAttributeOptionMutation({
+ *   variables: {
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useDeleteShotSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteShotSelectAttributeOptionMutation, DeleteShotSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteShotSelectAttributeOptionMutation, DeleteShotSelectAttributeOptionMutationVariables>(DeleteShotSelectAttributeOptionDocument, options);
+      }
+export type DeleteShotSelectAttributeOptionMutationHookResult = ReturnType<typeof useDeleteShotSelectAttributeOptionMutation>;
+export type DeleteShotSelectAttributeOptionMutationResult = Apollo.MutationResult<DeleteShotSelectAttributeOptionMutation>;
+export type DeleteShotSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<DeleteShotSelectAttributeOptionMutation, DeleteShotSelectAttributeOptionMutationVariables>;
+export const UpdateShotSelectAttributeOptionDocument = gql`
+    mutation updateShotSelectAttributeOption($id: BigInteger!, $name: String!) {
+  updateShotSelectAttributeOption(editDTO: {id: $id, name: $name}) {
+    id
+  }
+}
+    `;
+export type UpdateShotSelectAttributeOptionMutationFn = Apollo.MutationFunction<UpdateShotSelectAttributeOptionMutation, UpdateShotSelectAttributeOptionMutationVariables>;
+
+/**
+ * __useUpdateShotSelectAttributeOptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateShotSelectAttributeOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateShotSelectAttributeOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateShotSelectAttributeOptionMutation, { data, loading, error }] = useUpdateShotSelectAttributeOptionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useUpdateShotSelectAttributeOptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateShotSelectAttributeOptionMutation, UpdateShotSelectAttributeOptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateShotSelectAttributeOptionMutation, UpdateShotSelectAttributeOptionMutationVariables>(UpdateShotSelectAttributeOptionDocument, options);
+      }
+export type UpdateShotSelectAttributeOptionMutationHookResult = ReturnType<typeof useUpdateShotSelectAttributeOptionMutation>;
+export type UpdateShotSelectAttributeOptionMutationResult = Apollo.MutationResult<UpdateShotSelectAttributeOptionMutation>;
+export type UpdateShotSelectAttributeOptionMutationOptions = Apollo.BaseMutationOptions<UpdateShotSelectAttributeOptionMutation, UpdateShotSelectAttributeOptionMutationVariables>;
 export const ShotsDocument = gql`
     query shots($sceneId: String!) {
   shots(sceneId: $sceneId) {

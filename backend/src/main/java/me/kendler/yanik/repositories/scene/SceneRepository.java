@@ -27,7 +27,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
     public Scene create(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
-
+        shotlist.registerEdit();
         Scene scene = new Scene(shotlist);
         persist(scene);
 
@@ -44,6 +44,8 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
         scene.position = editDTO.position();
 
+        scene.shotlist.registerEdit();
+
         return scene;
     }
 
@@ -55,6 +57,8 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
             for (Shot shot : scene.shots) {
                 shotRepository.delete(shot);
             }
+
+            scene.shotlist.registerEdit();
 
             delete(scene);
 

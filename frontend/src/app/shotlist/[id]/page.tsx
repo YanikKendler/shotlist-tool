@@ -16,7 +16,7 @@ import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
 import {FileSliders, House, Plus} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
-import { ScrollArea } from "radix-ui"
+import { ScrollArea, Tooltip } from "radix-ui"
 import {query} from "@/ApolloClient"
 import useShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 import ErrorPage from "@/components/errorPage/errorPage"
@@ -44,7 +44,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const searchParams = useSearchParams()
     const sceneId = searchParams.get('sceneId')
 
-    const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {}, loading: true, error: null})
+    const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {} as ShotlistDto, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
@@ -58,7 +58,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8,
+                distance: 4,
             },
         }),
         useSensor(KeyboardSensor, {
@@ -226,6 +226,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
             href: '../dashboard'
         }
     }}/>
+
     if(shotlist.loading) return <LoadingPage/>
 
     if(!shotlist.data) return <ErrorPage settings={{
@@ -242,15 +243,27 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     return (
         <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true), elementIsBeingDragged: elementIsBeingDragged, setElementIsBeingDragged: setElementIsBeingDragged}}>
             <main className="shotlist" key={reloadKey}>
-                <PanelGroup autoSaveId={id} direction="horizontal" className={"PanelGroup"}>
+                <PanelGroup autoSaveId={"shotlist-sidebar"} direction="horizontal" className={"PanelGroup"}>
                     <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                         <div className="content">
                             <div className="top">
-                                <Link href={`../dashboard`}><House strokeWidth={2.5} size={20}/></Link>
+                                <Tooltip.Root>
+                                    <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                                        <Link href={`../dashboard`}>
+                                            <House strokeWidth={2.5} size={20}/>
+                                        </Link>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Portal>
+                                        <Tooltip.Content className={"TooltipContent"}>
+                                            <Tooltip.Arrow/>
+                                            <p><span className="bold">Click</span> to go back to the Dashboard</p>
+                                        </Tooltip.Content>
+                                    </Tooltip.Portal>
+                                </Tooltip.Root>
                                 <p>/</p>
                                 <input type="text" defaultValue={shotlist.data.name || ""}/>
                             </div>
-                            <div className="scenes">
+                            <div className="list">
                                 <DndContext
                                     sensors={sensors}
                                     collisionDetection={closestCenter}

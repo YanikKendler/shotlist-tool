@@ -45,7 +45,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8,
+                distance: 4,
             },
         }),
         useSensor(KeyboardSensor, {

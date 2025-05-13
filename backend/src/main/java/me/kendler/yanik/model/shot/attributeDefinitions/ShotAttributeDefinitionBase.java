@@ -23,7 +23,6 @@ public abstract class ShotAttributeDefinitionBase extends PanacheEntity {
     public ShotAttributeDefinitionBase(Shotlist shotlist) {
         this.position = shotlist.shotAttributeDefinitions.size();
         shotlist.shotAttributeDefinitions.add(this);
-        System.out.println(shotlist);
     }
 
     public ShotAttributeDefinitionBase(Shotlist shotlist, String name) {

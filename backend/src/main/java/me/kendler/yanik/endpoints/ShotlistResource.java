@@ -1,5 +1,6 @@
 package me.kendler.yanik.endpoints;
 
+import io.quarkus.oidc.IdToken;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistDTO;
@@ -9,14 +10,17 @@ import me.kendler.yanik.repositories.ShotlistRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.List;
 import java.util.UUID;
 
-//TODO i dont know why when getting it only returns a single shot defnition instead of all three
-
 @GraphQLApi
 public class ShotlistResource {
+    @Inject
+    @IdToken
+    JsonWebToken idToken;
+
     @Inject
     ShotlistRepository shotlistRepository;
 

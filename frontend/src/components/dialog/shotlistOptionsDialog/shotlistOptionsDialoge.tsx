@@ -117,7 +117,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
     async function createShotAttributeDefinition(type: ShotAttributeType) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation createShotSelectAttributeOption($shotlistId: String!, $attributeType: ShotAttributeType!) {
+                mutation createShotAttributeDefinition($shotlistId: String!, $attributeType: ShotAttributeType!) {
                     createShotAttributeDefinition(createDTO: {
                         shotlistId: $shotlistId,
                         type: $attributeType
@@ -180,7 +180,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
     async function createSceneAttributeDefinition(type: SceneAttributeType) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation createSceneSelectAttributeOption($shotlistId: String!, $attributeType: SceneAttributeType!) {
+                mutation createSceneAttributeDefinition($shotlistId: String!, $attributeType: SceneAttributeType!) {
                     createSceneAttributeDefinition(createDTO: {
                         shotlistId: $shotlistId,
                         type: $attributeType

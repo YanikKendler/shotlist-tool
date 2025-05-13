@@ -15,8 +15,6 @@ import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 import {ShotlistContext} from "@/context/ShotlistContext"
 
-//TODO optimize for dragging like shot
-
 export default function Scene({scene, position, expanded, onSelect, onDelete}: {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void}) {
     const [overflowVisible, setOverflowVisible] = useState(false);
     const [sceneAttributes, setSceneAttributes] = useState<AnySceneAttribute[]>(scene.attributes as AnySceneAttribute[]);
@@ -94,28 +92,26 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                             .join(" • ")
                 }</p>
                 <Popover.Root onOpenChange={setIsBeingEdited}>
-                    <Tooltip.Provider delayDuration={500}>
-                        <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
-                            <Popover.Trigger
-                                className="grip"
-                                ref={setActivatorNodeRef}
-                                {...listeners}
-                                {...attributes}
-                                onClick={e => e.stopPropagation()}
-                            >
-                                <Tooltip.Trigger className={"noPadding"} asChild>
-                                    <GripVertical size={expanded ? 22 : 20}/>
-                                </Tooltip.Trigger>
-                            </Popover.Trigger>
-                            <Tooltip.Portal>
-                                <Tooltip.Content className={"TooltipContent"}>
-                                    <Tooltip.Arrow/>
-                                    <p><span className="bold">Click</span> to edit</p>
-                                    <p><span className="bold">Drag</span> to reorder</p>
-                                </Tooltip.Content>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                    </Tooltip.Provider>
+                    <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
+                        <Popover.Trigger
+                            className="grip"
+                            ref={setActivatorNodeRef}
+                            {...listeners}
+                            {...attributes}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <Tooltip.Trigger className={"noPadding"} asChild>
+                                <GripVertical size={expanded ? 22 : 20}/>
+                            </Tooltip.Trigger>
+                        </Popover.Trigger>
+                        <Tooltip.Portal>
+                            <Tooltip.Content className={"TooltipContent"}>
+                                <Tooltip.Arrow/>
+                                <p><span className="bold">Click</span> to edit</p>
+                                <p><span className="bold">Drag</span> to reorder</p>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent sceneContextOptionsPopup" align={"start"} side={"right"} sideOffset={12} alignOffset={-10}>
                             <button className={"bad"} onClick={(e) => {e.stopPropagation(); deleteScene()}}><Trash size={18}/> delete</button>

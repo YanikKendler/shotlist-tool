@@ -83,6 +83,8 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
         SceneAttributeDefinitionBase attributeDefinition = null;
         Shotlist shotlist = shotlistRepository.findById(createDTO.shotlistId());
 
+        shotlist.registerEdit();
+
         switch (createDTO.type()) {
             case SceneSingleSelectAttribute -> {
                 attributeDefinition = new SceneSingleSelectAttributeDefinition(shotlist);
@@ -110,23 +112,22 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
     }
 
     public SceneAttributeDefinitionBase update(SceneAttributeDefinitionEditDTO editDTO) {
-        System.out.println(editDTO.toString());
-
         SceneAttributeDefinitionBase attribute = findById(editDTO.id());
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
         }
+
+        Shotlist shotlist = getEntityManager()
+                .createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d = :attribute", Shotlist.class)
+                .setParameter("attribute", attribute)
+                .getSingleResult();
+
+        shotlist.registerEdit();
+
         if(editDTO.name() != null && !editDTO.name().isEmpty()) {
             attribute.name = editDTO.name();
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
-            System.out.println("updating position");
-
-            Shotlist shotlist = getEntityManager()
-                    .createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d = :attribute", Shotlist.class)
-                    .setParameter("attribute", attribute)
-                    .getSingleResult();
-
             shotlist.sceneAttributeDefinitions.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
                     .forEach(a -> a.position++);
@@ -168,6 +169,8 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             relevantShotlist.sceneAttributeDefinitions.remove(attributeDefinition);
 
             delete(attributeDefinition);
+
+            relevantShotlist.registerEdit();
 
             return attributeDefinition;
         }

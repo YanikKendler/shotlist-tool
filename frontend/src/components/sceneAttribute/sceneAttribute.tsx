@@ -24,7 +24,7 @@ import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
 import {SceneSingleSelectAttributeDto} from "../../../lib/graphql/generated"
 
-export default function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
+const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -60,7 +60,7 @@ export default function SceneAttribute({attribute, attributeUpdated}: {attribute
                 ))
                 break
             case "SceneTextAttributeDTO":
-                setTextValue(attribute.textValue || "")
+                if(textValue == "") setTextValue(attribute.textValue || "")
                 break
         }
     }, [attribute]);
@@ -161,7 +161,7 @@ export default function SceneAttribute({attribute, attributeUpdated}: {attribute
     const updateAttributeValue = async (value: SceneAttributeValueCollection) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
-                mutation update($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
+                mutation updateSceneAttribute($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
                     updateSceneAttribute(editDTO:{
                         id: $id
                         textValue: $textValue
@@ -256,3 +256,5 @@ export default function SceneAttribute({attribute, attributeUpdated}: {attribute
 
     return <div className="sceneAttribute">{content}</div>
 }
+
+export default SceneAttribute

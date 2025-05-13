@@ -43,7 +43,7 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
     async function updateDefinition(newName: string) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation update($id: BigInteger!, $name: String!) {
+                mutation updateShotAttributeDefinition($id: BigInteger!, $name: String!) {
                     updateShotAttributeDefinition(editDTO: {
                         id: $id
                         name: $name
@@ -153,7 +153,7 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
     const updateOptionName = async (optionId: number, newName: string) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
-                mutation update($id: BigInteger!, $name: String!) {
+                mutation updateShotSelectAttributeOption($id: BigInteger!, $name: String!) {
                     updateShotSelectAttributeOption(editDTO: {
                         id: $id
                         name: $name

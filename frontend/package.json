@@ -11,6 +11,7 @@
   "dependencies": {
     "@apollo/client": "^3.13.7",
     "@apollo/client-integration-nextjs": "^0.12.1",
+    "@auth0/auth0-react": "^2.3.0",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@yanikkendler/web-utils": "^1.0.9",

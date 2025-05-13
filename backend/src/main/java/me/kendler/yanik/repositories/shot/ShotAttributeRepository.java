@@ -5,6 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shot.ShotAttributeEditDTO;
+import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
@@ -21,6 +22,12 @@ public class ShotAttributeRepository implements PanacheRepository<ShotAttributeB
 
     public ShotAttributeBase update(ShotAttributeEditDTO editDTO) {
         ShotAttributeBase attribute = findById(editDTO.id());
+
+        getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
+                , Shotlist.class)
+                .setParameter("definition", attribute.definition)
+                .getSingleResult()
+        .registerEdit();
 
         switch (attribute) {
             case null -> {

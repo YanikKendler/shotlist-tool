@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionCreateDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionSearchDTO;
+import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
@@ -35,6 +36,13 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
         }
 
         persist(shotSelectAttributeOptionDefinition);
+
+        getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
+                    , Shotlist.class)
+                .setParameter("definition", shotAttributeDefinition)
+                .getSingleResult()
+        .registerEdit();
+
         return shotSelectAttributeOptionDefinition;
     }
 
@@ -53,6 +61,13 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
             throw new IllegalArgumentException("ShotSelectAttributeOptionDefinition not found");
         }
         option.name = editDTO.name();
+
+        getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
+                , Shotlist.class)
+                .setParameter("definition", option.shotAttributeDefinition)
+                .getSingleResult()
+        .registerEdit();
+
         return option;
     }
 
@@ -80,7 +95,14 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
                 default:
                     throw new IllegalStateException("Unexpected value: " + shotSelectAttributeOptionDefinition.shotAttributeDefinition);
             }
+
             delete(shotSelectAttributeOptionDefinition);
+
+            getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
+                    , Shotlist.class)
+                    .setParameter("definition", shotSelectAttributeOptionDefinition.shotAttributeDefinition)
+                    .getSingleResult()
+            .registerEdit();
         }
         return shotSelectAttributeOptionDefinition;
     }

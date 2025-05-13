@@ -73,6 +73,7 @@ public class Shotlist extends PanacheEntityBase {
     }
 
     public void registerEdit() {
+        System.out.println("edited");
         this.editedAt = LocalDateTime.now();
     }
 
@@ -92,6 +93,8 @@ public class Shotlist extends PanacheEntityBase {
                     .map(ShotAttributeDefinitionBase::toDTO)
                     .sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition))
                     .collect(Collectors.toList()),
+            this.scenes.size(),
+            this.scenes.stream().map(scene -> scene.shots.size()).reduce(0, Integer::sum),
             this.name,
             this.createdAt,
             this.editedAt

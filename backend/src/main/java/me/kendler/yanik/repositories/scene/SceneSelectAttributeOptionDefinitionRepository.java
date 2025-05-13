@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionCreateDTO;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.scene.SceneSelectAttributeOptionSearchDTO;
+import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
@@ -25,6 +26,13 @@ public class SceneSelectAttributeOptionDefinitionRepository implements PanacheRe
         SceneAttributeDefinitionBase sceneAttributeDefinition = sceneAttributeDefinitionRepository.findById(createDTO.attributeDefinitionId());
         SceneSelectAttributeOptionDefinition sceneSelectAttributeOptionDefinition = new SceneSelectAttributeOptionDefinition(createDTO.name(), sceneAttributeDefinition);
         persist(sceneSelectAttributeOptionDefinition);
+
+        getEntityManager().createQuery("select s from Shotlist s join s.sceneAttributeDefinitions sad where sad = :definition"
+                , Shotlist.class)
+                .setParameter("definition", sceneAttributeDefinition)
+                .getSingleResult()
+        .registerEdit();
+
         return sceneSelectAttributeOptionDefinition;
     }
 
@@ -44,6 +52,13 @@ public class SceneSelectAttributeOptionDefinitionRepository implements PanacheRe
             throw new IllegalArgumentException("SceneSelectAttributeOptionDefinition not found");
         }
         option.name = editDTO.name();
+
+        getEntityManager().createQuery("select s from Shotlist s join s.sceneAttributeDefinitions sad where sad = :definition"
+                , Shotlist.class)
+                .setParameter("definition", option.sceneAttributeDefinition)
+                .getSingleResult()
+        .registerEdit();
+
         return option;
     }
 
@@ -72,7 +87,14 @@ public class SceneSelectAttributeOptionDefinitionRepository implements PanacheRe
                 default:
                     throw new IllegalStateException("Unexpected value: " + sceneSelectAttributeOptionDefinition.sceneAttributeDefinition);
             }
+
             delete(sceneSelectAttributeOptionDefinition);
+
+             getEntityManager().createQuery("select s from Shotlist s join s.sceneAttributeDefinitions sad where sad = :definition"
+                    , Shotlist.class)
+                    .setParameter("definition", sceneSelectAttributeOptionDefinition.sceneAttributeDefinition)
+                    .getSingleResult()
+            .registerEdit();
         }
         return sceneSelectAttributeOptionDefinition;
     }
