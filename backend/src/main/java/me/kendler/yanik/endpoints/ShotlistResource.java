@@ -1,6 +1,5 @@
 package me.kendler.yanik.endpoints;
 
-import io.quarkus.oidc.IdToken;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistDTO;
@@ -18,14 +17,15 @@ import java.util.UUID;
 @GraphQLApi
 public class ShotlistResource {
     @Inject
-    @IdToken
-    JsonWebToken idToken;
+    JsonWebToken jwt;
 
     @Inject
     ShotlistRepository shotlistRepository;
 
     @Query
     public List<ShotlistDTO> getShotlists() {
+        System.out.println("token: " + jwt);
+        System.out.println("user: " + jwt.getClaim("sub"));
         //TODO only show shotlists of the current user
         return shotlistRepository.listAll().stream().map(Shotlist::toDTO).toList();
     }

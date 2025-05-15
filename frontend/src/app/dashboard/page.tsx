@@ -11,8 +11,8 @@ import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {ChevronDown, House, NotepadText, Plus, User} from "lucide-react"
 import {ShotlistDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
-import {wuTime} from "@yanikkendler/web-utils/dist/wuTime"
-import {useAuth0} from "@auth0/auth0-react"
+import {wuTime} from "@yanikkendler/web-utils/dist"
+import auth from "@/Auth"
 
 export default function Dashboard() {
     const [shotlists, setShotlists] = useState<{data: ShotlistDto[] , loading: boolean, error: any}>({data: [], loading: true, error: null})
@@ -21,6 +21,7 @@ export default function Dashboard() {
     const client = useApolloClient()
 
     useEffect(() => {
+        console.log(auth.getIdToken())
         loadShotlists()
     }, []);
 
@@ -52,7 +53,6 @@ export default function Dashboard() {
 
     return (
         <main className="dashboard">
-            <h1>hi {user?.name}</h1>
             <PanelGroup autoSaveId={"dashboard-sidebar"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">

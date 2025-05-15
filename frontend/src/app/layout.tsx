@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 }
 
 import { Inter } from 'next/font/google'
+import { Tooltip } from "radix-ui"
 
 const inter = Inter({
     subsets: ['latin']
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body>
-        <ApolloWrapper>
-            <SelectRefreshProvider>
-                {children}
-            </SelectRefreshProvider>
-        </ApolloWrapper>
+          <Tooltip.Provider>
+            <ApolloWrapper>
+                <SelectRefreshProvider>
+                    {children}
+                </SelectRefreshProvider>
+            </ApolloWrapper>
+          </Tooltip.Provider>
       </body>
     </html>
   )

@@ -1,13 +1,20 @@
-import Dashboard from "@/app/dashboard/page"
-import {useAuth0} from "@auth0/auth0-react"
+"use client"
+
+import Auth from "@/Auth"
 
 export default function Home() {
-    const {loginWithRedirect} = useAuth0();
 
     return (
         <div>
             <h1>hello</h1>
-            <button onClick={() => loginWithRedirect()}>Log In</button>
+            <button onClick={() => Auth.login()}>login</button>
+            <button onClick={() => {
+                fetch("http://localhost:8080/hello")
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                    })
+            }}>test /hello</button>
         </div>
     );
 }
