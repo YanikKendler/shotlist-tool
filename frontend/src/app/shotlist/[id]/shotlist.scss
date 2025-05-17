@@ -3,6 +3,15 @@ main.shotlist{
   width: 100%;
   background-color: var(--sidebar-bg);
 
+  .sidebar{
+    .list >.empty{
+      text-align: center;
+      color: var(--text-40);
+      font-size: .9rem;
+      margin-block: 1rem;
+    }
+  }
+
   .content{
     display: flex;
     flex-direction: column;
@@ -12,6 +21,7 @@ main.shotlist{
 
     .header{
       display: flex;
+      align-items: center;
       padding-inline: 1.5rem 2.5rem;
 
       div{
@@ -26,6 +36,12 @@ main.shotlist{
           text-align: center;
           color: var(--text-40);
         }
+      }
+
+      .empty{
+        font-size: .9rem;
+        color: var(--text-40);
+        margin-inline: auto;
       }
     }
   }

@@ -20,7 +20,7 @@ import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSor
 import ShotService from "@/service/ShotService"
 import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
 import {AnyShotAttributeDefinition} from "@/util/Types"
-import {wuText} from "@yanikkendler/web-utils"
+import {wuText} from "@yanikkendler/web-utils/dist"
 import {restrictToVerticalAxis} from "@dnd-kit/modifiers"
 import {ShotlistContext} from "@/context/ShotlistContext"
 
@@ -149,13 +149,6 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         })
     }
 
-    if(!sceneId || sceneId == "") return <div className="shotTable"><p className={"error"}>No Scene selected</p></div>
-    if(shots.loading) return <div className="shotTable"><p className={"error"}>loading...</p></div>
-    if (shots.error) {
-        console.error(shots.error)
-        return <div className="shotTable"><p className={"error"}>shotTable error: {shots.error.name}, message: {shots.error.message}</p></div>
-    }
-
     function handleDragEnd(event: any) {
         shotlistContext.setElementIsBeingDragged(false)
 
@@ -175,9 +168,16 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
         }
     }
 
+    if(!sceneId || sceneId == "") return <div className="shotTable"><p className={"error"}>No Scene selected</p></div>
+    if(shots.loading) return <div className="shotTable"><p className={"error"}>loading...</p></div>
+    if (shots.error) {
+        console.error(shots.error)
+        return <div className="shotTable"><p className={"error"}>failed to load shots</p></div>
+    }
+
     return (
         <div className="shotTable" ref={shotTableElement}>
-            <DndContext
+        <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
@@ -199,23 +199,28 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                 </DragOverlay>*/}
             </DndContext>
 
-            <div className="shot new">
-                <div className="shotAttribute number first">
-                    <span>#</span>
-                </div>
-                {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
-                    let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
-                    return (
-                        <div className={`shotAttribute ${index == shotAttributeDefinitions.length-1 ? "last" : ""}`} key={shotAttributeDefinition.id}
-                             onClick={() => createShot(index)}>
-                            <p>{shotAttributeDefinition.name || "Unnamed"}</p>
-                            <div className="icon">
-                                <Icon size={18} />
+            {
+                shotAttributeDefinitions.length == 0 ?
+                <div className={"empty"}>No shots to display. Start by: <button onClick={shotlistContext.openShotlistOptionsDialog}>defining a shot attribute</button></div> :
+                <div className="shot new">
+                    <div className="shotAttribute number first">
+                        <span>#</span>
+                    </div>
+                    {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                        let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                        return (
+                            <div className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
+                                 key={shotAttributeDefinition.id}
+                                 onClick={() => createShot(index)}>
+                                <p>{shotAttributeDefinition.name || "Unnamed"}</p>
+                                <div className="icon">
+                                    <Icon size={18}/>
+                                </div>
                             </div>
-                        </div>
-                    )
-                })}
-            </div>
+                        )
+                    })}
+                </div>
+            }
         </div>
     )
 })

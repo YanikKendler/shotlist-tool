@@ -643,6 +643,15 @@ export type UpdateSceneMutationVariables = Exact<{
 
 export type UpdateSceneMutation = { __typename?: 'Mutation', updateScene?: { __typename?: 'SceneDTO', id?: string | null, position: number } | null };
 
+export type CreateShotlistMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  templateId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type CreateShotlistMutation = { __typename?: 'Mutation', createShotlist?: { __typename?: 'ShotlistDTO', id?: string | null } | null };
+
 export type DataQueryVariables = Exact<{
   shotlistId: Scalars['String']['input'];
 }>;
@@ -1040,6 +1049,43 @@ export function useUpdateSceneMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateSceneMutationHookResult = ReturnType<typeof useUpdateSceneMutation>;
 export type UpdateSceneMutationResult = Apollo.MutationResult<UpdateSceneMutation>;
 export type UpdateSceneMutationOptions = Apollo.BaseMutationOptions<UpdateSceneMutation, UpdateSceneMutationVariables>;
+export const CreateShotlistDocument = gql`
+    mutation createShotlist($name: String!, $templateId: String!, $userId: String!) {
+  createShotlist(
+    createDTO: {name: $name, templateId: $templateId, userId: $userId}
+  ) {
+    id
+  }
+}
+    `;
+export type CreateShotlistMutationFn = Apollo.MutationFunction<CreateShotlistMutation, CreateShotlistMutationVariables>;
+
+/**
+ * __useCreateShotlistMutation__
+ *
+ * To run a mutation, you first call `useCreateShotlistMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateShotlistMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createShotlistMutation, { data, loading, error }] = useCreateShotlistMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      templateId: // value for 'templateId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useCreateShotlistMutation(baseOptions?: Apollo.MutationHookOptions<CreateShotlistMutation, CreateShotlistMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateShotlistMutation, CreateShotlistMutationVariables>(CreateShotlistDocument, options);
+      }
+export type CreateShotlistMutationHookResult = ReturnType<typeof useCreateShotlistMutation>;
+export type CreateShotlistMutationResult = Apollo.MutationResult<CreateShotlistMutation>;
+export type CreateShotlistMutationOptions = Apollo.BaseMutationOptions<CreateShotlistMutation, CreateShotlistMutationVariables>;
 export const DataDocument = gql`
     query data($shotlistId: String!) {
   shotAttributeDefinitions(shotlistId: $shotlistId) {

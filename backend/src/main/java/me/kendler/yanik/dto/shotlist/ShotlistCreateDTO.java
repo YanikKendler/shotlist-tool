@@ -1,9 +1,11 @@
 package me.kendler.yanik.dto.shotlist;
 
+import io.smallrye.graphql.api.Nullable;
+
 import java.util.UUID;
 
 public record ShotlistCreateDTO(
-        UUID userId,
-        UUID templateId,
+        @Nullable String userId,
+        @Nullable UUID templateId,
         String name
 ) { }

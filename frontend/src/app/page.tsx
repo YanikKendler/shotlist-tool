@@ -8,13 +8,7 @@ export default function Home() {
         <div>
             <h1>hello</h1>
             <button onClick={() => Auth.login()}>login</button>
-            <button onClick={() => {
-                fetch("http://localhost:8080/hello")
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                    })
-            }}>test /hello</button>
+            <button onClick={() => Auth.logout()}>logout</button>
         </div>
     );
 }

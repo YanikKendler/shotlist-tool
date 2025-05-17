@@ -17,10 +17,12 @@ export default function ErrorPage({settings}: {settings: ErrorPageSettings}) {
     return (
         <div className={"errorPage"}>
             <div className="content">
-                <h1>{settings.title}</h1>
-                <p className={"description"}>{settings.description}</p>
-                <Link className={"solid"} href={settings.link.href}>{settings.link.text}</Link>
                 <span className="smiley">:(</span>
+                <div className="main">
+                    <h1>{settings.title}</h1>
+                    <p className={"description"}>{settings.description}</p>
+                    <Link className={"solid"} href={settings.link.href}>{settings.link.text}</Link>
+                </div>
             </div>
         </div>
     );

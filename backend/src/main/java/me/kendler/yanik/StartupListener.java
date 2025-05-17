@@ -42,7 +42,7 @@ public class StartupListener {
 
     @Transactional
     public void createDemoData() {
-        User user = new User("yanik", "yanik@mail");
+        User user = new User("a", "yanik", "yanik@mail");
         entityManager.persist(user);
 
         // Insert a new Shotlist

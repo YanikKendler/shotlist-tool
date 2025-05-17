@@ -3,6 +3,7 @@
 import {useEffect} from "react"
 import auth from "@/Auth"
 import { useRouter } from 'next/navigation'
+import LoadingPage from "@/components/loadingPage/loadingPage"
 
 export default function CallbackPage() {
     const router = useRouter()
@@ -19,9 +20,6 @@ export default function CallbackPage() {
     }, []);
 
     return (
-        <div>
-            <h1>Callback Page</h1>
-            <p>This is the callback page.</p>
-        </div>
+        <LoadingPage text={"logging you in"}/>
     )
 }

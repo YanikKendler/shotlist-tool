@@ -13,15 +13,26 @@ import {ShotlistDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
 import {wuTime} from "@yanikkendler/web-utils/dist"
 import auth from "@/Auth"
+import {useRouter} from "next/navigation"
+import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
 
 export default function Dashboard() {
     const [shotlists, setShotlists] = useState<{data: ShotlistDto[] , loading: boolean, error: any}>({data: [], loading: true, error: null})
     const [accountDialogOpen, setAccountDialogOpen] = useState(false)
 
     const client = useApolloClient()
+    const router = useRouter()
+
+    const { open, CreateShotlistDialog } = useCreateShotlistDialog()
 
     useEffect(() => {
-        console.log(auth.getIdToken())
+        if(!auth.isAuthenticated()){
+            router.replace('/')
+            return
+        }
+
+        if(!auth.getUser()) return
+
         loadShotlists()
     }, []);
 
@@ -49,7 +60,7 @@ export default function Dashboard() {
             href: '../dashboard'
         }
     }}/>
-    if(shotlists.loading) return <LoadingPage/>
+    if(shotlists.loading) return <LoadingPage text={"loading your dashboard"}/>
 
     return (
         <main className="dashboard">
@@ -137,7 +148,7 @@ export default function Dashboard() {
                 <Panel className="content">
                     <div className="header">
                         <button className="template" disabled>new template</button>
-                        <button className="shotlist">new shotlist</button>
+                        <button className="shotlist" onClick={open}>new shotlist</button>
                     </div>
                     <div className="main">
                         <div className="grid">
@@ -151,13 +162,15 @@ export default function Dashboard() {
                                     <p>last edited: <span className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                                 </Link>
                             ))}
-                            <button className={"gridItem add"}>
+                            <button className={"gridItem add"} onClick={open}>
                                 <span><Plus/>new shotlist</span>
                             </button>
                         </div>
                     </div>
                 </Panel>
             </PanelGroup>
+
+            {CreateShotlistDialog}
         </main>
     );
 }

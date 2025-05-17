@@ -8,41 +8,45 @@
     width: 90%;
     max-width: 600px;
     position: relative;
+    display: flex;
+    gap: 2rem;
+    translate: -2rem 0;
+    align-items: center;
 
-    h1{
-      font-size: 4rem;
-      font-weight: bold;
-      color: var(--text);
-    }
+    .main{
+      h1{
+        font-size: 4rem;
+        font-weight: bold;
+        color: var(--text);
+      }
 
-    p.description{
-      color: var(--text-30);
-    }
+      p.description{
+        color: var(--text-30);
+      }
 
-    a{
-      /*border: .15rem solid var(--accent);
-      color: var(--accent);*/
-      border: .15rem solid gray;
-      color: var(--text-30);
-      font-weight: bold;
-      margin-top: 1.3rem;
-      justify-content: center;
-      width: fit-content;
-      padding-block: .5rem;
-      padding-inline: 2rem;
-      font-size: .95rem;
+      a{
+        /*border: .15rem solid var(--accent);
+        color: var(--accent);*/
+        border: .15rem solid gray;
+        color: var(--text-30);
+        font-weight: bold;
+        margin-top: 1.3rem;
+        justify-content: center;
+        width: fit-content;
+        padding-block: .5rem;
+        padding-inline: 2rem;
+        font-size: .95rem;
 
-      &:hover{
-        border-color: var(--accent-60);
-        color: var(--accent-30);
+        &:hover{
+          border-color: var(--accent-60);
+          color: var(--accent-30);
+        }
       }
     }
 
+
     .smiley{
       font-size: 15rem;
-      position: absolute;
-      top: -30%;
-      right: 110%;
       z-index: -1;
       color: var(--text-90);
       width: fit-content;

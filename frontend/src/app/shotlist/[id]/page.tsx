@@ -1,28 +1,23 @@
 'use client'
 
 import gql from "graphql-tag"
-import React, {createContext, use, useContext, useEffect, useRef, useState} from "react"
-import {useApolloClient, useQuery} from "@apollo/client"
-import {SceneAttributeParser} from "@/util/AttributeParser"
+import React, {use, useEffect, useRef, useState} from "react"
+import {useApolloClient} from "@apollo/client"
 import Scene from "@/components/scene/scene"
 import {
-    SceneAttributeDefinitionBase,
     SceneDto,
     ShotAttributeDefinitionBase,
     ShotlistDto
 } from "../../../../lib/graphql/generated"
-import {useSearchParams} from "next/navigation"
+import {forbidden, useRouter, useSearchParams} from "next/navigation"
 import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
 import {FileSliders, House, Plus} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
 import { ScrollArea, Tooltip } from "radix-ui"
-import {query} from "@/ApolloClient"
-import useShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 import ErrorPage from "@/components/errorPage/errorPage"
 import { ShotlistContext } from "@/context/ShotlistContext"
 import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
-import shotTable from "@/components/shotTable/shotTable"
 import LoadingPage from "@/components/loadingPage/loadingPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {
@@ -37,6 +32,7 @@ import {
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import {apolloClient} from "@/ApolloWrapper"
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import auth from "@/Auth"
 
 export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
@@ -54,6 +50,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const shotTableRef = useRef<ShotTableRef>(null);
 
     const client = useApolloClient()
+    const router = useRouter()
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -67,6 +64,13 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     );
 
     useEffect(() => {
+        if(!auth.isAuthenticated()){
+            router.replace('/')
+            return
+        }
+
+        if(!auth.getUser()) return
+
         loadShotlist()
     }, [id])
 
@@ -227,7 +231,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
         }
     }}/>
 
-    if(shotlist.loading) return <LoadingPage/>
+    if(shotlist.loading) return <LoadingPage text={"loading shotlist"}/>
 
     if(!shotlist.data) return <ErrorPage settings={{
         title: '404',
@@ -264,7 +268,8 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                 <input type="text" defaultValue={shotlist.data.name || ""}/>
                             </div>
                             <div className="list">
-                                <DndContext
+                                { !shotlist.data.scenes || shotlist.data.scenes.length == 0 ? <p className={"empty"}>No scenes yet :(</p> :
+                                    <DndContext
                                     sensors={sensors}
                                     collisionDetection={closestCenter}
                                     onDragEnd={handleDragEnd}
@@ -278,10 +283,13 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                         strategy={verticalListSortingStrategy}
                                     >
                                         {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                            <Scene key={scene.id} scene={scene} position={index} expanded={selectedSceneId == scene.id} onSelect={selectScene} onDelete={removeScene}/>
+                                            <Scene key={scene.id} scene={scene} position={index}
+                                                   expanded={selectedSceneId == scene.id} onSelect={selectScene}
+                                                   onDelete={removeScene}/>
                                         ))}
                                     </SortableContext>
                                 </DndContext>
+                                }
                                 <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
                                     <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
@@ -296,11 +304,18 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                     <Panel className="content">
                         <div className="header">
                             <div className="number"><p>#</p></div>
-                            {(shotlist.data?.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
-                                <div key={attr.id}><p>{attr.name || "Unkown"}</p></div>
-                            ))}
+                            {!shotlist.data.shotAttributeDefinitions || shotlist.data.shotAttributeDefinitions.length == 0 ?
+                                <p className={"empty"}>No shot attributes defined</p> :
+                                (shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
+                                    <div key={attr.id}><p>{attr.name || "Unkown"}</p></div>
+                                ))
+                            }
                         </div>
-                        <ShotTable ref={shotTableRef} sceneId={selectedSceneId} shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}></ShotTable>
+                        <ShotTable
+                            ref={shotTableRef}
+                            sceneId={selectedSceneId}
+                            shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}
+                        />
                     </Panel>
                 </PanelGroup>
             </main>

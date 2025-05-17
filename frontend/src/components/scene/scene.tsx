@@ -126,7 +126,7 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                     style={{overflow: overflowVisible ? "visible" : "hidden",}}
                 >
                     <div className="attributes">
-                        {sceneAttributes.map((attr, index) => (
+                        {sceneAttributes.length == 0 ? <p className={"empty"}>No attributes defined</p> :sceneAttributes.map((attr, index) => (
                             <SceneAttribute
                                 key={attr.id}
                                 attribute={attr}

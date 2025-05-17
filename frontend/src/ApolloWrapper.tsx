@@ -1,6 +1,6 @@
 "use client";
 
-import { HttpLink } from "@apollo/client";
+import {from, HttpLink} from "@apollo/client";
 import {
     ApolloNextAppProvider,
     ApolloClient,
@@ -8,6 +8,8 @@ import {
 } from "@apollo/client-integration-nextjs";
 import auth from "@/Auth"
 import {setContext} from "@apollo/client/link/context"
+import {useRouter} from "next/navigation"
+import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
     const httpLink = new HttpLink({
@@ -29,8 +31,7 @@ export function makeClient() {
     });*/
 
     const authLink = setContext(async (_, {headers}) => {
-        const token = await auth.getTokenSilently();
-        console.log(token)
+        const token = await auth.getIdToken()
         // return the headers to the context so httpLink can read them
         return {
             headers: {
@@ -40,8 +41,17 @@ export function makeClient() {
         }
     })
 
+    const errorLink = onError(({ networkError }) => {
+        console.log("networkError", networkError)
+        if (networkError && 'statusCode' in networkError && networkError.statusCode === 401) {
+            if (typeof window !== 'undefined') {
+                window.location.href = '/notAllowed';
+            }
+        }
+    });
+
     return new ApolloClient({
-        link: authLink.concat(httpLink),
+        link: from([authLink, httpLink, errorLink]),
         cache: new InMemoryCache()
     })
 }

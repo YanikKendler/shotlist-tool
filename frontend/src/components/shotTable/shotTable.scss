@@ -35,4 +35,20 @@
     text-align: center;
     margin-top: 2rem;
   }
+
+  .empty{
+    color: var(--text-40);
+    text-align: center;
+    margin-top: 2rem;
+
+    button{
+      display: inline-block;
+      font-weight: bold;
+
+      &:hover{
+        background-color: var(--hover-bg-accent-10);
+        color: var(--accent-40);
+      }
+    }
+  }
 }

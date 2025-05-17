@@ -32,6 +32,7 @@ public class ShotlistResource {
 
     @Query
     public ShotlistDTO getShotlist(UUID id) {
+
         Shotlist shotlist = shotlistRepository.findById(id);
         if (shotlist == null) {
             return null;

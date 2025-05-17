@@ -8,5 +8,5 @@ import me.kendler.yanik.model.User;
 import java.util.UUID;
 
 @ApplicationScoped
-public class UserRepository implements PanacheRepositoryBase<User, UUID> {
+public class UserRepository implements PanacheRepositoryBase<User, String> {
 }

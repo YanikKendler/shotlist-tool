@@ -1,21 +1,18 @@
 package me.kendler.yanik.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.template.Template;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "app_user")
 public class User extends PanacheEntityBase {
     @Id
-    @GeneratedValue
-    public UUID id;
-    public String username;
+    public String id;
+    public String name;
     public String email;
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     public Set<Shotlist> shotlists;
@@ -27,9 +24,14 @@ public class User extends PanacheEntityBase {
         this.createdAt = LocalDateTime.now();
     }
 
-    public User(String username, String email) {
+    public User(String id) {
         this();
-        this.username = username;
+        this.id = id;
+    }
+
+    public User(String id, String name, String email) {
+        this(id);
+        this.name = name;
         this.email = email;
     }
 }

@@ -22,8 +22,6 @@ import {
     ShotSelectAttributeOptionDefinition
 } from "../../../../lib/graphql/generated"
 import Image from "next/image"
-import {wuGeneral} from "@yanikkendler/web-utils"
-import {set} from "immutable"
 import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
 
 export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {

@@ -93,6 +93,13 @@
     gap: .2rem;
     width: 100%;
     padding-bottom: .3rem;
+
+    .empty{
+      margin-top: .3rem;
+      margin-left: .1rem;
+      font-size: .8rem;
+      color: var(--text-50);
+    }
   }
 
   button.delete{
