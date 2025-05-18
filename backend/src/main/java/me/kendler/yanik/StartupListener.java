@@ -9,25 +9,19 @@ import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.*;
-import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
-import me.kendler.yanik.model.scene.attributes.SceneMultiSelectAttribute;
-import me.kendler.yanik.model.scene.attributes.SceneSingleSelectAttribute;
-import me.kendler.yanik.model.scene.attributes.SceneTextAttribute;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinition;
-import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
-import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
-import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
-import me.kendler.yanik.model.shot.attributes.ShotTextAttribute;
 
-import java.util.Set;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 @io.quarkus.runtime.Startup
 public class StartupListener {
+
+    private static final Logger LOGGER = Logger.getLogger(StartupListener.class);
 
     @Inject
     EntityManager entityManager;
@@ -35,7 +29,7 @@ public class StartupListener {
     @PostConstruct
     @Transactional
     public void init() {
-        System.out.println("Initializing demo data...");
+        LOGGER.info("Initializing demo data...");
 
         createDemoData();
     }

@@ -35,4 +35,19 @@ public class User extends PanacheEntityBase {
         this.name = name;
         this.email = email;
     }
+
+    public boolean equals(User user) {
+        return this.id.equals(user.id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", auth0Sub='" + auth0Sub + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
