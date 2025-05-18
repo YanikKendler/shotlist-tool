@@ -34,6 +34,7 @@ import {apolloClient} from "@/ApolloWrapper"
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import auth from "@/Auth"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
+import {wuGeneral} from "@yanikkendler/web-utils/dist"
 
 export default function Shotlist() {
     const { id } = useParams()
@@ -116,6 +117,38 @@ export default function Shotlist() {
 
         setShotlist({data: data.shotlist, loading: loading, error: errors})
     }
+
+    const updateShotlistName = async (name: string) => {
+        const { data, errors } = await client.mutate({
+            mutation: gql`
+                mutation updateShotlist($shotlistId: String!, $name: String!) {
+                    updateShotlist(editDTO: {
+                        id: $shotlistId
+                        name: $name
+                    }){
+                        id
+                        name
+                    }
+                }
+            `,
+            variables: { shotlistId: id, name: name },
+        });
+
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setShotlist({
+            ...shotlist,
+            data: {
+                ...shotlist.data,
+                name: data.updateShotlist.name
+            }
+        })
+    }
+
+    const debounceUpdateShotlistName = wuGeneral.debounce(updateShotlistName)
 
     const selectScene = (sceneId: string) => {
         setSelectedSceneId(sceneId)
@@ -265,7 +298,12 @@ export default function Shotlist() {
                                     </Tooltip.Portal>
                                 </Tooltip.Root>
                                 <p>/</p>
-                                <input type="text" defaultValue={shotlist.data.name || ""} placeholder={"shotlist name"}/>
+                                <input
+                                    type="text"
+                                    defaultValue={shotlist.data.name || ""}
+                                    placeholder={"shotlist name"}
+                                    onInput={e => debounceUpdateShotlistName(e.currentTarget.value)}
+                                />
                             </div>
                             <div className="list">
                                 { !shotlist.data.scenes || shotlist.data.scenes.length == 0 ? <p className={"empty"}>No scenes yet :(</p> :
@@ -308,7 +346,7 @@ export default function Shotlist() {
                             {!shotlist.data.shotAttributeDefinitions || shotlist.data.shotAttributeDefinitions.length == 0 ?
                                 <p className={"empty"}>No shot attributes defined</p> :
                                 (shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
-                                    <div key={attr.id}><p>{attr.name || "Unkown"}</p></div>
+                                    <div key={attr.id}><p>{attr.name || "Unnamed"}</p></div>
                                 ))
                             }
                         </div>
