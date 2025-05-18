@@ -36,7 +36,13 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
     SceneAttributeRepository sceneAttributeRepository;
 
     public List<SceneAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
-        Set<SceneAttributeDefinitionBase> attributeDefinitions = shotlistRepository.findById(shotlistId).sceneAttributeDefinitions;
+        Shotlist shotlist = shotlistRepository.findById(shotlistId);
+
+        if (shotlist == null) {
+            throw new IllegalArgumentException("Shotlist not found");
+        }
+
+        Set<SceneAttributeDefinitionBase> attributeDefinitions = shotlist.sceneAttributeDefinitions;
 
         List<SceneSelectAttributeOptionDefinition> options = SceneSelectAttributeOptionDefinition.find("sceneAttributeDefinition in ?1", attributeDefinitions).list();
 
@@ -117,10 +123,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             throw new IllegalArgumentException("Attribute not found");
         }
 
-        Shotlist shotlist = getEntityManager()
-                .createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d = :attribute", Shotlist.class)
-                .setParameter("attribute", attribute)
-                .getSingleResult();
+        Shotlist shotlist = getByDefinitionId(editDTO.id());
 
         shotlist.registerEdit();
 
@@ -161,10 +164,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
                 relevantAttributes.forEach(scene.attributes::remove);
             });
 
-            Shotlist relevantShotlist = getEntityManager()
-                    .createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
-                    .setParameter("definitionId", id)
-                    .getSingleResult();
+            Shotlist relevantShotlist = getByDefinitionId(id);
 
             relevantShotlist.sceneAttributeDefinitions.remove(attributeDefinition);
 
@@ -175,5 +175,11 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             return attributeDefinition;
         }
         return null;
+    }
+
+    public Shotlist getByDefinitionId(Long id) {
+        return getEntityManager().createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
+                .setParameter("definitionId", id)
+                .getSingleResult();
     }
 }

@@ -25,13 +25,12 @@ export function useAccountDialog() {
     async function createShotlist() {
         const {data, errors} = await client.mutate({
                 mutation: gql`
-                    mutation createShotlist($name: String!, $userId: String!){
+                    mutation createShotlist($name: String!){
                         createShotlist(createDTO: {
                             name: $name
-                            userId: $userId
                         }){ id }
                     }`,
-                variables: {name: name, userId: auth.getUser()?.sub}
+                variables: {name: name}
             },
         )
     }

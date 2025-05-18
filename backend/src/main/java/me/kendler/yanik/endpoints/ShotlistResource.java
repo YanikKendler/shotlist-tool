@@ -6,6 +6,7 @@ import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.repositories.ShotlistRepository;
+import me.kendler.yanik.repositories.UserRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
@@ -22,36 +23,38 @@ public class ShotlistResource {
     @Inject
     ShotlistRepository shotlistRepository;
 
+    @Inject
+    UserRepository userRepository;
+
     @Query
     public List<ShotlistDTO> getShotlists() {
-        System.out.println("token: " + jwt);
-        System.out.println("user: " + jwt.getClaim("sub"));
-        //TODO only show shotlists of the current user
-        return shotlistRepository.listAll().stream().map(Shotlist::toDTO).toList();
+        return userRepository.findOrCreateByJWT(jwt).shotlists.stream().map(Shotlist::toDTO).toList();
     }
 
     @Query
     public ShotlistDTO getShotlist(UUID id) {
-
         Shotlist shotlist = shotlistRepository.findById(id);
         if (shotlist == null) {
             return null;
         }
+        userRepository.checkUserAccessRights(shotlist, jwt);
         return shotlist.toDTO();
     }
 
     @Mutation
     public ShotlistDTO createShotlist(ShotlistCreateDTO createDTO) {
-        return shotlistRepository.create(createDTO).toDTO();
+        return shotlistRepository.create(createDTO, jwt).toDTO();
     }
 
     @Mutation
     public ShotlistDTO updateShotlist(ShotlistEditDTO editDTO) {
+        userRepository.checkUserAccessRights(shotlistRepository.findById(editDTO.id()), jwt);
         return shotlistRepository.update(editDTO).toDTO();
     }
 
     @Mutation
     public ShotlistDTO deleteShotlist(UUID id) {
+        userRepository.checkUserAccessRights(shotlistRepository.findById(id), jwt);
         return shotlistRepository.delete(id).toDTO();
     }
 }

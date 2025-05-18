@@ -31,6 +31,7 @@ public class Shot extends PanacheEntityBase {
     }
 
     public Shot(Scene scene) {
+        this();
         this.scene = scene;
         this.position = scene.shots.size();
         scene.shots.add(this);

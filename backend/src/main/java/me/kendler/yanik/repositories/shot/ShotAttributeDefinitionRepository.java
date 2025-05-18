@@ -33,7 +33,13 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
     ShotAttributeRepository shotAttributeRepository;
 
     public List<ShotAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
-        Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlistRepository.findById(shotlistId).shotAttributeDefinitions;
+        Shotlist shotlist = shotlistRepository.findById(shotlistId);
+
+        if (shotlist == null) {
+            throw new IllegalArgumentException("Shotlist not found");
+        }
+
+        Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlist.shotAttributeDefinitions;
 
         List<ShotSelectAttributeOptionDefinition> options = ShotSelectAttributeOptionDefinition.find("shotAttributeDefinition in ?1", attributeDefinitions).list();
 

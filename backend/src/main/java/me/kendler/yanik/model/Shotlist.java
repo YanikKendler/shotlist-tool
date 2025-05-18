@@ -49,6 +49,7 @@ public class Shotlist extends PanacheEntityBase {
     public Shotlist(User owner, String name) {
         this();
         this.owner = owner;
+        owner.shotlists.add(this);
         this.name = name;
     }
 
@@ -73,7 +74,6 @@ public class Shotlist extends PanacheEntityBase {
     }
 
     public void registerEdit() {
-        System.out.println("edited");
         this.editedAt = LocalDateTime.now();
     }
 

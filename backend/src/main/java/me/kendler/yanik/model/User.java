@@ -5,32 +5,33 @@ import jakarta.persistence.*;
 import me.kendler.yanik.model.template.Template;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "app_user")
 public class User extends PanacheEntityBase {
     @Id
-    public String id;
+    @GeneratedValue
+    public UUID id;
+    @Column(unique = true)
+    public String auth0Sub;
     public String name;
     public String email;
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    public Set<Shotlist> shotlists;
+    public Set<Shotlist> shotlists = new HashSet<>();
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    public Set<Template> templates;
+    public Set<Template> templates = new HashSet<>();
     public LocalDateTime createdAt;
 
     public User() {
         this.createdAt = LocalDateTime.now();
     }
 
-    public User(String id) {
+    public User(String auth0Sub, String name, String email) {
         this();
-        this.id = id;
-    }
-
-    public User(String id, String name, String email) {
-        this(id);
+        this.auth0Sub = auth0Sub;
         this.name = name;
         this.email = email;
     }
