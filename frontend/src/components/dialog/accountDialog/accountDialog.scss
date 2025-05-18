@@ -1,0 +1,28 @@
+.accountOverlay{
+  z-index: 2000;
+}
+
+.accountContent{
+  z-index: 2001;
+
+  .title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: .8rem;
+  }
+
+  .closeButton{
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    padding: .2rem;
+    background-color: var(--dialog-close-button-bg);
+    border-radius: 1rem;
+
+    &:hover{
+      background-color: var(--dialog-close-button-hover-bg);
+    }
+  }
+}
+

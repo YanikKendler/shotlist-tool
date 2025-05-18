@@ -16,6 +16,8 @@
 
   --bad: hsl(0, 70%, 60%);
 
+  --good: hsl(120, 25%, 45%);
+
   --text: hsl(0, 0%, 0%);
   --text-10: hsl(0, 0%, 10%);
   --text-20: hsl(0, 0%, 20%);
@@ -33,7 +35,8 @@
   --hover-bg-20: hsla(0, 0%, 50%, 20%);
   --hover-bg-30: hsla(0, 0%, 50%, 30%);
   --hover-bg-bad-10: hsla(0, 70%, 60%, 10%);
-  --hover-bg-accent-10: hsla(18, 100%, 47%, 10%);
+  --hover-bg-good-10: hsla(120, 40%, 50%, 10%);
+  --hover-bg-accent-10: hsla(20, 100%, 50%, 10%);
 
   --sidebar-bg: hsl(20, 20%, 96%);
   --home-button-bg: hsl(14, 21%, 92%);
@@ -46,7 +49,12 @@
   --select-menu-border: hsl(0, 0%, 75%);
   --select-menu-multivalue-bg: hsl(0, 0%, 95%);
 
+  --dialog-close-button-bg: hsl(0, 0%, 90%);
+  --dialog-close-button-hover-bg: hsl(0, 0%, 85%);
+
   --drag-handle-hover: hsl(0, 0%, 80%);
+
+  --labeled-input-border: hsl(0, 0%, 82%);
 
   --sidebar-width: 400px;
 }
@@ -133,6 +141,18 @@ button, a{
     border-color: var(--bad);
   }
 
+  &.good:hover{
+    background-color: var(--hover-bg-good-10);
+    color: var(--good);
+    border-color: var(--good);
+  }
+
+  &.accent:hover{
+    background-color: var(--hover-bg-accent-10);
+    color: var(--accent-55);
+    border-color: var(--accent);
+  }
+
   &[disabled]{
     opacity: 70%;
     cursor: initial;
@@ -146,6 +166,30 @@ button, a{
 span{
   &.bold{
     font-weight: bold;
+  }
+}
+
+.labeledInput{
+  display: flex;
+  flex-direction: column;
+
+  label{
+    font-size: .9rem;
+    color: var(--text-40);
+    margin-bottom: .2rem;
+    margin-left: .2rem;
+    font-weight: 500;
+  }
+
+  input{
+    border-radius: .2rem;
+    border: .15rem solid var(--labeled-input-border);
+    padding: .3rem;
+
+    &:focus-visible{
+      outline: none;
+      border-color: var(--accent);
+    }
   }
 }
 
@@ -234,6 +278,7 @@ span{
         bottom: 0;
         display: flex;
         flex-direction: column;
+        gap: .3rem;
         margin-bottom: .3rem;
         left: .5rem;
         right: .5rem;

@@ -9,9 +9,9 @@ import {
     ShotAttributeDefinitionBase,
     ShotlistDto
 } from "../../../../lib/graphql/generated"
-import {forbidden, useRouter, useSearchParams} from "next/navigation"
+import {forbidden, useParams, useRouter, useSearchParams} from "next/navigation"
 import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
-import {FileSliders, House, Plus} from "lucide-react"
+import {FileSliders, House, Plus, User} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
 import { ScrollArea, Tooltip } from "radix-ui"
@@ -33,10 +33,10 @@ import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSor
 import {apolloClient} from "@/ApolloWrapper"
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import auth from "@/Auth"
+import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 
-export default function Shotlist({params}: { params: Promise<{ id: string }> }) {
-    const { id } = use(params)
-
+export default function Shotlist() {
+    const { id } = useParams()
     const searchParams = useSearchParams()
     const sceneId = searchParams.get('sceneId')
 
@@ -44,13 +44,13 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
-
     const [reloadKey, setReloadKey] = useState(0)
 
     const shotTableRef = useRef<ShotTableRef>(null);
 
     const client = useApolloClient()
     const router = useRouter()
+    const {openAccountDialog, AccountDialog} = useAccountDialog()
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -265,7 +265,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                     </Tooltip.Portal>
                                 </Tooltip.Root>
                                 <p>/</p>
-                                <input type="text" defaultValue={shotlist.data.name || ""}/>
+                                <input type="text" defaultValue={shotlist.data.name || ""} placeholder={"shotlist name"}/>
                             </div>
                             <div className="list">
                                 { !shotlist.data.scenes || shotlist.data.scenes.length == 0 ? <p className={"empty"}>No scenes yet :(</p> :
@@ -293,6 +293,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                                 <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
                                     <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
+                                    <button onClick={openAccountDialog}>Account <User size={18}/></button>
                                 </div>
                             </div>
                         </div>
@@ -328,6 +329,7 @@ export default function Shotlist({params}: { params: Promise<{ id: string }> }) 
                     setReloadKey(reloadKey + 1)
                 }}
             ></ShotlistOptionsDialog>
+            {AccountDialog}
         </ShotlistContext.Provider>
     )
 }

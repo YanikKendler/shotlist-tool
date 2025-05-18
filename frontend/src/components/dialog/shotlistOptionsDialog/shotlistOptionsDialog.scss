@@ -1,5 +1,4 @@
 .shotlistOptionsDialogContent{
-  --close-button-bg: hsl(0, 0%, 90%);
   --attribute-type-bg: hsl(0, 0%, 90%);
 
   --button-border: hsl(0, 0%, 82%);
@@ -19,8 +18,12 @@
       top: 0;
       right: 0;
       padding: .2rem;
-      background-color: var(--close-button-bg);
+      background-color: var(--dialog-close-button-bg);
       border-radius: 1rem;
+
+      &:hover{
+        background-color: var(--dialog-close-button-hover-bg);
+      }
     }
 
     .optionsDialogPageTabRoot{

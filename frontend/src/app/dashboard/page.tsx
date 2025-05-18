@@ -15,15 +15,17 @@ import {wuTime} from "@yanikkendler/web-utils/dist"
 import auth from "@/Auth"
 import {useRouter} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
+import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
+import Utils from "@/util/Utils"
 
 export default function Dashboard() {
     const [shotlists, setShotlists] = useState<{data: ShotlistDto[] , loading: boolean, error: any}>({data: [], loading: true, error: null})
-    const [accountDialogOpen, setAccountDialogOpen] = useState(false)
 
     const client = useApolloClient()
     const router = useRouter()
 
-    const { open, CreateShotlistDialog } = useCreateShotlistDialog()
+    const { openCreateShotlistDialog, CreateShotlistDialog } = useCreateShotlistDialog()
+    const { openAccountDialog, AccountDialog } = useAccountDialog()
 
     useEffect(() => {
         if(!auth.isAuthenticated()){
@@ -36,7 +38,7 @@ export default function Dashboard() {
         loadShotlists()
     }, []);
 
-    const loadShotlists = async (noCache: boolean = false) => {
+    const loadShotlists = async (noCache: boolean = true) => {
         const { data, errors, loading } = await client.query({query: gql`
                 query shotlists{
                     shotlists{
@@ -92,10 +94,10 @@ export default function Dashboard() {
                                 <Collapsible.Content
                                     className="CollapsibleContent dashboardSidebar"
                                 >
-                                    {shotlists.data.map((shotlist) => (
+                                    {shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
                                         <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
                                             <NotepadText size={18}/>
-                                            {shotlist.name}
+                                            {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
                                         </Link>
                                     ))}
                                 </Collapsible.Content>
@@ -136,7 +138,7 @@ export default function Dashboard() {
                             </Collapsible.Root>
 
                             <div className="bottom">
-                                <button onClick={() => setAccountDialogOpen(true)}>Account <User size={18}/></button>
+                                <button onClick={openAccountDialog}>Account <User size={18}/></button>
                             </div>
                         </div>
                     </div>
@@ -148,21 +150,22 @@ export default function Dashboard() {
                 <Panel className="content">
                     <div className="header">
                         <button className="template" disabled>new template</button>
-                        <button className="shotlist" onClick={open}>new shotlist</button>
+                        <button className="shotlist" onClick={openCreateShotlistDialog}>new shotlist</button>
                     </div>
                     <div className="main">
+                        <h2>Shotlists</h2>
                         <div className="grid">
-                            {/*TODO limit to 8 shotlists and filter by last edited*/}
-                            {shotlists.data.map((shotlist: ShotlistDto) => (
+                            {/*TODO limit to X shotlists*/}
+                            {shotlists.data.sort(Utils.oderShotlistsByChangeDate).map((shotlist: ShotlistDto) => (
                                 <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
                                     <label><NotepadText size={15}/>Shotlist</label>
-                                    <h2>{shotlist.name}</h2>
+                                    <h3>{shotlist.name || <span className='italic'>Unnamed</span>}</h3>
                                     <p className={"bold"}>{shotlist.sceneCount} scene • {shotlist.shotCount} shots</p>
                                     <p>created by: <span className={"bold"}>Yanik Kendler</span></p>
                                     <p>last edited: <span className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                                 </Link>
                             ))}
-                            <button className={"gridItem add"} onClick={open}>
+                            <button className={"gridItem add"} onClick={openCreateShotlistDialog}>
                                 <span><Plus/>new shotlist</span>
                             </button>
                         </div>
@@ -171,6 +174,7 @@ export default function Dashboard() {
             </PanelGroup>
 
             {CreateShotlistDialog}
+            {AccountDialog}
         </main>
     );
 }
