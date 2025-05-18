@@ -122,11 +122,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             throw new IllegalArgumentException("Attribute not found");
         }
 
-        Shotlist shotlist = getEntityManager()
-                                .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d = :attribute", Shotlist.class)
-                                .setParameter("attribute", attribute)
-                                .getSingleResult();
-
+        Shotlist shotlist = getShotlistByDefinitionId(editDTO.id());
         shotlist.registerEdit();
 
         if(editDTO.name() != null && !editDTO.name().isEmpty()) {
@@ -164,10 +160,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                 relevantAttributes.forEach(shot.attributes::remove);
             });
 
-            Shotlist relevantShotlist = getEntityManager()
-                    .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
-                    .setParameter("definitionId", id)
-                    .getSingleResult();
+            Shotlist relevantShotlist = getShotlistByDefinitionId(id);
 
             relevantShotlist.shotAttributeDefinitions.remove(attributeDefinition);
 
@@ -178,5 +171,12 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             return attributeDefinition;
         }
         return null;
+    }
+
+    public Shotlist getShotlistByDefinitionId(Long id) {
+        return getEntityManager()
+                .createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
+                .setParameter("definitionId", id)
+                .getSingleResult();
     }
 }

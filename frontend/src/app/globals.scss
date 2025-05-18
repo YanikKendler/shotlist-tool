@@ -70,6 +70,17 @@
   }
 }*/
 
+.noMobile{
+  display: none;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 1200px) {
+  .noMobile{
+    display: block;
+  }
+}
+
 html,
 body {
   max-width: 100vw;

@@ -8,6 +8,7 @@ import gql from "graphql-tag"
 import auth from "@/Auth"
 import {useRouter} from "next/navigation"
 import {X} from "lucide-react"
+import Auth from "@/Auth"
 
 export function useAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +52,9 @@ export function useAccountDialog() {
                 <Dialog.Overlay className={"accountDialogOverlay dialogOverlay"}/>
                 <Dialog.Content className={"accountContent dialogContent"} aria-describedby={"account dialog"}>
                     <Dialog.Title className={"title"}>Account</Dialog.Title>
-                    <input type="text"/>
+                    <h2>hi, {Auth.getUser()?.name}</h2>
+                    <p>Since this is an early alpha test, account settings are not yet available</p>
+                    <button className={"logout"} onClick={() => Auth.logout()}>sign out</button>
 
                     <button className={"closeButton"} onClick={() => {
                         setIsOpen(false)

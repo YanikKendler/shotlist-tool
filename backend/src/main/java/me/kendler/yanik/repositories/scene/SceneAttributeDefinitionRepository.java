@@ -10,17 +10,10 @@ import me.kendler.yanik.dto.scene.SceneAttributeDefinitionEditDTO;
 import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
 import me.kendler.yanik.dto.scene.attributeDefinitions.SceneMultiSelectAttributeDefinitionDTO;
 import me.kendler.yanik.dto.scene.attributeDefinitions.SceneSingleSelectAttributeDefinitionDTO;
-import me.kendler.yanik.dto.shot.ShotAttributeDefinitionCreateDTO;
-import me.kendler.yanik.dto.shot.ShotAttributeDefinitionEditDTO;
-import me.kendler.yanik.dto.shot.attributeDefinitions.ShotAttributeDefinitionBaseDTO;
-import me.kendler.yanik.dto.shot.attributeDefinitions.ShotSingleSelectAttributeDefinitionDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.*;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
-import me.kendler.yanik.model.shot.Shot;
-import me.kendler.yanik.model.shot.attributeDefinitions.*;
-import me.kendler.yanik.model.shot.attributes.ShotAttributeBase;
 import me.kendler.yanik.repositories.ShotlistRepository;
 
 import java.util.*;
@@ -123,7 +116,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             throw new IllegalArgumentException("Attribute not found");
         }
 
-        Shotlist shotlist = getByDefinitionId(editDTO.id());
+        Shotlist shotlist = getShotlistByDefinitionId(editDTO.id());
 
         shotlist.registerEdit();
 
@@ -164,7 +157,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
                 relevantAttributes.forEach(scene.attributes::remove);
             });
 
-            Shotlist relevantShotlist = getByDefinitionId(id);
+            Shotlist relevantShotlist = getShotlistByDefinitionId(id);
 
             relevantShotlist.sceneAttributeDefinitions.remove(attributeDefinition);
 
@@ -177,7 +170,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
         return null;
     }
 
-    public Shotlist getByDefinitionId(Long id) {
+    public Shotlist getShotlistByDefinitionId(Long id) {
         return getEntityManager().createQuery("select s from Shotlist s join s.sceneAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
                 .setParameter("definitionId", id)
                 .getSingleResult();

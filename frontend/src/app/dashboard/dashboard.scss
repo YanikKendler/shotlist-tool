@@ -52,6 +52,12 @@ main.dashboard{
       &[data-state="open"] svg.chevron{
         rotate: 180deg;
       }
+
+      .empty{
+        margin-left: .4rem;
+        color: var(--text-30);
+        font-size: .9rem;
+      }
     }
   }
 

@@ -12,6 +12,16 @@
     margin-bottom: .8rem;
   }
 
+  .logout{
+    border: 2px solid var(--accent);
+    color: var(--accent-20);
+
+    &:hover{
+      background-color: var(--hover-bg-accent-10);
+      color: var(--accent-40);
+    }
+  }
+
   .closeButton{
     position: absolute;
     top: .5rem;

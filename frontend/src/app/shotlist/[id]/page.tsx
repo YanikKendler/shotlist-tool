@@ -336,7 +336,7 @@ export default function Shotlist() {
                             </div>
                         </div>
                         <div className="bottom">
-                            <Link className="shotlistTool" href={"../dashboard"}>shotlist.tools</Link>
+                            <Link className="shotlistTool" href={"../dashboard"}>shotlist tool</Link>
                         </div>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>

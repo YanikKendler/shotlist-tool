@@ -8,7 +8,7 @@ export default function Home() {
         <div>
             <h1>hello</h1>
             <button onClick={() => Auth.login()}>login</button>
-            <button onClick={() => Auth.logout()}>logout</button>
+
         </div>
     );
 }
