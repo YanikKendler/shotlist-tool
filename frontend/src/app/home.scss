@@ -1,0 +1,57 @@
+main.home{
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  .content{
+    background-color: hsl(0, 0%, 95%);
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+    max-width: min(90%, 500px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+
+    h1{
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      /*
+      color: var(--accent);
+      */
+    }
+
+    .mainText{
+      color: var(--text-20);
+    }
+
+    button{
+      background-color: var(--hover-bg-accent-10);
+      color: var(--accent);
+      padding-inline: 2rem;
+      font-weight: bold;
+      margin: 1rem auto;
+      border: 2px solid transparent;
+
+      &:hover{
+        border-color: var(--accent);
+      }
+    }
+
+    .bottomText{
+      color: var(--text-50);
+      text-align: center;
+      margin-top: 2rem;
+      font-size: .9rem;
+
+      a{
+        display: inline;
+        font: inherit;
+        text-decoration: underline;
+        padding: 0;
+
+        &:hover{
+         color: var(--accent-40);
+        }
+      }
+    }
+  }
+}
