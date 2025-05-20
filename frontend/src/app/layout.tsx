@@ -22,6 +22,7 @@ export default function RootLayout({
                                    }: Readonly<{
     children: React.ReactNode
 }>) {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
     return (
         <html lang="en" className={inter.className}>
