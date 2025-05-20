@@ -3,7 +3,7 @@
 import {ShotDto} from "../../../lib/graphql/generated"
 import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import {AnyShotAttribute} from "@/util/Types"
-import {wuText} from "@yanikkendler/web-utils"
+import {wuText} from "@yanikkendler/web-utils/dist"
 import './shot.scss'
 import {ArrowDownRight, CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"

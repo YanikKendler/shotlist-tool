@@ -16,7 +16,7 @@ import {useApolloClient} from "@apollo/client"
 import {SceneDto, SceneSelectAttributeOptionDefinition} from "../../../lib/graphql/generated"
 import { Popover } from "radix-ui"
 import {useEffect, useState} from "react"
-import {wuGeneral} from "@yanikkendler/web-utils"
+import {wuGeneral} from "@yanikkendler/web-utils/dist"
 
 export default function SceneAttributeDefinition({attributeDefinition, onDelete, dataChanged}: {attributeDefinition: AnySceneAttributeDefinition, onDelete: (id: number) => void, dataChanged: () => void}) {
 

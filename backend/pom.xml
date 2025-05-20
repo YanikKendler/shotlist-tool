@@ -87,6 +87,8 @@
     </dependencies>
 
     <build>
+        <finalName>shotlist-tool-backend</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

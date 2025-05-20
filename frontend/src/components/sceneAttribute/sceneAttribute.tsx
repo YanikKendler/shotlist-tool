@@ -18,7 +18,7 @@ import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './sceneAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
-import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
+import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
 import Select, {selectSceneStyles} from "@/components/select/select"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"

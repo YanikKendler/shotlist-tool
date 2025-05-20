@@ -1,7 +1,7 @@
 import {AnySceneAttribute, AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
 import {ChevronDown, List, Type} from "lucide-react"
 import {JSX} from "react"
-import {wuText} from "@yanikkendler/web-utils"
+import {wuText} from "@yanikkendler/web-utils/dist"
 
 export abstract class SceneAttributeParser {
     static toValueString(attribute: AnySceneAttribute): string{
