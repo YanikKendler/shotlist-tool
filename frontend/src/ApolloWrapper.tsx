@@ -12,8 +12,9 @@ import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
+    console.log(process.env, process.env.BACKEND_URL)
     const httpLink = new HttpLink({
-        uri: process.env.BACKEND_URL + "/graphql",
+        uri: process.env.NEXT_PUBLIC_BACKEND_URL + "/graphql",
         fetchOptions: {
             // you can pass additional options that should be passed to `fetch` here,
             // e.g. Next.js-related `fetch` options regarding caching and revalidation
