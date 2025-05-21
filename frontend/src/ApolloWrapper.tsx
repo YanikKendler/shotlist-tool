@@ -12,8 +12,11 @@ import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
+    //const backendURL = "https://shotlist-tool-backend-566625943723.europe-west1.run.app";
+    const backendURL = "http://localhost:8080";
+
     const httpLink = new HttpLink({
-        uri: "http://localhost:8080/graphql",
+        uri: backendURL + "/graphql",
         fetchOptions: {
             // you can pass additional options that should be passed to `fetch` here,
             // e.g. Next.js-related `fetch` options regarding caching and revalidation

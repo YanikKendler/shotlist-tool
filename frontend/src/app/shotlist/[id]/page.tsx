@@ -115,6 +115,8 @@ export default function Shotlist() {
             variables: {id: id},
             fetchPolicy: noCache ? "no-cache" : "cache-first"})
 
+        console.log(data.shotlist)
+
         setShotlist({data: data.shotlist, loading: loading, error: errors})
     }
 

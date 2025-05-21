@@ -12,7 +12,7 @@ import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
-import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils"
+import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
 import Select, {selectShotStyles} from "@/components/select/select"
 import ShotService from "@/service/ShotService"
 import {ShotlistContext} from "@/context/ShotlistContext"

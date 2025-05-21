@@ -11,13 +11,20 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
+    private FRONTEND_URL: string = ""
+
 
     constructor() {
+        //this.FRONTEND_URL = "https://shotlist-tool-frontend-566625943723.europe-west1.run.app"
+        this.FRONTEND_URL = "http://localhost:3000";
+
+        console.log("Auth0 constructor", this.FRONTEND_URL)
+
         this.auth0 = new auth0.WebAuth({
             domain: 'dev-pvlm4i5qpteni14h.us.auth0.com',
             clientID: '4FPKDtlCQjAToOwAEiG6ZrL0eW2UXlx4',
             responseType: 'id_token token',
-            redirectUri: 'http://localhost:3000/callback',
+            redirectUri: this.FRONTEND_URL + '/callback',
             audience: 'https://dev-pvlm4i5qpteni14h.us.auth0.com/api/v2/',
             scope: 'openid profile email',
         });
@@ -39,7 +46,7 @@ class Auth {
     logout() {
         localStorage.setItem(this.authFlag, JSON.stringify(false));
         this.auth0.logout({
-            returnTo: 'http://localhost:3000',
+            returnTo: this.FRONTEND_URL,
         });
     }
 

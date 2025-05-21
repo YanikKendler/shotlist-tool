@@ -20,7 +20,6 @@ import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSor
 import ShotService from "@/service/ShotService"
 import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
 import {AnyShotAttributeDefinition} from "@/util/Types"
-import {wuText} from "@yanikkendler/web-utils/dist"
 import {restrictToVerticalAxis} from "@dnd-kit/modifiers"
 import {ShotlistContext} from "@/context/ShotlistContext"
 
