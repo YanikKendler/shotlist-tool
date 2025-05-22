@@ -33,17 +33,6 @@ steps:
       - '--allow-unauthenticated'
     id: 'deploy-to-cloud-run'
 
-availableSecrets:
-  secretManager:
-    - env: 'AUTH0SECRET'
-      versionName: 'projects/$PROJECT_NUMBER/secrets/AUTH0SECRET/versions/latest'
-    - env: 'DB_URL'
-      versionName: 'projects/$PROJECT_NUMBER/secrets/DB_URL/versions/latest'
-    - env: 'DB_USERNAME'
-      versionName: 'projects/$PROJECT_NUMBER/secrets/DB_USERNAME/versions/latest'
-    - env: 'DB_PASSWORD'
-      versionName: 'projects/$PROJECT_NUMBER/secrets/DB_PASSWORD/versions/latest'
-
 images:
   - 'gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA'
 
