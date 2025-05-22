@@ -4,6 +4,11 @@ steps:
     args: [ 'clean', 'package', '-DskipTests', '-Dquarkus.container-image.build=false' ]
     dir: 'backend'
     id: 'build-quarkus-jar'
+    secretEnv:
+      - 'AUTH0SECRET'
+      - 'DB_URL'
+      - 'DB_USERNAME'
+      - 'DB_PASSWORD'
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA', '-f', 'backend/Dockerfile', 'backend']
@@ -22,11 +27,6 @@ steps:
       - '--platform=managed'
       - '--region=europe-west1'
       - '--allow-unauthenticated'
-    secretEnv:
-      - 'AUTH0SECRET'
-      - 'DB_URL'
-      - 'DB_USERNAME'
-      - 'DB_PASSWORD'
     id: 'deploy-to-cloud-run'
 
 availableSecrets:
