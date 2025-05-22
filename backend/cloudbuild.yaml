@@ -1,6 +1,5 @@
 steps:
-  - name: 'eclipse-temurin:21-jdk'
-    entrypoint: 'mvn'
+  - name: 'maven:3.9-eclipse-temurin-21'
     args: [ 'clean', 'package', '-DskipTests', '-Dquarkus.container-image.build=false' ]
     dir: 'backend'
     id: 'build-quarkus-jar'
