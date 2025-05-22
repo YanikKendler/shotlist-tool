@@ -1,6 +1,7 @@
 steps:
-  - name: 'gcr.io/cloud-builders/mvn'
-    args: ['clean', 'package', '-DskipTests', '-Dquarkus.container-image.build=false']
+  - name: 'eclipse-temurin:21-jdk'
+    entrypoint: 'mvn'
+    args: [ 'clean', 'package', '-DskipTests', '-Dquarkus.container-image.build=false' ]
     dir: 'backend'
     id: 'build-quarkus-jar'
 
