@@ -17,17 +17,16 @@ steps:
     id: 'push-docker-image'
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        gcloud run deploy shotlist-tool-backend-service \
-          --image=gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA \
-          --platform=managed \
-          --region=europe-west1 \
-          --allow-unauthenticated \
-          --set-env-vars="AUTH0SECRET=${AUTH0SECRET},DB_URL=${DB_URL},DB_USERNAME=${DB_USERNAME},DB_PASSWORD=${DB_PASSWORD}"
-    secretEnv: [ 'AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD' ]
+      - 'run'
+      - 'deploy'
+      - 'shotlist-tool-backend-service'
+      - '--image=gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA'
+      - '--platform=managed'
+      - '--region=europe-west1'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=AUTH0SECRET=$$AUTH0SECRET,DB_URL=$$DB_URL,DB_USERNAME=$$DB_USERNAME,DB_PASSWORD=$$DB_PASSWORD'
+    secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'deploy-to-cloud-run'
 
 availableSecrets:
