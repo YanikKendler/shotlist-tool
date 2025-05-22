@@ -7,8 +7,7 @@ steps:
            '-Dquarkus.oidc.credentials.secret=$$AUTH0SECRET',
            '-Dquarkus.datasource.jdbc.url=$$DB_URL',
            '-Dquarkus.datasource.username=$$DB_USERNAME',
-           '-Dquarkus.datasource.password=$$DB_PASSWORD',
-           '-Dquarkus.container-image.build=false']
+           '-Dquarkus.datasource.password=$$DB_PASSWORD']
     dir: 'backend'
     secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'build-quarkus-jar'
