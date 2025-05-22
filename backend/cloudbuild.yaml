@@ -15,16 +15,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA'
       - '-f'
       - 'backend/Dockerfile'
-      - '--build-arg'
-      - 'AUTH0SECRET=ath'
-      - '--build-arg'
-      - 'DB_URL=urlimurli'
-      - '--build-arg'
-      - 'DB_USERNAME=uzza'
-      - '--build-arg'
-      - 'DB_PASSWORD=paword'
       - 'backend'
-    secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'build-docker-image'
 
   - name: 'gcr.io/cloud-builders/docker'
