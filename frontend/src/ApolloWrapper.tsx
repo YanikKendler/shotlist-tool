@@ -12,8 +12,10 @@ import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
-    //const backendURL = "https://shotlist-tool-backend-566625943723.europe-west1.run.app";
-    const backendURL = "http://localhost:8080";
+    const backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-566625943723.europe-west1.run.app";
+
+    console.log("node env", process.env.NODE_ENV)
+    console.log("backendURL", backendURL)
 
     const httpLink = new HttpLink({
         uri: backendURL + "/graphql",

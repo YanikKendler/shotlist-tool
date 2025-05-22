@@ -11,14 +11,10 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
-    private FRONTEND_URL: string = ""
-
+    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotlist-tool-frontend-566625943723.europe-west1.run.app";
 
     constructor() {
-        //this.FRONTEND_URL = "https://shotlist-tool-frontend-566625943723.europe-west1.run.app"
-        this.FRONTEND_URL = "http://localhost:3000";
-
-        console.log("Auth0 constructor", this.FRONTEND_URL)
+        console.log("Auth constructor", this.FRONTEND_URL)
 
         this.auth0 = new auth0.WebAuth({
             domain: 'dev-pvlm4i5qpteni14h.us.auth0.com',
