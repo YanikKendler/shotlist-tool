@@ -1,13 +1,13 @@
 steps:
   - name: 'maven:3.9-eclipse-temurin-21'
     entrypoint: 'mvn'
-    args: ['clean'
-           'package'
-           '-DskipTests'
-           '-Dquarkus.oidc.credentials.secret=$$AUTH0SECRET'
-           '-Dquarkus.datasource.jdbc.url=$$DB_URL'
-           '-Dquarkus.datasource.username=$$DB_USERNAME'
-           '-Dquarkus.datasource.password=$$DB_PASSWORD'
+    args: ['clean',
+           'package',
+           '-DskipTests',
+           '-Dquarkus.oidc.credentials.secret=$$AUTH0SECRET',
+           '-Dquarkus.datasource.jdbc.url=$$DB_URL',
+           '-Dquarkus.datasource.username=$$DB_USERNAME',
+           '-Dquarkus.datasource.password=$$DB_PASSWORD',
            '-Dquarkus.container-image.build=false']
     dir: 'backend'
     secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
