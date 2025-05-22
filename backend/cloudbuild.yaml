@@ -25,7 +25,7 @@ steps:
       - '--platform=managed'
       - '--region=europe-west1'
       - '--allow-unauthenticated'
-      - '--set-env-vars=AUTH0SECRET=$$AUTH0SECRET,DB_URL=$$DB_URL,DB_USERNAME=$$DB_USERNAME,DB_PASSWORD=$$DB_PASSWORD'
+      - '--set-env-vars=AUTH0SECRET=$$AUTH0SECRET,DB_USERNAME=$$DB_USERNAME,DB_URL=$$DB_URL,DB_PASSWORD=$$DB_PASSWORD'
     secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'deploy-to-cloud-run'
 
