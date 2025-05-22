@@ -57,6 +57,12 @@ main.dashboard{
         margin-left: .4rem;
         color: var(--text-30);
         font-size: .9rem;
+        display: block;
+
+        span {
+          font-weight: bold;
+          text-decoration: underline;
+        }
       }
     }
   }

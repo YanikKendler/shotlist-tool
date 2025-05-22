@@ -18,15 +18,19 @@ import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSor
 import {apolloClient} from "@/ApolloWrapper"
 import {
     SceneAttributeType,
-    ShotAttributeType,
+    ShotAttributeType, ShotlistDto,
     ShotSelectAttributeOptionDefinition
 } from "../../../../lib/graphql/generated"
 import Image from "next/image"
 import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
+import ReactPDF, {pdf, PDFDownloadLink} from '@react-pdf/renderer';
+import PDFExport from "@/components/PDFExport"
+import {wuTime} from "@yanikkendler/web-utils/dist"
 
 export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {
     const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[] | null>(null);
     const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[] | null>(null);
+    const [shotlist, setShotlist] = useState<ShotlistDto>({} as ShotlistDto);
     // used for refreshing the shotlist on dialog close, only when any data has been edited
     const [stringifiedAttributeData, setStringifiedAttributeData] = useState<string>("");
     const [dataChanged, setDataChanged] = useState(false);
@@ -54,6 +58,10 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
     const loadData = async () => {
         const { data, errors, loading } = await client.query({query: gql`
                 query data($shotlistId: String!){
+                    shotlist(id: $shotlistId){
+                        id
+                        name
+                    }
                     shotAttributeDefinitions(shotlistId: $shotlistId){
                         id
                         name
@@ -100,6 +108,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
 
         setSceneAttributeDefinitions(data.sceneAttributeDefinitions)
         setShotAttributeDefinitions(data.shotAttributeDefinitions)
+        setShotlist(data.shotlist)
 
         setStringifiedAttributeData(JSON.stringify(data.shotAttributeDefinitions) + JSON.stringify(data.sceneAttributeDefinitions))
     }
@@ -231,6 +240,77 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                 return arrayMove(sceneAttributeDefinitions, oldIndex, newIndex)
             })
         }
+    }
+
+    async function exportPDF() {
+            const {data, error, loading} = await client.query({
+                    query: gql`
+                        query shotlistForExport($id: String!) {
+                            shotlist(id: $id){
+                                id
+                                name
+                                scenes{
+                                    id
+                                    position
+                                    attributes{
+                                        id
+                                        definition{id, name, position}
+
+                                        ... on SceneSingleSelectAttributeDTO{
+                                            singleSelectValue{id,name}
+                                        }
+
+                                        ... on SceneMultiSelectAttributeDTO{
+                                            multiSelectValue{id,name}
+                                        }
+                                        ... on SceneTextAttributeDTO{
+                                            textValue
+                                        }
+                                    }
+                                    shots {
+                                        id
+                                        position
+                                        attributes{
+                                            id
+                                            definition{id, name, position}
+
+                                            ... on ShotSingleSelectAttributeDTO{
+                                                singleSelectValue{id,name}
+                                            }
+
+                                            ... on ShotMultiSelectAttributeDTO{
+                                                multiSelectValue{id,name}
+                                            }
+                                            ... on ShotTextAttributeDTO{
+                                                textValue
+                                            }
+                                        }
+                                    }
+                                }
+                                sceneAttributeDefinitions{
+                                    id
+                                    name
+                                }
+                                shotAttributeDefinitions{
+                                    id
+                                    name
+                                }
+                            }
+                        }`,
+                    variables: {id: shotlistId}
+                }
+            )
+
+        console.log(data)
+
+        const blob = await pdf(<PDFExport data={data.shotlist}/>).toBlob()
+
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `shotly-${shotlist.name}-${wuTime.toFullDateTimeString(Date.now())}.pdf`
+        link.click()
+        URL.revokeObjectURL(url)
     }
 
     function runRefreshShotlistCheck(){
@@ -382,7 +462,8 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                 collaborators
                             </Tabs.Content>
                             <Tabs.Content value={"export"} className={"content"}>
-                                export
+
+                                <button onClick={exportPDF}>test export</button>
                             </Tabs.Content>
                         </Tabs.Root>
                     </div>

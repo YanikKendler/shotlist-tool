@@ -95,7 +95,7 @@ export default function Dashboard() {
                                     className="CollapsibleContent dashboardSidebar"
                                 >
                                     {
-                                        shotlists.data.length === 0 ? (<p className={"empty"}>Start by creating a new shotlist :)</p>) :
+                                        shotlists.data.length === 0 ? (<button onClick={openCreateShotlistDialog} className={"empty"}>Start by <span>creating a new shotlist</span> :)</button>) :
                                         shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
                                             <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
                                                 <NotepadText size={18}/>
