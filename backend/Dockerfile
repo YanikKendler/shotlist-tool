@@ -1,14 +1,9 @@
 FROM eclipse-temurin:21-jre
 
-ARG AUTH0SECRET="unkown"
-ARG DB_URL="unkown"
-ARG DB_USERNAME="unkown"
-ARG DB_PASSWORD="unkown"
-
-ENV AUTH0SECRET=$AUTH0SECRET
-ENV DB_URL=$DB_URL
-ENV DB_USERNAME=$DB_USERNAME
-ENV DB_PASSWORD=$DB_PASSWORD
+ENV AUTH0SECRET="unknown"
+ENV DB_URL="unknown"
+ENV DB_USERNAME="unknown"
+ENV DB_PASSWORD="unknown"
 
 RUN mkdir -p /opt/application
 WORKDIR /opt/application

@@ -1,9 +1,11 @@
 package me.kendler.yanik.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.shot.Shot;
+
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "shotnote")
@@ -13,9 +15,9 @@ public class ShotNote extends PanacheEntity {
     @ManyToOne
     public User user;
     public String text;
-    public LocalDateTime createdAt;
+    public ZonedDateTime createdAt;
 
     public ShotNote() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 }

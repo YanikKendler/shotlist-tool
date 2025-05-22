@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
-    const backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-566625943723.europe-west1.run.app";
+    const backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-v2-566625943723.europe-west1.run.app";
 
     console.log("node env", process.env.NODE_ENV)
     console.log("backendURL", backendURL)

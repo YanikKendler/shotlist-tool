@@ -1,7 +1,8 @@
 package me.kendler.yanik.model.template;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
-import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -23,9 +24,9 @@ public class Template extends PanacheEntityBase {
     @OneToMany(mappedBy = "template")
     public Set<ShotAttributeTemplateBase> shotAttributes;
     public String name;
-    public LocalDateTime createdAt;
+    public ZonedDateTime createdAt;
 
     public Template() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 }

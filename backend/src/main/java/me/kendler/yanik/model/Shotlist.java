@@ -1,7 +1,8 @@
 package me.kendler.yanik.model;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,12 +39,12 @@ public class Shotlist extends PanacheEntityBase {
     public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions = new HashSet<>();
 
     public String name;
-    public LocalDateTime createdAt;
-    public LocalDateTime editedAt;
+    public ZonedDateTime createdAt;
+    public ZonedDateTime editedAt;
 
     public Shotlist() {
-        this.createdAt = LocalDateTime.now();
-        this.editedAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
+        this.editedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public Shotlist(User owner, String name) {
@@ -74,7 +75,7 @@ public class Shotlist extends PanacheEntityBase {
     }
 
     public void registerEdit() {
-        this.editedAt = LocalDateTime.now();
+        this.editedAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public ShotlistDTO toDTO() {

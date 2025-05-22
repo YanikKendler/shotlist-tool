@@ -1,6 +1,7 @@
 package me.kendler.yanik.model.scene;
 
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,10 @@ public class Scene extends PanacheEntityBase {
     @OneToMany(mappedBy = "scene", fetch = FetchType.EAGER)
     public Set<Shot> shots = new HashSet<>();
     public int position;
-    public LocalDateTime createdAt;
+    public ZonedDateTime createdAt;
 
     public Scene() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public Scene(Shotlist shotlist) {

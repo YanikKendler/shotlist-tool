@@ -4,7 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.template.Template;
 
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -23,10 +24,10 @@ public class User extends PanacheEntityBase {
     public Set<Shotlist> shotlists = new HashSet<>();
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     public Set<Template> templates = new HashSet<>();
-    public LocalDateTime createdAt;
+    public ZonedDateTime createdAt;
 
     public User() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
     }
 
     public User(String auth0Sub, String name, String email) {

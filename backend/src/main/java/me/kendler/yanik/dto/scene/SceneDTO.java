@@ -4,7 +4,7 @@ import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
 import me.kendler.yanik.dto.shot.ShotDTO;
 import me.kendler.yanik.model.Shotlist;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,5 +14,5 @@ public record SceneDTO (
     List<SceneAttributeBaseDTO> attributes,
     List<ShotDTO> shots,
     int position,
-    LocalDateTime createdAt
+    ZonedDateTime createdAt
 ){ }
