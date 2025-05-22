@@ -1,26 +1,14 @@
 steps:
-  # Step 1: Build the Quarkus application (generates the JAR)
-  # The 'dir' property changes the working directory for this step.
-  # This ensures 'mvn package' runs inside the 'backend' folder.
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['clean', 'package', '-DskipTests', '-Dquarkus.container-image.build=false']
-    dir: 'backend' # <--- IMPORTANT: Run Maven within the 'backend' directory
+    dir: 'backend'
     id: 'build-quarkus-jar'
-
-  # Step 2: Build the Docker image.
-  #   -f backend/Dockerfile: Specifies the Dockerfile location relative to the repo root.
-  #   backend: Specifies the build context. This is the directory that Docker will
-  #            consider the 'root' when evaluating COPY commands inside the Dockerfile.
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-quarkus-app:$COMMIT_SHA', '-f', 'backend/Dockerfile', 'backend'] # <--- IMPORTANT
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-quarkus-app:$COMMIT_SHA', '-f', 'backend/Dockerfile', 'backend']
     id: 'build-docker-image'
-
-  # Step 3: Push the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/my-quarkus-app:$COMMIT_SHA']
     id: 'push-docker-image'
-
-  # Step 4: Deploy the application to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
@@ -33,7 +21,6 @@ steps:
       - '--set-env-vars=QUARKUS_OIDC_CREDENTIALS_SECRET=$$AUTH0SECRET,QUARKUS_DATASOURCE_JDBC_URL=$$DB_URL,QUARKUS_DATASOURCE_USERNAME=$$DB_USERNAME,QUARKUS_DATASOURCE_PASSWORD=$$DB_PASSWORD'
     secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'deploy-to-cloud-run'
-
 availableSecrets:
   - secretManager:
       env: 'AUTH0SECRET'
@@ -47,6 +34,5 @@ availableSecrets:
   - secretManager:
       env: 'DB_PASSWORD'
       versionName: 'projects/$PROJECT_NUMBER/secrets/DB_PASSWORD/versions/latest'
-
 images:
   - 'gcr.io/$PROJECT_ID/my-quarkus-app:$COMMIT_SHA'
