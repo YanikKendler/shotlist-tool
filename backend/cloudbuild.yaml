@@ -1,15 +1,11 @@
 steps:
   - name: 'maven:3.9-eclipse-temurin-21'
     entrypoint: 'mvn'
-    args: ['clean',
-           'package',
-           '-DskipTests',
-           '-Dquarkus.oidc.credentials.secret=$$AUTH0SECRET',
-           '-Dquarkus.datasource.jdbc.url=$$DB_URL',
-           '-Dquarkus.datasource.username=$$DB_USERNAME',
-           '-Dquarkus.datasource.password=$$DB_PASSWORD']
+    args:
+      - 'clean'
+      - 'package'
+      - '-DskipTests'
     dir: 'backend'
-    secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'build-quarkus-jar'
 
   - name: 'gcr.io/cloud-builders/docker'
@@ -25,10 +21,19 @@ steps:
       - 'run'
       - 'deploy'
       - 'shotlist-tool-backend-service'
+      - '-e'
+      - '"AUTH0SECRET=$$AUTH0SECRET"'
+      - '-e'
+      - '"DB_URL=$$DB_URL"'
+      - '-e'
+      - '"DB_USERNAME=$$DB_USERNAME"'
+      - '-e'
+      - '"DB_PASSWORD=$$DB_PASSWORD"'
       - '--image=gcr.io/$PROJECT_ID/shotlist-tool-backend:$COMMIT_SHA'
       - '--platform=managed'
       - '--region=europe-west1'
       - '--allow-unauthenticated'
+    secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'deploy-to-cloud-run'
 
 availableSecrets:
