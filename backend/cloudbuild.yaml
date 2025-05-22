@@ -5,7 +5,6 @@ steps:
       - 'clean'
       - 'package'
       - '-DskipTests'
-      -
     dir: 'backend'
     id: 'build-quarkus-jar'
 
@@ -17,13 +16,13 @@ steps:
       - '-f'
       - 'backend/Dockerfile'
       - '--build-arg'
-      - 'AUTH0SECRET=$AUTH0SECRET'
+      - 'AUTH0SECRET=$$AUTH0SECRET'
       - '--build-arg'
-      - 'DB_URL=$DB_URL'
+      - 'DB_URL=$$DB_URL'
       - '--build-arg'
-      - 'DB_USERNAME=$DB_USERNAME'
+      - 'DB_USERNAME=$$DB_USERNAME'
       - '--build-arg'
-      - 'DB_PASSWORD=$DB_PASSWORD'
+      - 'DB_PASSWORD=$$DB_PASSWORD'
       - 'backend'
     secretEnv: ['AUTH0SECRET', 'DB_URL', 'DB_USERNAME', 'DB_PASSWORD']
     id: 'build-docker-image'
