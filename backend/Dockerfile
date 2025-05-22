@@ -12,4 +12,4 @@ COPY ./target/shotlist-tool-backend-runner.jar /opt/application/backend.jar
 
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-Dquarkus.oidc.credentials.secret=${AUTH0SECRET}","-Dquarkus.datasource.jdbc.url=${DB_URL}", "-Dquarkus.datasource.username=${DB_USERNAME}", "-Dquarkus.datasource.password=${DB_PASSWORD}", "-jar", "backend.jar" ]
+ENTRYPOINT ["/bin/sh", "-c", "java -Dquarkus.oidc.credentials.secret=${AUTH0SECRET} -Dquarkus.datasource.jdbc.url=${DB_URL} -Dquarkus.datasource.username=${DB_USERNAME} -Dquarkus.datasource.password=${DB_PASSWORD} -jar backend.jar"]
