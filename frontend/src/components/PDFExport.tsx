@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     scene: {
-        display: 'flex',
     },
     row: {
-        display: "flex"
+        display: "flex",
+        width: "100%",
     }
 });
 
@@ -34,11 +34,11 @@ export default function PDFExport({data}: { data: ShotlistDto }) {
                         <View style={styles.row}>
                             <Text>{scene.position}</Text>
                             {(scene.attributes as AnySceneAttribute[])?.map(attribute =>
-                                <Text>{SceneAttributeParser.toValueString(attribute)}</Text>
+                                <Text key={attribute.id}>{SceneAttributeParser.toValueString(attribute)}</Text>
                             )}
                         </View>
                         {(scene.shots as ShotDto[])?.map(shot =>
-                            <View>shot</View>
+                            <View key={shot.id}>shot</View>
                         )}
                     </View>
                 ))}
