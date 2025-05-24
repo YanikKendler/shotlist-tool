@@ -9,6 +9,8 @@ main.home{
     border-radius: 1rem;
     max-width: min(90%, 500px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
 
     h1{
       font-size: 2rem;
@@ -17,6 +19,13 @@ main.home{
       /*
       color: var(--accent);
       */
+    }
+
+    .wordmark{
+      width: 80%;
+      margin-inline: auto;
+      margin-bottom: 1rem;
+      color: var(--accent);
     }
 
     .mainText{

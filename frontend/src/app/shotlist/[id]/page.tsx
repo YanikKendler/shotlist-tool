@@ -35,6 +35,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import auth from "@/Auth"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
+import Iconmark from "@/components/iconmark"
 
 export default function Shotlist() {
     const { id } = useParams()
@@ -338,7 +339,7 @@ export default function Shotlist() {
                             </div>
                         </div>
                         <div className="bottom">
-                            <Link className="shotlistTool" href={"../dashboard"}>shotlist tool</Link>
+                            <Link className="shotlistTool" href={"../dashboard"}><Iconmark/>shotly.at</Link>
                         </div>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>

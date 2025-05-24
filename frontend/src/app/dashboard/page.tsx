@@ -17,6 +17,8 @@ import {useRouter} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import Utils from "@/util/Utils"
+import Image from "next/image"
+import Iconmark from "@/components/iconmark"
 
 export default function Dashboard() {
     const [shotlists, setShotlists] = useState<{data: ShotlistDto[] , loading: boolean, error: any}>({data: [], loading: true, error: null})
@@ -146,7 +148,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="bottom">
-                        <Link className="shotlistTool" href={"../dashboard"}>shotlist tool</Link>
+                        <Link className="shotlistTool" href={"../dashboard"}><Iconmark/>shotly.at</Link>
                     </div>
                 </Panel>
                 <PanelResizeHandle className="PanelResizeHandle"/>

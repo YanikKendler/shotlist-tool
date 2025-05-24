@@ -3,13 +3,14 @@
 import Auth from "@/Auth"
 import "./home.scss"
 import Link from "next/link"
+import Wordmark from "@/components/wordmark"
 
 export default function Home() {
 
     return (
         <main className="home">
             <div className="content">
-                <h1>Welcome!</h1>
+                <Wordmark/>
                 <p className="mainText">
                     This is an early alpha version of my shotlist creation tool. Log in to get started!
                 </p>

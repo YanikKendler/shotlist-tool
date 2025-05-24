@@ -12,6 +12,7 @@ import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
 
     @Inject
     TemplateRepository templateRepository;
+
+    private static final Logger LOGGER = Logger.getLogger(ShotlistRepository.class);
 
     public Shotlist create(ShotlistCreateDTO createDTO, JsonWebToken jwt){
         User user = userRepository.findOrCreateByJWT(jwt);
@@ -39,6 +42,8 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
             }
             shotlist = new Shotlist(user, template, createDTO.name());
         }
+
+        LOGGER.infof("Created new shotlist: %s", shotlist.toString());
 
         persist(shotlist);
 
