@@ -26,8 +26,20 @@ import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/scen
 import ReactPDF, {pdf, PDFDownloadLink} from '@react-pdf/renderer';
 import PDFExport from "@/components/PDFExport"
 import {wuTime} from "@yanikkendler/web-utils/dist"
+import {useRouter} from "next/navigation"
 
-export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, refreshShotlist}: {isOpen: boolean, setIsOpen: any, shotlistId: string, refreshShotlist: () => void}) {
+export type ShotlistOptionsDialogPage = "attributes" | "collaborators" | "export"
+
+export type ShotlistOptionsDialogSubPage = "shot" | "scene"
+
+export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, shotlistId, refreshShotlist}:
+{
+    isOpen: boolean,
+    setIsOpen: any,
+    selectedPage: { main: ShotlistOptionsDialogPage, sub: ShotlistOptionsDialogSubPage },
+    shotlistId: string,
+    refreshShotlist: () => void
+}) {
     const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[] | null>(null);
     const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[] | null>(null);
     const [shotlist, setShotlist] = useState<ShotlistDto>({} as ShotlistDto);
@@ -36,6 +48,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
     const [dataChanged, setDataChanged] = useState(false);
 
     const client = useApolloClient()
+    const router = useRouter()
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -53,7 +66,26 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
         if (isOpen) {
             setStringifiedAttributeData(JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions))
         }
+        updateUrl(selectedPage.main, selectedPage.sub)
     }, [isOpen]);
+
+    const updateUrl = (page?: ShotlistOptionsDialogPage, subPage?: ShotlistOptionsDialogSubPage) => {
+        const url = new URL(window.location.href)
+        if(isOpen){
+            url.searchParams.set("oo", "true") // options open
+            if(page)
+                url.searchParams.set("mp", page) // main page
+            if(subPage)
+                url.searchParams.set("sp", subPage) // sub page
+        }
+        else {
+            url.searchParams.delete("oo") // options open
+            url.searchParams.delete("mp") // main page
+            url.searchParams.delete("sp") // sub page
+        }
+
+        router.push(url.toString())
+    }
 
     const loadData = async () => {
         const { data, errors, loading } = await client.query({query: gql`
@@ -214,7 +246,6 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
     function handleSceneDragEnd(event: any) {
         const {active, over} = event;
 
-
         if (active.id !== over.id && sceneAttributeDefinitions) {
             setSceneAttributeDefinitions((definition) => {
                 const oldIndex = sceneAttributeDefinitions.findIndex((definition) => definition.id === active.id);
@@ -341,7 +372,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                         }}>
                             <X size={18}/>
                         </button>
-                        <Tabs.Root className={"optionsDialogPageTabRoot"} defaultValue={"attributes"}>
+                        <Tabs.Root className={"optionsDialogPageTabRoot"} defaultValue={selectedPage.main} onValueChange={page => updateUrl(page as ShotlistOptionsDialogPage)}>
                             <Tabs.List className={"tabs"}>
                                 <Tabs.Trigger value={"attributes"}>
                                     <List size={18} strokeWidth={2}/>
@@ -361,7 +392,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, shotlistId, re
                                 orientation="vertical"
                             />
                             <Tabs.Content value={"attributes"} className={"content"}>
-                                <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={"shot"}>
+                                <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={selectedPage.sub} onValueChange={page => updateUrl("attributes", page as ShotlistOptionsDialogSubPage)}>
                                     <Tabs.List className={"tabs"}>
                                         <Tabs.Trigger value={"shot"}>
                                             Shot

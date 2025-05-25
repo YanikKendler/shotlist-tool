@@ -1,4 +1,9 @@
-import {AnySceneAttribute, AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
+import {
+    AnySceneAttribute,
+    AnySceneAttributeDefinition,
+    AnyShotAttribute,
+    AnyShotAttributeDefinition
+} from "@/util/Types"
 import {ChevronDown, List, Type} from "lucide-react"
 import {JSX} from "react"
 import {wuText} from "@yanikkendler/web-utils/dist"
@@ -26,6 +31,20 @@ export abstract class SceneAttributeParser {
                 return !attribute.multiSelectValue || attribute.multiSelectValue.length === 0
         }
         return true
+    }
+}
+
+export abstract class ShotAttributeParser {
+    static toValueString(attribute: AnyShotAttribute): string{
+        switch (attribute.__typename) {
+            case "ShotTextAttributeDTO":
+                return wuText.truncateText(<string>attribute.textValue, 15, "..")
+            case "ShotSingleSelectAttributeDTO":
+                return <string>attribute.singleSelectValue?.name
+            case "ShotMultiSelectAttributeDTO":
+                return <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+        }
+        return ""
     }
 }
 

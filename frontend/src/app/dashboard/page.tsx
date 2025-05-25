@@ -68,7 +68,7 @@ export default function Dashboard() {
 
     return (
         <main className="dashboard">
-            <PanelGroup autoSaveId={"dashboard-sidebar"} direction="horizontal" className={"PanelGroup"}>
+            <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">
                         <div className="top">

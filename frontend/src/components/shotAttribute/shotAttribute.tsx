@@ -164,7 +164,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"shot"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
                     ></Select>
                     {!singleSelectValue &&
@@ -187,7 +187,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"shot"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
                     ></Select>
                     {(!multiSelectValue || multiSelectValue?.length == 0) &&

@@ -196,7 +196,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"scene"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
                     ></Select>
                     <div className="icon">
@@ -217,7 +217,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"scene"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
                     ></Select>
                     <div className="icon">

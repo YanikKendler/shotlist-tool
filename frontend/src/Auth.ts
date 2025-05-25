@@ -127,6 +127,7 @@ class Auth {
         return new Promise<Auth0DecodedHash>((resolve, reject) => {
             this.auth0.checkSession({}, (err, authResult) => {
                 if (err) {
+                    console.error(err)
                     localStorage.removeItem(this.authFlag);
                     return reject(err);
                 }

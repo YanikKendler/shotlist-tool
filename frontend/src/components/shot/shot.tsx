@@ -13,6 +13,7 @@ import React, {useContext, useState} from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {ShotlistContext} from "@/context/ShotlistContext"
+import Utils from "@/util/Utils"
 
 export default function Shot({shot, position, onDelete}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void}) {
     const [isBeingEdited, setIsBeingEdited] = useState(false);
@@ -29,14 +30,6 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
     const client = useApolloClient()
 
     const shotlistContext = useContext(ShotlistContext)
-
-    const numberToShotLetter = (number: number) => {
-        let result = wuText.numberToLetter(number)
-        for (let i = 0; i < Math.floor(number / 26); i++) {
-            result += wuText.numberToLetter(number)
-        }
-        return result;
-    }
 
     async function deleteShot(){
         const { errors } = await client.mutate({
@@ -95,7 +88,7 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
             </Popover.Root>
 
             <div className="shotAttribute first number">
-                <p>{numberToShotLetter(position)}</p>
+                <p>{Utils.numberToShotLetter(position)}</p>
             </div>
             {(shot.attributes as [AnyShotAttribute])?.map((attr, index) => (
                 <ShotAttribute className={index == shot.attributes!.length-1 ? "last" : ""} attribute={attr} key={attr.id}></ShotAttribute>

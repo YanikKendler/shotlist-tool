@@ -200,7 +200,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
 
             {
                 shotAttributeDefinitions.length == 0 ?
-                <div className={"empty"}>No shots to display. Start by: <button onClick={shotlistContext.openShotlistOptionsDialog}>defining a shot attribute</button></div> :
+                <div className={"empty"}>No shots to display. Start by: <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button></div> :
                 <div className="shot new">
                     <div className="shotAttribute number first">
                         <span>#</span>
