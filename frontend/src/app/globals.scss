@@ -54,7 +54,8 @@
 
   --drag-handle-hover: hsl(0, 0%, 80%);
 
-  --labeled-input-border: hsl(0, 0%, 82%);
+  --default-interactable-border: hsl(0, 0%, 82%);
+  --default-interactable-hover-border: hsl(0, 0%, 10%);
 
   --sidebar-width: 400px;
 }
@@ -196,7 +197,7 @@ span{
 
   input{
     border-radius: .2rem;
-    border: .15rem solid var(--labeled-input-border);
+    border: .15rem solid var(--default-interactable-border);
     padding: .3rem;
 
     &:focus-visible{
