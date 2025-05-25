@@ -25,7 +25,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     public User findOrCreateByJWT(JsonWebToken jwt) {
         String auth0Sub = jwt.getClaim("sub");
         if (auth0Sub == null) {
-            LOGGER.errorf("Tried to find user (getName): '%s' by JWT, but JWT does not contain 'sub' claim", jwt.getName());
+            LOGGER.errorf("Tried to find user by JWT %s, but JWT does not contain 'sub' claim", jwt.toString());
             throw new IllegalArgumentException("JWT does not contain 'sub' claim");
         }
         Optional<User> user = find("auth0Sub", auth0Sub).singleResultOptional();

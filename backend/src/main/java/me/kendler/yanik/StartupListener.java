@@ -17,6 +17,8 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinit
 
 import org.jboss.logging.Logger;
 
+import java.time.LocalDateTime;
+
 @ApplicationScoped
 @io.quarkus.runtime.Startup
 public class StartupListener {
@@ -36,7 +38,7 @@ public class StartupListener {
 
     @Transactional
     public void createDemoData() {
-        User user = new User("a", "yanik", "yanik@mail");
+        User user = new User(LocalDateTime.now().toString(), "yanik", "yanik@mail");
         entityManager.persist(user);
 
         // Insert a new Shotlist

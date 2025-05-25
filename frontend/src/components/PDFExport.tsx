@@ -19,9 +19,12 @@ import Utils from "@/util/Utils"
 // Create styles
 const styles = StyleSheet.create({
     page: {
-        backgroundColor: '#E4E4E4',
-        padding: 30,
+        backgroundColor: '#ffffff',
+        padding: 20,
         fontSize: 9,
+    },
+    container: {
+        borderBottom: '1px solid #000',
     },
     row: {
         display: "flex",
@@ -48,9 +51,12 @@ const styles = StyleSheet.create({
     cell: {
         flex: 1,
         borderRight: '1px solid #000',
-        textAlign: 'left',
         paddingVertical: 2,
         paddingHorizontal: 3,
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: '100%',
     },
     bigCell: {
         paddingVertical: 4,
@@ -58,16 +64,16 @@ const styles = StyleSheet.create({
     number: {
         maxWidth: 30,
         borderLeft: '1px solid #000',
-        textAlign: 'center',
+        justifyContent: 'center',
     },
     small: {
         fontSize: 9,
     },
-    credit: {
-        borderTop: '1px solid #000',
+    bottom: {
         padding: 4,
-        textAlign: 'center',
-        color: '#2c2c2c',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     }
 });
 
@@ -76,41 +82,57 @@ export default function PDFExport({data}: { data: ShotlistDto }) {
     return (
         <Document>
             <Page size="A4" orientation="landscape" style={styles.page}>
-                <View style={[styles.row, styles.sceneDefinitions]}>
-                    <Text style={[styles.cell, styles.number, styles.small]}>Scene</Text>
-                    {(data.sceneAttributeDefinitions as AnySceneAttributeDefinition[]).map((attribute) => (
-                        <Text style={[styles.cell]} key={attribute.id}>{attribute.name}</Text>
-                    ))}
-                </View>
-                {(data.scenes as SceneDto[]).map((scene: SceneDto) => (
-                    <View key={scene.id}>
-                        <View style={[styles.row, styles.heading]}>
-                            <Text style={[styles.cell, styles.bigCell, styles.number]}>{scene.position+1}</Text>
-                            {(scene.attributes as AnySceneAttribute[])?.map(attribute =>
-                                <Text style={[styles.cell, styles.bigCell]} key={attribute.id}>{SceneAttributeParser.toValueString(attribute)}</Text>
-                            )}
-                        </View>
-                        <View style={[styles.row, styles.shotDefinitions]}>
-                            <Text style={[styles.cell, styles.number]}>Shot</Text>
-                            {(data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).map((attribute) => (
-                                <Text style={[styles.cell]} key={attribute.id}>{attribute.name}</Text>
-                            ))}
-                        </View>
-                        {(scene.shots as ShotDto[])?.map((shot, index) =>
-                            <View style={[styles.row , index%2==0 ? styles.rowOdd : {}]} key={shot.id}>
-                                <Text style={[styles.cell, styles.number]}>{Utils.numberToShotLetter(shot.position)}</Text>
-                                {(shot.attributes as AnyShotAttribute[])?.map((attribute) =>
-                                    <Text style={[styles.cell]} key={attribute.id}>{ShotAttributeParser.toValueString(attribute)}</Text>
+                <View style={styles.container}>
+                    <View style={[styles.row, styles.sceneDefinitions]}>
+                        <Text style={[styles.cell, styles.number, styles.small]}>Scene</Text>
+                        {(data.sceneAttributeDefinitions as AnySceneAttributeDefinition[]).map((attribute) => (
+                            <Text style={[styles.cell]} key={attribute.id}>{attribute.name}</Text>
+                        ))}
+                    </View>
+                    {(data.scenes as SceneDto[]).map((scene: SceneDto) => (
+                        <View key={scene.id}>
+                            <View style={[styles.row, styles.heading]}>
+                                <View style={[styles.cell, styles.bigCell, styles.number]}>
+                                    <Text>{scene.position+1}</Text>
+                                </View>
+                                {(scene.attributes as AnySceneAttribute[])?.map(attribute =>
+                                    <View style={[styles.cell, styles.bigCell]} key={attribute.id}>
+                                        <Text>{SceneAttributeParser.toValueString(attribute, false)}</Text>
+                                    </View>
                                 )}
                             </View>
-                        )}
-                    </View>
-                ))}
-                <Text style={styles.credit}>created with &lt;3 using shotly.at</Text>
-                {/*TODO create proper footer and header*/}
-                <Text render={({ pageNumber, totalPages }) => (
-                    `${pageNumber} / ${totalPages}`
-                )} fixed />
+                            <View style={[styles.row, styles.shotDefinitions]}>
+                                <View style={[styles.cell, styles.number]}>
+                                    <Text>Shot</Text>
+                                </View>
+                                {(data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).map((attribute) => (
+                                    <View style={[styles.cell]} key={attribute.id}>
+                                        <Text>{attribute.name}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                            {(scene.shots as ShotDto[])?.map((shot, index) =>
+                                <View style={[styles.row , index%2==0 ? styles.rowOdd : {}]} key={shot.id}>
+                                    <View style={[styles.cell, styles.number]}>
+                                        <Text>{Utils.numberToShotLetter(shot.position)}</Text>
+                                    </View>
+                                    {(shot.attributes as AnyShotAttribute[])?.map((attribute) =>
+                                        <View style={[styles.cell]} key={attribute.id}>
+                                            <Text>{ShotAttributeParser.toValueString(attribute, false)}</Text>
+                                        </View>
+                                    )}
+                                </View>
+                            )}
+                        </View>
+                    ))}
+                </View>
+                <View style={styles.bottom} fixed>
+                    <Text>created with &lt;3 using shotly.at</Text>
+                    <Text render={({pageNumber, totalPages}) => (
+                        `${pageNumber} / ${totalPages}`
+                    )}/>
+                    <Text>{data?.name || "Unnamed Shotlist"}</Text>
+                </View>
             </Page>
         </Document>
     )

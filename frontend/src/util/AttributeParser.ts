@@ -9,16 +9,20 @@ import {JSX} from "react"
 import {wuText} from "@yanikkendler/web-utils/dist"
 
 export abstract class SceneAttributeParser {
-    static toValueString(attribute: AnySceneAttribute): string{
+    static toValueString(attribute: AnySceneAttribute, truncate = true): string{
+        let result = ""
         switch (attribute.__typename) {
             case "SceneTextAttributeDTO":
-                return wuText.truncateText(<string>attribute.textValue, 15, "..")
+                result = attribute?.textValue || ""
+                break
             case "SceneSingleSelectAttributeDTO":
-                return <string>attribute.singleSelectValue?.name
+                result = <string>attribute.singleSelectValue?.name
+                break
             case "SceneMultiSelectAttributeDTO":
-                return <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                result = <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                break
         }
-        return ""
+        return truncate ? wuText.truncateText(result, 15, "..") : result
     }
 
     static isEmpty(attribute: AnySceneAttribute): boolean{
@@ -35,16 +39,20 @@ export abstract class SceneAttributeParser {
 }
 
 export abstract class ShotAttributeParser {
-    static toValueString(attribute: AnyShotAttribute): string{
+    static toValueString(attribute: AnyShotAttribute, truncate = true): string{
+        let result = ""
         switch (attribute.__typename) {
             case "ShotTextAttributeDTO":
-                return wuText.truncateText(<string>attribute.textValue, 15, "..")
+                result = attribute.textValue || ""
+                break
             case "ShotSingleSelectAttributeDTO":
-                return <string>attribute.singleSelectValue?.name
+                result = <string>attribute.singleSelectValue?.name
+                break
             case "ShotMultiSelectAttributeDTO":
-                return <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                result = <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                break
         }
-        return ""
+        return truncate ? wuText.truncateText(result, 15, "..") : result
     }
 }
 

@@ -17,12 +17,16 @@ class Auth {
         console.log("Auth constructor", this.FRONTEND_URL)
 
         this.auth0 = new auth0.WebAuth({
-            domain: 'dev-pvlm4i5qpteni14h.us.auth0.com',
+            domain: 'login.shotly.at',
             clientID: '4FPKDtlCQjAToOwAEiG6ZrL0eW2UXlx4',
             responseType: 'id_token token',
             redirectUri: this.FRONTEND_URL + '/callback',
             audience: 'https://dev-pvlm4i5qpteni14h.us.auth0.com/api/v2/',
             scope: 'openid profile email',
+            overrides: {
+                __tenant: "dev-pvlm4i5qpteni14h",
+                __token_issuer: 'https://login.shotly.at/'
+            },
         });
 
         this.login = this.login.bind(this);
