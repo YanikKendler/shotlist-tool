@@ -1,5 +1,6 @@
 import {ShotlistDto} from "../../lib/graphql/generated"
 import {wuText} from "@yanikkendler/web-utils/dist"
+import {ThemeConfig} from "react-select"
 
 export default class Utils {
     static orderShotlistsByName(a: ShotlistDto, b: ShotlistDto) {
@@ -36,3 +37,14 @@ export default class Utils {
         return result;
     }
 }
+
+export const reactSelectTheme: ThemeConfig = (theme) => ({
+    ...theme,
+    colors: {
+        ...theme.colors,
+        primary: 'var(--accent)',
+        primary25: 'var(--accent-90)',
+        primary50: 'var(--accent-80)',
+        primary75: 'var(--accent-60',
+    },
+})

@@ -19,10 +19,9 @@ import {useApolloClient} from "@apollo/client"
 import './sceneAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
-import Select, {selectSceneStyles} from "@/components/select/select"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
-import {SceneSingleSelectAttributeDto} from "../../../lib/graphql/generated"
+import AttributeValueSelect, {selectSceneStyles} from "@/components/attributeValueSelect/attributeValueSelect"
 
 const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -187,7 +186,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
         case "SceneSingleSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={false}
                         loadOptions={loadOptions}
@@ -198,7 +197,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         shotOrScene={"scene"}
                         editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     <div className="icon">
                         <ChevronDown size={18} strokeWidth={2}/>
                     </div>
@@ -208,7 +207,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
         case "SceneMultiSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={true}
                         loadOptions={loadOptions}
@@ -219,7 +218,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         shotOrScene={"scene"}
                         editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     <div className="icon">
                         <List size={18} strokeWidth={2}/>
                     </div>

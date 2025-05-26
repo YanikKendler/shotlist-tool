@@ -1,19 +1,33 @@
-import {ChevronDown, File, ListOrdered, Plus} from "lucide-react"
-import React, {useState} from "react"
+import {Download, File, ListOrdered, Plus} from "lucide-react"
+import React, {useEffect, useState} from "react"
 import gql from "graphql-tag"
 import {pdf} from "@react-pdf/renderer"
 import PDFExport from "@/components/PDFExport"
 import {wuTime} from "@yanikkendler/web-utils/dist"
 import {useApolloClient} from "@apollo/client"
-import {ShotlistDto} from "../../../../../lib/graphql/generated"
+import {SceneDto, ShotlistDto} from "../../../../../lib/graphql/generated"
 import "./exportTab.scss"
-import { Select } from "radix-ui"
 import SimpleSelect from "@/components/simpleSelect/simpleSelect"
+import {SelectOption} from "@/util/Types"
+import Select from 'react-select';
+import {reactSelectTheme} from "@/util/Utils"
+import MultiSelect from "@/components/multiSelect/multiSelect"
 
 export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
     const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
+    const [sceneOptions, setSceneOptions] = useState<SelectOption[]>([{value: "this is bad", label: "1"}]);
+    const [selectedScenes, setSelectedScenes] = useState<number[]>([]);
 
     const client = useApolloClient()
+
+    useEffect(() => {
+        let newSceneOptions: SelectOption[] = [];
+        for (let i = 0; i < shotlist.sceneCount; i++) {
+            newSceneOptions.push({value: i.toString(), label: `${(i + 1).toString()}`});
+        }
+        console.log(newSceneOptions, shotlist)
+        setSceneOptions(newSceneOptions)
+    }, [shotlist]);
 
     async function exportPDF() {
         const {data, error, loading} = await client.query({
@@ -74,7 +88,14 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
             }
         )
 
-        const blob = await pdf(<PDFExport data={data.shotlist}/>).toBlob()
+        console.log(data.shotlist, selectedScenes)
+
+        let filteredScenes = (data.shotlist.scenes as SceneDto[]).filter((scene) => selectedScenes.includes(scene.position))
+        let filteredData = {...data.shotlist, scenes: filteredScenes}
+
+        console.log(filteredScenes)
+
+        const blob = await pdf(<PDFExport data={filteredData}/>).toBlob()
 
         const url = URL.createObjectURL(blob)
         const link = document.createElement('a')
@@ -83,6 +104,8 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
         link.click()
         URL.revokeObjectURL(url)
     }
+
+    if(!shotlist) return <p>loading</p>
 
     return (
         <div className={"shotlistOptionsDialogExportTab"}>
@@ -93,16 +116,13 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
                         <File/>
                         <p>Format</p>
                     </div>
-                    <select defaultValue={selectedFileType}>
-                        <option value="PDF">PDF</option>
-                        <option value="CSV">CSV</option>
-                    </select>
 
                     <SimpleSelect
-                        name={"File Type"}
-                        onChange={newValue => {console.log(newValue)}}
+                        name="File Type"
+                        onChange={newValue => setSelectedFileType(newValue as "PDF" | "CSV")}
                         options={[{value: "PDF", label: "PDF"}, {value: "CSV", label: "CSV"}]}
                         value={"PDF"}
+                        fontSize={".95rem"}
                     />
                 </div>
                 <div className="filter">
@@ -110,10 +130,19 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
                         <ListOrdered/>
                         <p>Scenes</p>
                     </div>
+
+                    <MultiSelect
+                        name={"Scenes"}
+                        options={sceneOptions}
+                        onChange={newValue => {
+                            setSelectedScenes(newValue.map((option: SelectOption) => parseInt(option.value)))
+                        }}
+                        minWidth={"20rem"}
+                    />
                 </div>
                 <button className="addFilter">add filter<Plus size={16}/></button>
             </div>
-            <button className={"export"} onClick={exportPDF}>export shotlist</button>
+            <button className={"export"} onClick={exportPDF}>export shotlist<Download size={16} strokeWidth={3}/></button>
         </div>
     )
 }

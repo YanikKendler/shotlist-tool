@@ -94,6 +94,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                     shotlist(id: $shotlistId){
                         id
                         name
+                        sceneCount
                     }
                     shotAttributeDefinitions(shotlistId: $shotlistId){
                         id

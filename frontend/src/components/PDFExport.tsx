@@ -74,7 +74,16 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-    }
+        marginTop: "auto",
+    },
+    bottomBox: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    bottomText: {
+        color: 'gray',
+    },
 });
 
 // Create Document Component
@@ -127,11 +136,15 @@ export default function PDFExport({data}: { data: ShotlistDto }) {
                     ))}
                 </View>
                 <View style={styles.bottom} fixed>
-                    <Text>created with &lt;3 using shotly.at</Text>
-                    <Text render={({pageNumber, totalPages}) => (
-                        `${pageNumber} / ${totalPages}`
-                    )}/>
-                    <Text>{data?.name || "Unnamed Shotlist"}</Text>
+                    <View style={[styles.bottomBox, {justifyContent: 'flex-start'}]}>
+                        <Text style={styles.bottomText}>{data?.name || "Unnamed Shotlist"}</Text>
+                    </View>
+                    <View style={[styles.bottomBox, {justifyContent: 'center'}]}>
+                        <Text style={styles.bottomText}>created with &lt;3 using shotly.at</Text>
+                    </View>
+                    <View style={[styles.bottomBox, {justifyContent: 'flex-end'}]}>
+                        <Text style={styles.bottomText} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}/>
+                    </View>
                 </View>
             </Page>
         </Document>

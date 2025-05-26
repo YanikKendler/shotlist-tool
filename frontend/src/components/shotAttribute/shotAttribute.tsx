@@ -13,10 +13,10 @@ import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
-import Select, {selectShotStyles} from "@/components/select/select"
 import ShotService from "@/service/ShotService"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
+import AttributeValueSelect, {selectShotStyles} from "@/components/attributeValueSelect/attributeValueSelect"
 
 const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: {attribute: AnyShotAttribute, className?: string}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -155,7 +155,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
         case "ShotSingleSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={false}
                         loadOptions={loadOptions}
@@ -166,7 +166,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         shotOrScene={"shot"}
                         editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     {!singleSelectValue &&
                         <div className="icon">
                             <ChevronDown size={18} strokeWidth={2}/>
@@ -178,7 +178,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
         case "ShotMultiSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={true}
                         loadOptions={loadOptions}
@@ -189,7 +189,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         shotOrScene={"shot"}
                         editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     {(!multiSelectValue || multiSelectValue?.length == 0) &&
                         <div className="icon">
                             <List size={18} strokeWidth={2}/>

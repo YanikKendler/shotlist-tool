@@ -2,40 +2,48 @@
   border: .1rem solid var(--default-interactable-border);
   display: flex;
   align-items: center;
-  padding-block: .2rem;
-  min-width: 15ch;
+  padding-block: .4rem;
+  min-width: 8rem;
+
+  .SelectIcon {
+    display: flex;
+    align-items: center;
+    color: var(--text-50);
+  }
 
   &:hover {
+    border-color: var(--default-interactable-hover-border);
+
+    .SelectIcon {
+      color: var(--text-10);
+    }
   }
-  &:focus {
-  }
+
   &[data-placeholder] {
+    color: var(--text-40);
   }
 }
 
-.SelectIcon {
-}
 
 .SelectContent {
   overflow: hidden;
   background-color: var(--contrast);
-  border-radius: .3rem;
+  border-radius: .5rem;
   border: .1rem solid var(--default-interactable-border);
-  padding: .3rem;
-  min-width: 15ch;
+  padding: .3rem .2rem;
+  min-width: 8rem;
 }
 
 .SelectItem {
-  padding: .2rem;
+  padding: .2rem .3rem;
   user-select: none;
+  cursor: pointer;
+  border-radius: .3rem;
+  color: var(--text-20);
 
-  &:hover{
+  &:hover, &[data-highlighted], &:focus-visible {
+    outline: none;
     background-color: var(--hover-bg-10);
-    color: red;
+    color: var(--text);
   }
-}
-.SelectItem[data-highlighted] {
-  outline: none;
-  background-color: var(--violet-9);
-  color: var(--violet-1);
 }

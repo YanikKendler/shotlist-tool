@@ -55,7 +55,7 @@
   --drag-handle-hover: hsl(0, 0%, 80%);
 
   --default-interactable-border: hsl(0, 0%, 82%);
-  --default-interactable-hover-border: hsl(0, 0%, 10%);
+  --default-interactable-hover-border: hsl(0, 0%, 20%);
 
   --sidebar-width: 400px;
 }
@@ -100,6 +100,12 @@ body {
   padding: 0;
   margin: 0;
   font: inherit;
+
+  &:where(:focus-visible) {
+    &:focus-visible {
+      outline: .15rem solid var(--accent);
+    }
+  }
 }
 
 a {
