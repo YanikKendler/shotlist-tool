@@ -1,0 +1,41 @@
+.SelectTrigger {
+  border: .1rem solid var(--default-interactable-border);
+  display: flex;
+  align-items: center;
+  padding-block: .2rem;
+  min-width: 15ch;
+
+  &:hover {
+  }
+  &:focus {
+  }
+  &[data-placeholder] {
+  }
+}
+
+.SelectIcon {
+}
+
+.SelectContent {
+  overflow: hidden;
+  background-color: var(--contrast);
+  border-radius: .3rem;
+  border: .1rem solid var(--default-interactable-border);
+  padding: .3rem;
+  min-width: 15ch;
+}
+
+.SelectItem {
+  padding: .2rem;
+  user-select: none;
+
+  &:hover{
+    background-color: var(--hover-bg-10);
+    color: red;
+  }
+}
+.SelectItem[data-highlighted] {
+  outline: none;
+  background-color: var(--violet-9);
+  color: var(--violet-1);
+}

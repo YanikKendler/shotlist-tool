@@ -1,4 +1,4 @@
-import {File, ListOrdered, Plus} from "lucide-react"
+import {ChevronDown, File, ListOrdered, Plus} from "lucide-react"
 import React, {useState} from "react"
 import gql from "graphql-tag"
 import {pdf} from "@react-pdf/renderer"
@@ -7,6 +7,8 @@ import {wuTime} from "@yanikkendler/web-utils/dist"
 import {useApolloClient} from "@apollo/client"
 import {ShotlistDto} from "../../../../../lib/graphql/generated"
 import "./exportTab.scss"
+import { Select } from "radix-ui"
+import SimpleSelect from "@/components/simpleSelect/simpleSelect"
 
 export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
     const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
@@ -95,6 +97,13 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
                         <option value="PDF">PDF</option>
                         <option value="CSV">CSV</option>
                     </select>
+
+                    <SimpleSelect
+                        name={"File Type"}
+                        onChange={newValue => {console.log(newValue)}}
+                        options={[{value: "PDF", label: "PDF"}, {value: "CSV", label: "CSV"}]}
+                        value={"PDF"}
+                    />
                 </div>
                 <div className="filter">
                     <div className="left">

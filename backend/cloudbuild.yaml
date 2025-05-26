@@ -1,3 +1,5 @@
+# DEPRECATED: unused since the env variables just would not work :(
+
 steps:
   - name: 'maven:3.9-eclipse-temurin-21'
     entrypoint: 'mvn'
