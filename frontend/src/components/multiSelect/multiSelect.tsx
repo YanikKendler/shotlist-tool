@@ -6,7 +6,7 @@ import Select, {
     MultiValueProps
 } from "react-select"
 import {reactSelectTheme} from "@/util/Utils"
-import React from "react"
+import React, {useState} from "react"
 import {ChevronDown, X} from "lucide-react"
 import {SelectOption} from "@/util/Types"
 
@@ -22,13 +22,26 @@ const CustomClearIndicator = (
     return <components.ClearIndicator {...props} children={<X size={18}/>}/>;
 }
 
-export default function MultiSelect({name, options, onChange, minWidth = '8rem'}: {name: string, options: SelectOption[], onChange: (newValue: MultiValue<SelectOption>)=>void, minWidth?: string}) {
+export default function MultiSelect({name, options, onChange, minWidth = '8rem', sorted = false}: {name: string, options: SelectOption[], onChange: (newValue: MultiValue<SelectOption>)=>void, minWidth?: string, sorted?: boolean}) {
+    const [selectedOptions, setSelectedOptions] = useState<MultiValue<SelectOption>>([]);
+
+    const handleChange = (selectedOptions: MultiValue<SelectOption>) => {
+        let newOptions= selectedOptions.values().toArray()
+        if(sorted)
+            newOptions = selectedOptions.values().toArray().sort((a, b) =>
+                a.value.localeCompare(b.value)
+            )
+        setSelectedOptions(newOptions);
+        onChange(newOptions);
+    };
+
     return (
         <Select
             isMulti
             name={name}
+            value={selectedOptions}
             options={options}
-            onChange={onChange}
+            onChange={handleChange}
             theme={reactSelectTheme}
             closeMenuOnSelect={false}
             components={{
@@ -55,6 +68,19 @@ export default function MultiSelect({name, options, onChange, minWidth = '8rem'}
                     '&:hover': {
                         borderColor: state.isFocused ? 'var(--accent)' : 'var(--default-interactable-border-hover)',
                     }
+                }),
+                menu: (base) => ({
+                    ...base,
+                    padding: '0.3rem',
+                    borderRadius: '0.4rem',
+                }),
+                menuList: (base) => ({
+                    ...base,
+                    padding: '0rem',
+                }),
+                option: (base, state) => ({
+                    ...base,
+                    borderRadius: '0.3rem',
                 })
             }}
         />

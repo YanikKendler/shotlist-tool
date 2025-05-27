@@ -53,13 +53,8 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
 
     return (
         <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
-            {/*<p
-                ref={setActivatorNodeRef}
-                {...listeners}
-                {...attributes}
-            >drag</p>*/}
             <Popover.Root onOpenChange={setIsBeingEdited}>
-                <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}}>
+                <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}} delayDuration={500}>
                     <Popover.Trigger
                         className="grip"
                         ref={setActivatorNodeRef}

@@ -4,7 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import React, {useEffect, useState} from 'react';
 import "./shotlistOptionsDialog.scss"
 import {Popover, Separator, Tabs, VisuallyHidden} from "radix-ui"
-import {ChevronDown, File, FileDown, List, Plus, Type, Users, X, ListOrdered} from "lucide-react"
+import {ChevronDown, File, FileDown, List, Plus, Type, Users, X, ListOrdered, Settings} from "lucide-react"
 import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
 import {
     AnySceneAttributeDefinition,
@@ -25,11 +25,11 @@ import Image from "next/image"
 import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
 import ReactPDF, {Page, pdf, PDFDownloadLink} from '@react-pdf/renderer';
 import PDFExport from "@/components/PDFExport"
-import {wuTime} from "@yanikkendler/web-utils/dist"
+import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import {useRouter} from "next/navigation"
 import ExportTab from "@/components/dialog/shotlistOptionsDialog/exportTab/exportTab"
 
-export type ShotlistOptionsDialogPage = "attributes" | "collaborators" | "export"
+export type ShotlistOptionsDialogPage = "general" | "attributes" | "collaborators" | "export"
 
 export type ShotlistOptionsDialogSubPage = "shot" | "scene"
 
@@ -65,7 +65,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
 
     useEffect(() => {
         if (isOpen) {
-            setStringifiedAttributeData(JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions))
+            setStringifiedAttributeData(JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions) + JSON.stringify(shotlist));
         }
         updateUrl(selectedPage.main, selectedPage.sub)
     }, [isOpen]);
@@ -275,8 +275,37 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
         }
     }
 
+    const updateShotlistName = async (name: string) => {
+        const { data, errors } = await client.mutate({
+            mutation: gql`
+                mutation updateShotlistName($shotlistId: String!, $name: String!) {
+                    updateShotlist(editDTO: {
+                        id: $shotlistId
+                        name: $name
+                    }){
+                        id
+                        name
+                    }
+                }
+            `,
+            variables: { shotlistId: shotlistId, name: name },
+        });
+
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setShotlist({
+            ...shotlist,
+            name: data.updateShotlist.name
+        })
+    }
+
+    const debounceUpdateShotlistName = wuGeneral.debounce(updateShotlistName)
+
     function runRefreshShotlistCheck(){
-        let currentAttributeData = JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions)
+        let currentAttributeData = JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions) + JSON.stringify(shotlist)
 
         if(dataChanged || currentAttributeData != stringifiedAttributeData) {
             refreshShotlist()
@@ -305,6 +334,10 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                         </button>
                         <Tabs.Root className={"optionsDialogPageTabRoot"} defaultValue={selectedPage.main} onValueChange={page => updateUrl(page as ShotlistOptionsDialogPage)}>
                             <Tabs.List className={"tabs"}>
+                                <Tabs.Trigger value={"general"}>
+                                    <Settings size={18} strokeWidth={2}/>
+                                    General
+                                </Tabs.Trigger>
                                 <Tabs.Trigger value={"attributes"}>
                                     <List size={18} strokeWidth={2}/>
                                     Attributes
@@ -322,6 +355,24 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                 className="Separator"
                                 orientation="vertical"
                             />
+                            <Tabs.Content value={"general"} className={"content"}>
+                                <h2>Shotlist settings</h2>
+                                <div className={"labeledInput"}>
+                                    <label htmlFor={"name"}>Name</label>
+                                    <input
+                                        type="text"
+                                        name={"name"}
+                                        defaultValue={shotlist.name || ""}
+                                        placeholder={"My shotlist"}
+                                        onInput={event => debounceUpdateShotlistName(event.currentTarget.value)}
+                                    />
+                                </div>
+                                <Separator.Root className={"Separator dangerZone"}></Separator.Root>
+                                <div className="row">
+                                    <p>permanently delete the shotlist "{shotlist.name}"</p>
+                                    <button className="deleteShotlist bad">delete shotlist</button>
+                                </div>
+                            </Tabs.Content>
                             <Tabs.Content value={"attributes"} className={"content"}>
                                 <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={selectedPage.sub} onValueChange={page => updateUrl("attributes", page as ShotlistOptionsDialogSubPage)}>
                                     <Tabs.List className={"tabs"}>

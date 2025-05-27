@@ -47,7 +47,7 @@ export default function Shotlist() {
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {} as ShotlistDto, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
-    const [selectedOptionsDialogPage, setSelectedOptionsDialogPage] = useState<{main: ShotlistOptionsDialogPage, sub: ShotlistOptionsDialogSubPage}>({main: "attributes", sub: "shot"})
+    const [selectedOptionsDialogPage, setSelectedOptionsDialogPage] = useState<{main: ShotlistOptionsDialogPage, sub: ShotlistOptionsDialogSubPage}>({main: "general", sub: "shot"})
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
     const [reloadKey, setReloadKey] = useState(0)
 
@@ -388,8 +388,9 @@ export default function Shotlist() {
                 selectedPage={selectedOptionsDialogPage}
                 shotlistId={shotlist.data.id || ""}
                 refreshShotlist={() => {
-                    loadShotlist(true)
-                    setReloadKey(reloadKey + 1)
+                    loadShotlist(true).then(() => {
+                        setReloadKey(reloadKey + 1)
+                    })
                 }}
             ></ShotlistOptionsDialog>
             {AccountDialog}

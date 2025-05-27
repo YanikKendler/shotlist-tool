@@ -14,7 +14,10 @@
   --accent-95: hsl(19, 81%, 95%);
   --accent-98: hsl(19, 81%, 98%);
 
+  --bad-20: hsl(0, 70%, 20%);
+  --bad-40: hsl(0, 70%, 50%);
   --bad: hsl(0, 70%, 60%);
+  --bad-60: hsl(0, 70%, 65%);
 
   --good: hsl(120, 25%, 45%);
 
@@ -423,13 +426,15 @@ span{
   background-color: var(--text-90);
 
   &[data-orientation="horizontal"] {
+    --offset: 1rem;
     height: 1px;
-    width: 100%;
+    width: calc(100% - var(--offset)*2);
+    margin-inline: var(--offset);
     margin-block: .5rem;
   }
   &[data-orientation="vertical"] {
     width: 1px;
-    height: 100%;
+    height: calc(100% - 2rem);
     margin-inline: .5rem;
   }
 }

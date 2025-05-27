@@ -1,17 +1,19 @@
 import {Download, File, ListOrdered, Plus} from "lucide-react"
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import gql from "graphql-tag"
 import {pdf} from "@react-pdf/renderer"
 import PDFExport from "@/components/PDFExport"
 import {wuTime} from "@yanikkendler/web-utils/dist"
 import {useApolloClient} from "@apollo/client"
-import {SceneDto, ShotlistDto} from "../../../../../lib/graphql/generated"
+import {SceneDto, ShotDto, ShotlistDto} from "../../../../../lib/graphql/generated"
 import "./exportTab.scss"
 import SimpleSelect from "@/components/simpleSelect/simpleSelect"
-import {SelectOption} from "@/util/Types"
-import Select from 'react-select';
-import {reactSelectTheme} from "@/util/Utils"
+import {AnyShotAttribute, AnyShotAttributeDefinition, SelectOption} from "@/util/Types"
+import Utils from "@/util/Utils"
 import MultiSelect from "@/components/multiSelect/multiSelect"
+import {ShotAttributeParser} from "@/util/AttributeParser"
+//@ts-ignore
+import { downloadCSV } from "download-csv";
 
 export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
     const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
@@ -29,7 +31,7 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
         setSceneOptions(newSceneOptions)
     }, [shotlist]);
 
-    async function exportPDF() {
+    async function getData() {
         const {data, error, loading} = await client.query({
                 query: gql`
                     query shotlistForExport($id: String!) {
@@ -88,21 +90,52 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
             }
         )
 
-        console.log(data.shotlist, selectedScenes)
+        let filteredScenes= data.shotlist.scenes as SceneDto[]
+        if(selectedScenes.length > 0)
+            filteredScenes = (data.shotlist.scenes as SceneDto[]).filter((scene) => selectedScenes.includes(scene.position))
 
-        let filteredScenes = (data.shotlist.scenes as SceneDto[]).filter((scene) => selectedScenes.includes(scene.position))
-        let filteredData = {...data.shotlist, scenes: filteredScenes}
+        return {...data.shotlist, scenes: filteredScenes} as ShotlistDto;
+    }
 
-        console.log(filteredScenes)
+    async function exportShotlist() {
+        const data = await getData()
 
-        const blob = await pdf(<PDFExport data={filteredData}/>).toBlob()
+        switch (selectedFileType) {
+            case "CSV":
+                let csvData: string[][] = [];
 
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `shotly-${shotlist.name}-${wuTime.toFullDateTimeString(Date.now())}.pdf`
-        link.click()
-        URL.revokeObjectURL(url)
+                (data.scenes as SceneDto[]).forEach((scene) => {
+                    (scene.shots as ShotDto[]).forEach(shot => {
+                        let row: string[] = [scene.position+1 + Utils.numberToShotLetter(shot.position)];
+                        (shot.attributes as AnyShotAttribute[]).forEach(attribute => {
+                            row.push(ShotAttributeParser.toValueString(attribute, false))
+                        })
+                        csvData.push(row)
+                    })
+                })
+
+                let headerArray = (data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).map(attr => attr.name)
+
+                let headerString = ["Shot", ...headerArray].join(",");
+
+                downloadCSV(csvData, [headerString], generateFileName())
+
+                break
+            case "PDF":
+                const blob = await pdf(<PDFExport data={data}/>).toBlob()
+                const url = URL.createObjectURL(blob)
+                const link = document.createElement('a')
+                link.href = url
+                link.download = generateFileName() + ".pdf"
+                link.click()
+                URL.revokeObjectURL(url)
+                break
+        }
+
+    }
+
+    function generateFileName() {
+        return `shotly-${shotlist.name}-${wuTime.toFullDateTimeString(Date.now())}`
     }
 
     if(!shotlist) return <p>loading</p>
@@ -137,12 +170,14 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
                         onChange={newValue => {
                             setSelectedScenes(newValue.map((option: SelectOption) => parseInt(option.value)))
                         }}
+                        sorted={true}
                         minWidth={"20rem"}
                     />
                 </div>
-                <button className="addFilter">add filter<Plus size={16}/></button>
+                {/*TODO custom filters*/}
+                {/*<button className="addFilter">add filter<Plus size={16}/></button>*/}
             </div>
-            <button className={"export"} onClick={exportPDF}>export shotlist<Download size={16} strokeWidth={3}/></button>
+            <button className={"export"} onClick={exportShotlist}>download shotlist<Download size={16} strokeWidth={3}/></button>
         </div>
     )
 }

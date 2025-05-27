@@ -87,7 +87,15 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-export default function PDFExport({data}: { data: ShotlistDto }) {
+export default function PDFExport({data}: { data: ShotlistDto | null }) {
+    if(!data) return (
+        <Document>
+            <Page size="A4" orientation="landscape" style={styles.page}>
+                <Text>shotlist data was not loaded</Text>
+            </Page>
+        </Document>
+    )
+
     return (
         <Document>
             <Page size="A4" orientation="landscape" style={styles.page}>
