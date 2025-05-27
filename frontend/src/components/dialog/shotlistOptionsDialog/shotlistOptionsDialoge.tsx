@@ -4,28 +4,19 @@ import * as Dialog from '@radix-ui/react-dialog';
 import React, {useEffect, useState} from 'react';
 import "./shotlistOptionsDialog.scss"
 import {Popover, Separator, Tabs, VisuallyHidden} from "radix-ui"
-import {ChevronDown, File, FileDown, List, Plus, Type, Users, X, ListOrdered, Settings} from "lucide-react"
-import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
+import {ChevronDown, File, FileDown, List, Plus, Type, Users, X, ListOrdered, Settings, Settings2} from "lucide-react"
 import {
     AnySceneAttributeDefinition,
     AnyShotAttributeDefinition,
-    ShotSingleOrMultiSelectAttributeDefinition
 } from "@/util/Types"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
-import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
-import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
-import {apolloClient} from "@/ApolloWrapper"
-import {
-    SceneAttributeType,
-    ShotAttributeType, ShotlistDto,
-    ShotSelectAttributeOptionDefinition
-} from "../../../../lib/graphql/generated"
+import { ShotlistDto } from "../../../../lib/graphql/generated"
 import {useRouter} from "next/navigation"
 import ExportTab from "@/components/dialog/shotlistOptionsDialog/exportTab/exportTab"
 import GeneralTab from "@/components/dialog/shotlistOptionsDialog/generalTab/generalTab"
-import Image from "next/image"
-import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
+import AttributeTab from "@/components/dialog/shotlistOptionsDialog/attributeTab/attributeTab"
+import CollaboratorsTab from "@/components/dialog/shotlistOptionsDialog/collaboratorsTab/collaboratorsTab"
 
 export type ShotlistOptionsDialogPage = "general" | "attributes" | "collaborators" | "export"
 
@@ -49,13 +40,6 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
     const client = useApolloClient()
     const router = useRouter()
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
-    );
-
     useEffect(() => {
         loadData()
         setDataChanged(false)
@@ -65,17 +49,15 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
         if (isOpen) {
             setStringifiedAttributeData(JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions) + JSON.stringify(shotlist));
         }
-        updateUrl(selectedPage.main, selectedPage.sub)
+        updateUrl(selectedPage.main)
     }, [isOpen]);
 
-    const updateUrl = (page?: ShotlistOptionsDialogPage, subPage?: ShotlistOptionsDialogSubPage) => {
+    const updateUrl = (page?: ShotlistOptionsDialogPage) => {
         const url = new URL(window.location.href)
         if(isOpen){
             url.searchParams.set("oo", "true") // options open
             if(page)
                 url.searchParams.set("mp", page) // main page
-            if(subPage)
-                url.searchParams.set("sp", subPage) // sub page
         }
         else {
             url.searchParams.delete("oo") // options open
@@ -94,6 +76,11 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                         name
                         sceneCount
                         shotCount
+                        editedAt
+                        createdAt
+                        owner {
+                            name
+                        }
                     }
                     shotAttributeDefinitions(shotlistId: $shotlistId){
                         id
@@ -146,134 +133,6 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
         setStringifiedAttributeData(JSON.stringify(data.shotAttributeDefinitions) + JSON.stringify(data.sceneAttributeDefinitions))
     }
 
-    function removeShotAttributeDefinition(definitionId: number) {
-        if(!shotAttributeDefinitions || shotAttributeDefinitions.length == 0) return
-
-        let newShotDefinitions: AnyShotAttributeDefinition[] = shotAttributeDefinitions.filter((shotDefinition: AnyShotAttributeDefinition) => shotDefinition.id != definitionId)
-
-        setShotAttributeDefinitions(newShotDefinitions)
-    }
-
-    async function createShotAttributeDefinition(type: ShotAttributeType) {
-        const {data, errors} = await client.mutate({
-            mutation: gql`
-                mutation createShotAttributeDefinition($shotlistId: String!, $attributeType: ShotAttributeType!) {
-                    createShotAttributeDefinition(createDTO: {
-                        shotlistId: $shotlistId,
-                        type: $attributeType
-                    }) {
-                        id
-                        name
-                        position
-                    }
-                }
-            `,
-            variables: {shotlistId: shotlistId, attributeType: type},
-        });
-        if (errors) {
-            console.error(errors);
-            return;
-        }
-
-        setShotAttributeDefinitions([
-            ...shotAttributeDefinitions || [],
-            data.createShotAttributeDefinition
-        ])
-    }
-
-    function handleShotDragEnd(event: any) {
-        const {active, over} = event;
-
-        if (active.id !== over.id && shotAttributeDefinitions) {
-            setShotAttributeDefinitions((definition) => {
-                const oldIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === active.id);
-                const newIndex = shotAttributeDefinitions.findIndex((definition) => definition.id === over.id);
-
-                apolloClient.mutate({
-                    mutation: gql`
-                        mutation updateShotDefinition($id: BigInteger!, $position: Int!) {
-                            updateShotAttributeDefinition(editDTO:{
-                                id: $id,
-                                position: $position
-                            }){
-                                id
-                                position
-                            }
-                        }
-                    `,
-                    variables: {id: active.id, position: newIndex},
-                })
-
-                return arrayMove(shotAttributeDefinitions, oldIndex, newIndex)
-            })
-        }
-    }
-
-    function removeSceneAttributeDefinition(definitionId: number) {
-        if(!sceneAttributeDefinitions || sceneAttributeDefinitions.length == 0) return
-
-        let newSceneDefinitions: AnySceneAttributeDefinition[] = sceneAttributeDefinitions.filter((sceneDefinition: AnySceneAttributeDefinition) => sceneDefinition.id != definitionId)
-
-        setSceneAttributeDefinitions(newSceneDefinitions)
-    }
-
-    async function createSceneAttributeDefinition(type: SceneAttributeType) {
-        const {data, errors} = await client.mutate({
-            mutation: gql`
-                mutation createSceneAttributeDefinition($shotlistId: String!, $attributeType: SceneAttributeType!) {
-                    createSceneAttributeDefinition(createDTO: {
-                        shotlistId: $shotlistId,
-                        type: $attributeType
-                    }) {
-                        id
-                        name
-                        position
-                    }
-                }
-            `,
-            variables: {shotlistId: shotlistId, attributeType: type},
-        });
-        if (errors) {
-            console.error(errors);
-            return;
-        }
-
-        setSceneAttributeDefinitions([
-            ...sceneAttributeDefinitions || [],
-            data.createSceneAttributeDefinition
-        ])
-    }
-
-    function handleSceneDragEnd(event: any) {
-        const {active, over} = event;
-
-        if (active.id !== over.id && sceneAttributeDefinitions) {
-            setSceneAttributeDefinitions((definition) => {
-                const oldIndex = sceneAttributeDefinitions.findIndex((definition) => definition.id === active.id);
-                const newIndex = sceneAttributeDefinitions.findIndex((definition) => definition.id === over.id);
-
-                apolloClient.mutate({
-                    mutation: gql`
-                        mutation updateSceneDefinition($id: BigInteger!, $position: Int!) {
-                            updateSceneAttributeDefinition(editDTO:{
-                                id: $id,
-                                position: $position
-                            }){
-                                id
-                                position
-                            }
-                        }
-                    `,
-                    variables: {id: active.id, position: newIndex},
-                }).then(result => {
-                    console.log(result)
-                })
-
-                return arrayMove(sceneAttributeDefinitions, oldIndex, newIndex)
-            })
-        }
-    }
-
     function runRefreshShotlistCheck(){
         let currentAttributeData = JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions) + JSON.stringify(shotlist)
 
@@ -285,6 +144,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
     return (
         <Dialog.Root open={isOpen} onOpenChange={(isOpen: boolean) => {
             setIsOpen(isOpen)
+            updateUrl()
             runRefreshShotlistCheck()
         }}>
             <Dialog.Portal>
@@ -305,7 +165,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                         <Tabs.Root className={"optionsDialogPageTabRoot"} defaultValue={selectedPage.main} onValueChange={page => updateUrl(page as ShotlistOptionsDialogPage)}>
                             <Tabs.List className={"tabs"}>
                                 <Tabs.Trigger value={"general"}>
-                                    <Settings size={18} strokeWidth={2}/>
+                                    <Settings2 size={18} strokeWidth={2}/>
                                     General
                                 </Tabs.Trigger>
                                 <Tabs.Trigger value={"attributes"}>
@@ -329,112 +189,24 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                 <GeneralTab shotlist={shotlist} setShotlist={setShotlist}/>
                             </Tabs.Content>
                             <Tabs.Content value={"attributes"} className={"content"}>
-                                <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={selectedPage.sub} onValueChange={page => updateUrl("attributes", page as ShotlistOptionsDialogSubPage)}>
-                                    <Tabs.List className={"tabs"}>
-                                        <Tabs.Trigger value={"shot"}>
-                                            Shot
-                                        </Tabs.Trigger>
-                                        <Tabs.Trigger value={"scene"}>
-                                            Scene
-                                        </Tabs.Trigger>
-                                    </Tabs.List>
-                                    <Tabs.Content value={"shot"} className={"content"}>
-                                        {!shotAttributeDefinitions ?
-                                            <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
-                                            <>
-                                                <DndContext
-                                                    sensors={sensors}
-                                                    collisionDetection={closestCenter}
-                                                    onDragEnd={handleShotDragEnd}
-                                                >
-                                                    <SortableContext
-                                                        items={shotAttributeDefinitions?.map(def => def.id) || []}
-                                                        strategy={verticalListSortingStrategy}
-                                                    >
-                                                        <div className="definitions">
-                                                            {shotAttributeDefinitions?.map((attribute) => (
-                                                                <ShotAttributeDefinition
-                                                                    attributeDefinition={attribute}
-                                                                    key={attribute.id}
-                                                                    onDelete={removeShotAttributeDefinition}
-                                                                    dataChanged={() => setDataChanged(true)}
-                                                                />
-                                                            ))}
-                                                            {shotAttributeDefinitions?.length == 0 &&
-                                                                <div className={"noResults"}>
-                                                                    No attributes defined yet :(
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </SortableContext>
-                                                </DndContext>
-                                                <Popover.Root>
-                                                    <Popover.Trigger className={"add"}>Add attribute <Plus/></Popover.Trigger>
-                                                    <Popover.Portal>
-                                                        <Popover.Content className="PopoverContent addAttributeDefinitionPopup" sideOffset={5} align={"start"}>
-                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotTextAttribute)}><Type size={16}/>Text</button>
-                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotSingleSelectAttribute)}><ChevronDown size={16}/>Single select</button>
-                                                            <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotMultiSelectAttribute)}><List size={16}/>Multi select</button>
-                                                        </Popover.Content>
-                                                    </Popover.Portal>
-                                                </Popover.Root>
-                                            </>
-                                        }
-                                    </Tabs.Content>
-                                    <Tabs.Content value={"scene"} className={"content"}>
-                                        {!sceneAttributeDefinitions ?
-                                            <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
-                                            <>
-                                                <DndContext
-                                                    sensors={sensors}
-                                                    collisionDetection={closestCenter}
-                                                    onDragEnd={handleSceneDragEnd}
-                                                >
-                                                    <SortableContext
-                                                        items={sceneAttributeDefinitions?.map(def => def.id) || []}
-                                                        strategy={verticalListSortingStrategy}
-                                                    >
-                                                        <div className="definitions">
-                                                            {sceneAttributeDefinitions?.map((attribute) => (
-                                                                <SceneAttributeDefinition
-                                                                    attributeDefinition={attribute}
-                                                                    key={attribute.id}
-                                                                    onDelete={removeSceneAttributeDefinition}
-                                                                    dataChanged={() => setDataChanged(true)}
-                                                                />
-                                                            ))}
-                                                            {sceneAttributeDefinitions?.length == 0 &&
-                                                                <div className={"noResults"}>
-                                                                    No attributes defined yet :(
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </SortableContext>
-                                                </DndContext>
-                                                <Popover.Root>
-                                                    <Popover.Trigger className={"add"}>Add attribute <Plus/></Popover.Trigger>
-                                                    <Popover.Portal>
-                                                        <Popover.Content className="PopoverContent addAttributeDefinitionPopup" sideOffset={5} align={"start"}>
-                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneTextAttribute)}><Type size={16}/>Text</button>
-                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneSingleSelectAttribute)}><ChevronDown size={16}/>Single select</button>
-                                                            <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneMultiSelectAttribute)}><List size={16}/>Multi select</button>
-                                                        </Popover.Content>
-                                                    </Popover.Portal>
-                                                </Popover.Root>
-                                            </>
-                                        }
-                                    </Tabs.Content>
-                                </Tabs.Root>
+                                <AttributeTab
+                                    shotlistId={shotlistId}
+                                    shotAttributeDefinitions={shotAttributeDefinitions}
+                                    setShotAttributeDefinitions={setShotAttributeDefinitions}
+                                    sceneAttributeDefinitions={sceneAttributeDefinitions}
+                                    setSceneAttributeDefinitions={setSceneAttributeDefinitions}
+                                    selectedPage={selectedPage.sub}
+                                    dataChanged={() => setDataChanged(true)}
+                                />
                             </Tabs.Content>
                             <Tabs.Content value={"collaborators"} className={"content"}>
-                                This feature is under development and will be available soon.
+                                <CollaboratorsTab/>
                             </Tabs.Content>
                             <Tabs.Content value={"export"} className={"content"}>
                                 <ExportTab shotlist={shotlist}/>
                             </Tabs.Content>
                         </Tabs.Root>
                     </div>
-
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>

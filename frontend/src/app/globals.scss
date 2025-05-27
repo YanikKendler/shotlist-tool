@@ -435,14 +435,14 @@ span{
   background-color: var(--text-90);
 
   &[data-orientation="horizontal"] {
-    --offset: 1rem;
+    --offset: 0rem;
     height: 1px;
     width: calc(100% - var(--offset)*2);
     margin-inline: var(--offset);
     margin-block: .5rem;
   }
   &[data-orientation="vertical"] {
-    --offset: 1rem;
+    --offset: 0rem;
     width: 1px;
     height: calc(100% - var(--offset)*2);
     margin-block: var(--offset);

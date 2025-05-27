@@ -2,7 +2,7 @@ import {ShotlistDto} from "../../../../../lib/graphql/generated"
 import {Separator} from "radix-ui"
 import React from "react"
 import gql from "graphql-tag"
-import {wuGeneral} from "@yanikkendler/web-utils/dist"
+import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
 import {useRouter} from "next/navigation"
@@ -88,7 +88,17 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
                     placeholder={"My shotlist"}
                     onInput={event => debounceUpdateShotlistName(event.currentTarget.value)}/>
             </div>
+
+            <Separator.Root className={"Separator"}></Separator.Root>
+
+            <div className="details">
+                <p>created at {wuTime.toFullDateTimeString(shotlist.createdAt)} by {shotlist.owner?.name}</p>
+                <p>last edited at: {wuTime.toFullDateTimeString(shotlist.editedAt)}</p>
+                <p>{shotlist.sceneCount} scenes • {shotlist.shotCount} shots</p>
+            </div>
+
             <Separator.Root className={"Separator dangerZone"}></Separator.Root>
+
             <div className="row">
                 <p>Permanently delete the shotlist "{shotlist.name}"</p>
                 <button className="deleteShotlist bad" onClick={deleteShotlist}>delete shotlist</button>

@@ -160,7 +160,7 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
                 </div>
                 <div className="filter">
                     <div className="left">
-                        <ListOrdered/>
+                        <ListOrdered size={22}/>
                         <p>Scenes</p>
                     </div>
 
