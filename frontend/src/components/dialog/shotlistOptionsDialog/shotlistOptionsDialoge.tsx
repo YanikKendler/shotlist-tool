@@ -21,13 +21,11 @@ import {
     ShotAttributeType, ShotlistDto,
     ShotSelectAttributeOptionDefinition
 } from "../../../../lib/graphql/generated"
-import Image from "next/image"
-import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
-import ReactPDF, {Page, pdf, PDFDownloadLink} from '@react-pdf/renderer';
-import PDFExport from "@/components/PDFExport"
-import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import {useRouter} from "next/navigation"
 import ExportTab from "@/components/dialog/shotlistOptionsDialog/exportTab/exportTab"
+import GeneralTab from "@/components/dialog/shotlistOptionsDialog/generalTab/generalTab"
+import Image from "next/image"
+import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/sceneAttributeDefinition"
 
 export type ShotlistOptionsDialogPage = "general" | "attributes" | "collaborators" | "export"
 
@@ -95,6 +93,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                         id
                         name
                         sceneCount
+                        shotCount
                     }
                     shotAttributeDefinitions(shotlistId: $shotlistId){
                         id
@@ -275,35 +274,6 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
         }
     }
 
-    const updateShotlistName = async (name: string) => {
-        const { data, errors } = await client.mutate({
-            mutation: gql`
-                mutation updateShotlistName($shotlistId: String!, $name: String!) {
-                    updateShotlist(editDTO: {
-                        id: $shotlistId
-                        name: $name
-                    }){
-                        id
-                        name
-                    }
-                }
-            `,
-            variables: { shotlistId: shotlistId, name: name },
-        });
-
-        if (errors) {
-            console.error(errors);
-            return;
-        }
-
-        setShotlist({
-            ...shotlist,
-            name: data.updateShotlist.name
-        })
-    }
-
-    const debounceUpdateShotlistName = wuGeneral.debounce(updateShotlistName)
-
     function runRefreshShotlistCheck(){
         let currentAttributeData = JSON.stringify(shotAttributeDefinitions) + JSON.stringify(sceneAttributeDefinitions) + JSON.stringify(shotlist)
 
@@ -356,22 +326,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                 orientation="vertical"
                             />
                             <Tabs.Content value={"general"} className={"content"}>
-                                <h2>Shotlist settings</h2>
-                                <div className={"labeledInput"}>
-                                    <label htmlFor={"name"}>Name</label>
-                                    <input
-                                        type="text"
-                                        name={"name"}
-                                        defaultValue={shotlist.name || ""}
-                                        placeholder={"My shotlist"}
-                                        onInput={event => debounceUpdateShotlistName(event.currentTarget.value)}
-                                    />
-                                </div>
-                                <Separator.Root className={"Separator dangerZone"}></Separator.Root>
-                                <div className="row">
-                                    <p>permanently delete the shotlist "{shotlist.name}"</p>
-                                    <button className="deleteShotlist bad">delete shotlist</button>
-                                </div>
+                                <GeneralTab shotlist={shotlist} setShotlist={setShotlist}/>
                             </Tabs.Content>
                             <Tabs.Content value={"attributes"} className={"content"}>
                                 <Tabs.Root className={"attributeTypeTabRoot"} defaultValue={selectedPage.sub} onValueChange={page => updateUrl("attributes", page as ShotlistOptionsDialogSubPage)}>

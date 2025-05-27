@@ -159,26 +159,34 @@ button, a{
   user-select: none;
   margin: 0;
 
-  &:not([disabled]):not(.noClickFx):active{
-    transform: translate(0, 1px) scale(0.995);
-  }
+  &:not([disabled]):not(.noClickFx){
+    &:active{
+      transform: translate(0, 1px) scale(0.995);
+    }
 
-  &.bad:hover{
-    background-color: var(--hover-bg-bad-10);
-    color: var(--bad);
-    border-color: var(--bad);
-  }
+    &.default:hover{
+      background-color: var(--hover-bg-10);
+      color: var(--text);
+      border-color: var(--default-interactable-hover-border);
+    }
 
-  &.good:hover{
-    background-color: var(--hover-bg-good-10);
-    color: var(--good);
-    border-color: var(--good);
-  }
+    &.bad:hover{
+      background-color: var(--hover-bg-bad-10);
+      color: var(--bad);
+      border-color: var(--bad);
+    }
 
-  &.accent:hover{
-    background-color: var(--hover-bg-accent-10);
-    color: var(--accent-55);
-    border-color: var(--accent);
+    &.good:hover{
+      background-color: var(--hover-bg-good-10);
+      color: var(--good);
+      border-color: var(--good);
+    }
+
+    &.accent:hover{
+      background-color: var(--hover-bg-accent-10);
+      color: var(--accent-55);
+      border-color: var(--accent);
+    }
   }
 
   &[disabled]{
@@ -213,6 +221,7 @@ span{
     border-radius: .2rem;
     border: .15rem solid var(--default-interactable-border);
     padding: .3rem;
+    max-width: 40ch;
 
     &:focus-visible{
       outline: none;
@@ -433,8 +442,10 @@ span{
     margin-block: .5rem;
   }
   &[data-orientation="vertical"] {
+    --offset: 1rem;
     width: 1px;
-    height: calc(100% - 2rem);
+    height: calc(100% - var(--offset)*2);
+    margin-block: var(--offset);
     margin-inline: .5rem;
   }
 }
@@ -488,4 +499,33 @@ span{
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+//style radix checkbox
+
+.CheckboxRoot {
+  background-color: var(--contrast);
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: .4rem;
+  border: .15rem solid var(--default-interactable-border);
+  display: grid;
+  place-content: center;
+
+  &:hover {
+    background-color: var(--hover-bg-10);
+  }
+  &:focus {
+    border-color: var(--default-interactable-hover-border);
+  }
+  &[data-state="checked"] {
+    background-color: var(--hover-bg-accent-10);
+    border-color: var(--accent-20);
+  }
+}
+
+.CheckboxIndicator {
+  color: var(--accent);
+  display: grid;
+  place-content: center;
 }

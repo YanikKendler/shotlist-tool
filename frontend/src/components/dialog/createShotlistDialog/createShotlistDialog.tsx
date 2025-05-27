@@ -40,7 +40,6 @@ export function useCreateShotlistDialog() {
             },
         )
         router.push(`/shotlist/${data.createShotlist.id}`)
-        setIsOpen(false)
         promiseResolver?.(true)
     }
 
@@ -57,9 +56,12 @@ export function useCreateShotlistDialog() {
                     {isLoading ?
                         <>
                             <Dialog.Title className={"title"}>Creating shotlist "{name}"</Dialog.Title>
-                            <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/>
-                            <p>You will be redirected shortly</p>
-                        </> :
+                            <div className={"loading"}>
+                                <Image src={"/loadingBars.svg"} alt={"loading..."} width={50} height={62.5}/>
+                                <p>You will be redirected shortly</p>
+                            </div>
+                        </>
+                        :
                         <>
                             <Dialog.Title className={"title"}>Create Shotlist</Dialog.Title>
                             <div className="labeledInput">

@@ -58,10 +58,15 @@
       > .content{
         width: 100%;
         height: 100%;
+        &:not([hidden]){
+          display: flex;
+          flex-direction: column;
+        }
 
         h2{
           font-weight: 600;
           margin-block: .5rem;
+          margin-bottom: 1rem;
         }
 
         .definitions{
@@ -74,34 +79,6 @@
             width: 100%;
             text-align: center;
             color: var(--text-40);
-          }
-        }
-
-        .Separator.dangerZone{
-          background-color: var(--bad);
-          margin-top: 5rem;
-          --offset: 0rem;
-        }
-
-        .row{
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-inline: .5rem;
-          margin-top: 1rem;
-
-          p{
-            color: var(--bad-20);
-          }
-        }
-
-        button.deleteShotlist{
-          color: var(--bad);
-          font-weight: bold;
-          border: .15rem solid var(--bad);
-
-          &:hover{
-            color: var(--bad-40);
           }
         }
       }

@@ -9,7 +9,9 @@ import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
+import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.template.Template;
+import me.kendler.yanik.repositories.scene.SceneRepository;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
@@ -21,6 +23,9 @@ import java.util.UUID;
 public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID> {
     @Inject
     UserRepository userRepository;
+
+    @Inject
+    SceneRepository sceneRepository;
 
     @Inject
     TemplateRepository templateRepository;
@@ -60,6 +65,9 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
     public Shotlist delete(UUID id){
         Shotlist shotlist = findById(id);
         if(shotlist != null) {
+            for (Scene scene : shotlist.scenes) {
+                sceneRepository.delete(scene.id);
+            }
             delete(shotlist);
             return shotlist;
         }
