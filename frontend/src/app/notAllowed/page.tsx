@@ -1,4 +1,4 @@
-import ErrorPage from "@/components/errorPage/errorPage"
+import ErrorPage from "@/pages/errorPage/errorPage"
 
 export default function NotAllowed() {
     return (

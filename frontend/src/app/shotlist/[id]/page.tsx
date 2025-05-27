@@ -15,13 +15,13 @@ import {FileSliders, House, Plus, User} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
 import { Tooltip } from "radix-ui"
-import ErrorPage from "@/components/errorPage/errorPage"
+import ErrorPage from "@/pages/errorPage/errorPage"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import ShotlistOptionsDialog, {
     ShotlistOptionsDialogPage,
     ShotlistOptionsDialogSubPage
 } from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
-import LoadingPage from "@/components/loadingPage/loadingPage"
+import LoadingPage from "@/pages/loadingPage/loadingPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {
     closestCenter,
