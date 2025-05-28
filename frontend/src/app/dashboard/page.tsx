@@ -11,7 +11,7 @@ import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {ChevronDown, House, NotepadText, Plus, User} from "lucide-react"
 import {ShotlistDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
-import {wuTime} from "@yanikkendler/web-utils/dist"
+import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import auth from "@/Auth"
 import {useRouter} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
@@ -74,7 +74,12 @@ export default function Dashboard() {
                         <div className="top">
                             <Tooltip.Root>
                                 <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
-                                    <Link href={`../dashboard`}>
+                                    <Link href={`../dashboard`} onClick={e => {
+                                        wuGeneral.onNthClick( () => {
+                                            console.log("forward")
+                                            window.open("https://orteil.dashnet.org/cookieclicker", '_blank')?.focus()
+                                        }, e.nativeEvent, 10)
+                                    }}>
                                         <House strokeWidth={2.5} size={20}/>
                                     </Link>
                                 </Tooltip.Trigger>

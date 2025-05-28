@@ -199,35 +199,8 @@ button, a{
   }
 }
 
-span{
-  &.bold{
-    font-weight: bold;
-  }
-}
-
-.labeledInput{
-  display: flex;
-  flex-direction: column;
-
-  label{
-    font-size: .9rem;
-    color: var(--text-40);
-    margin-bottom: .2rem;
-    margin-left: .2rem;
-    font-weight: 500;
-  }
-
-  input{
-    border-radius: .2rem;
-    border: .15rem solid var(--default-interactable-border);
-    padding: .3rem;
-    max-width: 40ch;
-
-    &:focus-visible{
-      outline: none;
-      border-color: var(--accent);
-    }
-  }
+span.bold, b{
+  font-weight: bold;
 }
 
 // Sidebar styles

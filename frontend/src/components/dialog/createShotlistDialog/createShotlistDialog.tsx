@@ -9,6 +9,7 @@ import auth from "@/Auth"
 import {useRouter} from "next/navigation"
 import {is} from "@babel/types"
 import Image from "next/image"
+import Input from "@/components/input/input"
 
 export function useCreateShotlistDialog() {
     const [isOpen, setIsOpen] = useState(false);
@@ -64,10 +65,10 @@ export function useCreateShotlistDialog() {
                         :
                         <>
                             <Dialog.Title className={"title"}>Create Shotlist</Dialog.Title>
-                            <div className="labeledInput">
-                                <label htmlFor="name">Name</label>
-                                <input type="text" name="name" onInput={e => setName(e.currentTarget.value)}/>
-                            </div>
+                            <Input
+                                label={"Name"}
+                                setValue={setName}
+                            />
                             <div className={"buttons"}>
                                 <button onClick={e => {
                                     e.stopPropagation();

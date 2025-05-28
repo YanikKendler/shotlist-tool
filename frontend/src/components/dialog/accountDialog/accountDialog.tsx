@@ -9,6 +9,7 @@ import {Info, X} from "lucide-react"
 import Auth from "@/Auth"
 import {User} from "../../../../lib/graphql/generated"
 import {Tooltip} from "radix-ui"
+import Input from "@/components/input/input"
 
 export function useAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
@@ -64,35 +65,19 @@ export function useAccountDialog() {
                 <Dialog.Content className={"accountContent dialogContent"} aria-describedby={"account dialog"}>
                     <Dialog.Title className={"title"}>Account</Dialog.Title>
 
-                    <div className="labeledInput">
-                        <label htmlFor="email">email</label>
-                        <input
-                            type="email"
-                            value={user?.email || "unknown"}
-                            disabled
-                        />
-                    </div>
+                    <Input
+                        label={"email"}
+                        value={user?.email || "unknown"}
+                        disabled={true}
+                    />
 
-                    <div className="infoContainer">
-                        <div className="labeledInput">
-                            <label htmlFor="email">name</label>
-                            <input
-                                type="text"
-                                value={user?.name || "unknown"}
-                            />
-                        </div>
-                        <Tooltip.Root delayDuration={0}>
-                            <Tooltip.Trigger className={"noPadding"} asChild>
-                                <Info/>
-                            </Tooltip.Trigger>
-                            <Tooltip.Portal>
-                                <Tooltip.Content className={"TooltipContent"}>
-                                    <Tooltip.Arrow/>
-                                    <p>This a publicly visible name used for collaboration with others. You can not use it to log in.</p>
-                                </Tooltip.Content>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                    </div>
+                    <Input
+                        label={"name"}
+                        value={user?.name || "unknown"}
+                        info={"This a publicly visible name used for collaboration with others. You can not use it to log in."}
+                        maxLength={50}
+                        placeholder={"John Doe"}
+                    />
 
                     <button className={"logout"} onClick={() => Auth.logout()}>sign out</button>
 

@@ -7,6 +7,7 @@ import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
 import {useRouter} from "next/navigation"
 import "./generalTab.scss"
+import Input from "@/components/input/input"
 
 export default function GeneralTab({shotlist, setShotlist}: { shotlist: ShotlistDto, setShotlist: (shotlist: ShotlistDto) => void }) {
     const client = useApolloClient()
@@ -79,22 +80,19 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
     return (
         <div className={"shotlistOptionsDialogGeneralTab"}>
             <h2>Shotlist settings</h2>
-            <div className={"labeledInput"}>
-                <label htmlFor={"name"}>Name</label>
-                <input
-                    type="text"
-                    name={"name"}
-                    defaultValue={shotlist.name || ""}
-                    placeholder={"My shotlist"}
-                    onInput={event => debounceUpdateShotlistName(event.currentTarget.value)}/>
-            </div>
+            <Input
+                label={"Name"}
+                value={shotlist.name || ""}
+                placeholder={"My shotlist"}
+                setValue={debounceUpdateShotlistName}
+            />
 
             <Separator.Root className={"Separator"}></Separator.Root>
 
             <div className="details">
-                <p>created at {wuTime.toFullDateTimeString(shotlist.createdAt)} by {shotlist.owner?.name}</p>
-                <p>last edited at: {wuTime.toFullDateTimeString(shotlist.editedAt)}</p>
-                <p>{shotlist.sceneCount} scenes • {shotlist.shotCount} shots</p>
+                <p>created at <b>{wuTime.toFullDateTimeString(shotlist.createdAt)}</b> by <b>{shotlist.owner?.name}</b></p>
+                <p>last edited at: <b>{wuTime.toFullDateTimeString(shotlist.editedAt)}</b></p>
+                <p><b>{shotlist.sceneCount}</b> scenes • <b>{shotlist.shotCount}</b> shots</p>
             </div>
 
             <Separator.Root className={"Separator dangerZone"}></Separator.Root>
