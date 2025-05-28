@@ -46,6 +46,7 @@ export type Mutation = {
   updateShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
   updateShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
   updateShotlist?: Maybe<ShotlistDto>;
+  updateUser?: Maybe<User>;
 };
 
 
@@ -186,9 +187,16 @@ export type MutationUpdateShotlistArgs = {
   editDTO?: InputMaybe<ShotlistEditDtoInput>;
 };
 
+
+/** Mutation root */
+export type MutationUpdateUserArgs = {
+  editDTO?: InputMaybe<UserEditDtoInput>;
+};
+
 /** Query root */
 export type Query = {
   __typename?: 'Query';
+  currentUser?: Maybe<User>;
   sceneAttributeDefinitions?: Maybe<Array<Maybe<SceneAttributeDefinitionBaseDto>>>;
   sceneSelectAttributeOptions?: Maybe<Array<Maybe<SceneSelectAttributeOptionDefinition>>>;
   scenes?: Maybe<Array<Maybe<SceneDto>>>;
@@ -614,6 +622,10 @@ export type User = {
   name?: Maybe<Scalars['String']['output']>;
   shotlists?: Maybe<Array<Maybe<Shotlist>>>;
   templates?: Maybe<Array<Maybe<Template>>>;
+};
+
+export type UserEditDtoInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ShotlistsQueryVariables = Exact<{ [key: string]: never; }>;

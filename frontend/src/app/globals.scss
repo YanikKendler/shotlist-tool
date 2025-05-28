@@ -480,10 +480,10 @@ span{
   font-size: .9rem;
   border-radius: .5rem;
   border: 1px solid var(--popup-border);
-  /*z-index: 3000;*/
   translate: 0 -.2rem;
   text-align: center;
   animation: slideUpAndFade 200ms ease-in-out;
+  max-width: 300px;
 
   svg{
     fill: var(--popup-border);

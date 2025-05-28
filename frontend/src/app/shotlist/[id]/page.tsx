@@ -40,9 +40,10 @@ import {wuGeneral} from "@yanikkendler/web-utils/dist"
 import Iconmark from "@/components/iconmark"
 
 export default function Shotlist() {
-    const { id } = useParams()
+    const params = useParams<{ id: string }>()
+    const id = params?.id || ""
     const searchParams = useSearchParams()
-    const sceneId = searchParams.get('sceneId')
+    const sceneId = searchParams?.get('sceneId')
 
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {} as ShotlistDto, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")

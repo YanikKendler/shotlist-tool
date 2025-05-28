@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.StartupListener;
 import me.kendler.yanik.UnauthorizedAccessException;
+import me.kendler.yanik.dto.user.UserEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -38,6 +39,16 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
             LOGGER.infof("Created new user: %s", newUser.toString());
             return newUser;
         }
+    }
+
+    public User update(UserEditDTO editDTO, JsonWebToken jwt) {
+        User user = findOrCreateByJWT(jwt);
+        if (editDTO.name() != null) {
+            user.name = editDTO.name();
+        }
+        persist(user);
+        LOGGER.infof("Updated user: %s", user.toString());
+        return user;
     }
 
     public boolean userCanAccessShotlist(Shotlist shotlist, JsonWebToken jwt) {

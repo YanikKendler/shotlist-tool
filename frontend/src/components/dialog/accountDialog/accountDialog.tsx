@@ -1,20 +1,25 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "./accountDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
-import auth from "@/Auth"
-import {useRouter} from "next/navigation"
-import {X} from "lucide-react"
+import {Info, X} from "lucide-react"
 import Auth from "@/Auth"
+import {User} from "../../../../lib/graphql/generated"
+import {Tooltip} from "radix-ui"
 
 export function useAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const [promiseResolver, setPromiseResolver] = useState<(value: boolean) => void>();
+    const [user, setUser] = useState<User | null>(null);
 
     const client = useApolloClient()
+
+    useEffect(() => {
+        getCurrentUser()
+    }, []);
 
     function openAccountDialog(): Promise<boolean> {
         setIsOpen(true);
@@ -36,14 +41,20 @@ export function useAccountDialog() {
         )
     }
 
-    function handleConfirm() {
-        setIsOpen(false);
-        promiseResolver?.(true);
-    }
+    async function getCurrentUser(){
+        const {data, loading, error} = await client.query({
+            query: gql`
+                query currentUser{
+                    currentUser {
+                        id
+                        name
+                        email
+                        createdAt
+                    }
+                }`
+        })
 
-    function handleCancel() {
-        setIsOpen(false);
-        promiseResolver?.(false);
+        setUser(data.currentUser)
     }
 
     const AccountDialog = (
@@ -52,8 +63,37 @@ export function useAccountDialog() {
                 <Dialog.Overlay className={"accountDialogOverlay dialogOverlay"}/>
                 <Dialog.Content className={"accountContent dialogContent"} aria-describedby={"account dialog"}>
                     <Dialog.Title className={"title"}>Account</Dialog.Title>
-                    <h2>hi, {Auth.getUser()?.name}</h2>
-                    <p>Since this is an early alpha test, account settings are not yet available</p>
+
+                    <div className="labeledInput">
+                        <label htmlFor="email">email</label>
+                        <input
+                            type="email"
+                            value={user?.email || "unknown"}
+                            disabled
+                        />
+                    </div>
+
+                    <div className="infoContainer">
+                        <div className="labeledInput">
+                            <label htmlFor="email">name</label>
+                            <input
+                                type="text"
+                                value={user?.name || "unknown"}
+                            />
+                        </div>
+                        <Tooltip.Root delayDuration={0}>
+                            <Tooltip.Trigger className={"noPadding"} asChild>
+                                <Info/>
+                            </Tooltip.Trigger>
+                            <Tooltip.Portal>
+                                <Tooltip.Content className={"TooltipContent"}>
+                                    <Tooltip.Arrow/>
+                                    <p>This a publicly visible name used for collaboration with others. You can not use it to log in.</p>
+                                </Tooltip.Content>
+                            </Tooltip.Portal>
+                        </Tooltip.Root>
+                    </div>
+
                     <button className={"logout"} onClick={() => Auth.logout()}>sign out</button>
 
                     <button className={"closeButton"} onClick={() => {

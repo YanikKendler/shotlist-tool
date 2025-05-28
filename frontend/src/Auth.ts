@@ -1,7 +1,6 @@
 import auth0, {Auth0DecodedHash, Auth0ParseHashError, WebAuth} from 'auth0-js';
 
 export interface AuthUser {
-    name: string;
     email: string;
     sub: string;
 }
@@ -117,7 +116,6 @@ class Auth {
             return
         }
         this.authUser = {
-            name: authResult.idTokenPayload.name,
             email: authResult.idTokenPayload.email,
             sub: authResult.idTokenPayload.sub,
         }
