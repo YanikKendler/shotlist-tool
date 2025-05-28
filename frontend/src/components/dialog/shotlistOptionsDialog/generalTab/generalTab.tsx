@@ -8,13 +8,18 @@ import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge
 import {useRouter} from "next/navigation"
 import "./generalTab.scss"
 import Input from "@/components/input/input"
+import LoadingPage from "@/pages/loadingPage/loadingPage"
 
-export default function GeneralTab({shotlist, setShotlist}: { shotlist: ShotlistDto, setShotlist: (shotlist: ShotlistDto) => void }) {
+export default function GeneralTab({shotlist, setShotlist}: { shotlist: ShotlistDto | null, setShotlist: (shotlist: ShotlistDto) => void }) {
     const client = useApolloClient()
     const { confirm, ConfirmDialog } = useConfirmDialog();
     const router = useRouter()
 
     const updateShotlistName = async (name: string) => {
+        if(!shotlist) return
+
+        console.log(shotlist)
+
         const { data, errors } = await client.mutate({
             mutation: gql`
                 mutation updateShotlistName($shotlistId: String!, $name: String!) {
@@ -44,6 +49,8 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
     const debounceUpdateShotlistName = wuGeneral.debounce(updateShotlistName)
 
     const deleteShotlist = async () => {
+        if(!shotlist) return
+
         let decision = await confirm({
             title: 'Are you absolutely sure?',
             message: `Do you want to delete the shotlist "${shotlist.name}" and its ${shotlist.sceneCount} scenes and ${shotlist.shotCount} shots? This action cannot be undone.`,
@@ -76,6 +83,8 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
             router.push("/dashboard")
         }
     }
+
+    if(!shotlist) return <LoadingPage text={"loading shotlist"}/>
 
     return (
         <div className={"shotlistOptionsDialogGeneralTab"}>

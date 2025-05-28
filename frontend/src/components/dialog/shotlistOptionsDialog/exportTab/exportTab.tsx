@@ -15,7 +15,7 @@ import {ShotAttributeParser} from "@/util/AttributeParser"
 //@ts-ignore
 import { downloadCSV } from "download-csv";
 
-export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
+export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
     const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
     const [sceneOptions, setSceneOptions] = useState<SelectOption[]>([{value: "this is bad", label: "1"}]);
     const [selectedScenes, setSelectedScenes] = useState<number[]>([]);
@@ -23,15 +23,18 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
     const client = useApolloClient()
 
     useEffect(() => {
+        if (!shotlist) return;
+
         let newSceneOptions: SelectOption[] = [];
         for (let i = 0; i < shotlist.sceneCount; i++) {
             newSceneOptions.push({value: i.toString(), label: `${(i + 1).toString()}`});
         }
-        console.log(newSceneOptions, shotlist)
         setSceneOptions(newSceneOptions)
     }, [shotlist]);
 
     async function getData() {
+        if(!shotlist) return null;
+
         const {data, error, loading} = await client.query({
                 query: gql`
                     query shotlistForExport($id: String!) {
@@ -97,8 +100,14 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
         return {...data.shotlist, scenes: filteredScenes} as ShotlistDto;
     }
 
+    //TODO properly test this with a new shotlist
     async function exportShotlist() {
         const data = await getData()
+
+        if (!data) {
+            console.error("No data found for export");
+            return;
+        }
 
         switch (selectedFileType) {
             case "CSV":
@@ -135,7 +144,7 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto}) {
     }
 
     function generateFileName() {
-        return `shotly-${shotlist.name}-${wuTime.toFullDateTimeString(Date.now())}`
+        return `shotly_${shotlist?.name?.replace(/\s/g, "-") || "unnamed-shotlist"}_${wuTime.toFullDateTimeString(Date.now(), {timeSeparator: "-", dateSeparator: "-"}).replace(/\s/g, "_")}`
     }
 
     if(!shotlist) return <p>loading</p>

@@ -2,7 +2,7 @@
 .accountContent{
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .8rem;
   max-width: 600px;
 
   .title{
@@ -12,13 +12,28 @@
     margin-bottom: .8rem;
   }
 
-  .logout{
-    border: 2px solid var(--accent);
-    color: var(--accent-20);
+  .row{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    justify-content: space-between;
 
-    &:hover{
-      background-color: var(--hover-bg-accent-10);
-      color: var(--accent-40);
+    p{
+      color: var(--text-20);
+    }
+
+    button{
+      border: .15rem solid var(--default-interactable-border);
+      color: var(--text-30);
+      font-weight: 500;
+      width: fit-content;
+      padding: .4rem 1rem;
+
+      &:hover{
+        background-color: var(--hover-bg-10);
+        color: var(--text);
+      }
     }
   }
 

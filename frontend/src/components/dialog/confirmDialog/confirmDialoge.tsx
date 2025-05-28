@@ -4,6 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import "./confirmDialog.scss"
 import LabeledCheckbox from "@/components/labeledCheckbox/labeledCheckbox"
+import {VisuallyHidden} from "radix-ui"
 
 export interface ConfirmDialogSettings {
     title?: string
@@ -28,7 +29,8 @@ export function useConfirmDialog() {
 
     function confirm(settings: ConfirmDialogSettings): Promise<boolean> {
         setSettings(settings)
-        setIsOpen(true);
+        setIsOpen(true)
+        setIsChecked(false)
         return new Promise((resolve) => {
             setPromiseResolver(() => resolve);
         });
@@ -49,6 +51,10 @@ export function useConfirmDialog() {
             <Dialog.Portal>
                 <Dialog.Overlay className={"confirmDialogOverlay dialogOverlay"}/>
                 <Dialog.Content aria-describedby={"confirm action dialog"} className={"confirmDialogContent dialogContent"}>
+                    <VisuallyHidden.Root>
+                        <Dialog.Title>Confirm or cancel your action</Dialog.Title>
+                    </VisuallyHidden.Root>
+
                     <Dialog.Title className={"title"}>{settings?.title || "Are you sure?"}</Dialog.Title>
                     <p className={"description"}>{settings.message}</p>
                     {settings.checkbox === true && (<LabeledCheckbox text="I know what i am doing" checked={isChecked} onCheckedChange={setIsChecked}/>)}

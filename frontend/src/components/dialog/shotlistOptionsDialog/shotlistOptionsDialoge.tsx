@@ -32,7 +32,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
 }) {
     const [sceneAttributeDefinitions, setSceneAttributeDefinitions] = useState<AnySceneAttributeDefinition[] | null>(null);
     const [shotAttributeDefinitions, setShotAttributeDefinitions] = useState<AnyShotAttributeDefinition[] | null>(null);
-    const [shotlist, setShotlist] = useState<ShotlistDto>({} as ShotlistDto);
+    const [shotlist, setShotlist] = useState<ShotlistDto | null>(null);
     // used for refreshing the shotlist on dialog close, only when any data has been edited
     const [stringifiedAttributeData, setStringifiedAttributeData] = useState<string>("");
     const [dataChanged, setDataChanged] = useState(false);

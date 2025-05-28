@@ -68,6 +68,7 @@ export function useCreateShotlistDialog() {
                             <Input
                                 label={"Name"}
                                 setValue={setName}
+                                placeholder={"Interstellar"}
                             />
                             <div className={"buttons"}>
                                 <button onClick={e => {

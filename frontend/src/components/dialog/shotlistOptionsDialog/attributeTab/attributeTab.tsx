@@ -208,7 +208,7 @@ export default function AttributeTab(
                                         ))}
                                         {shotAttributeDefinitions?.length == 0 &&
                                             <div className={"noResults"}>
-                                                No attributes defined yet :(
+                                                no attributes defined yet
                                             </div>
                                         }
                                     </div>
