@@ -22,6 +22,12 @@ export default function Home() {
                     Thank you! :)
                     Since this is an alpha release, I do NOT guarantee the safety of your data at this time.
                 </p>
+                <div className="legal">
+                    <Link href={"./legal/cookies"}>cookies</Link>
+                    <Link href={"./legal/datenschutz"}>datenschutz</Link>
+                    <Link href={"./legal/impressum"}>impressum</Link>
+                    <Link href={"./legal/nutzungsbedingungen"}>nutzungsbedingungen</Link>
+                </div>
             </div>
         </main>
     );

@@ -11,7 +11,7 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
-    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotlist-tool-frontend-566625943723.europe-west1.run.app";
+    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotlist-tool-frontend-566625943723.europe-west1.run.app"
 
     constructor() {
         console.log("Auth constructor", this.FRONTEND_URL)
@@ -27,16 +27,16 @@ class Auth {
                 __tenant: "dev-pvlm4i5qpteni14h",
                 __token_issuer: 'https://login.shotly.at/'
             },
-        });
+        })
 
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
-        this.handleAuthentication = this.handleAuthentication.bind(this);
-        this.isAuthenticated = this.isAuthenticated.bind(this);
-        this.getTokenSilently = this.getTokenSilently.bind(this);
-        this.silentAuth = this.silentAuth.bind(this);
+        this.login = this.login.bind(this)
+        this.logout = this.logout.bind(this)
+        this.handleAuthentication = this.handleAuthentication.bind(this)
+        this.isAuthenticated = this.isAuthenticated.bind(this)
+        this.getTokenSilently = this.getTokenSilently.bind(this)
+        this.silentAuth = this.silentAuth.bind(this)
 
-        this.authFlag = 'isLoggedIn';
+        this.authFlag = 'isLoggedIn'
     }
 
     login() {
@@ -62,12 +62,12 @@ class Auth {
         return new Promise((resolve, reject) => {
             this.auth0.checkSession({},(err, authResult) => {
                 if (err) {
-                    console.error("Silent auth error", err);
-                    return reject(err);
+                    console.error("Silent auth error", err)
+                    return reject(err)
                 }
 
-                this.setSession(authResult);
-                resolve(authResult.accessToken);
+                this.setSession(authResult)
+                resolve(authResult.accessToken)
             })
         })
     }

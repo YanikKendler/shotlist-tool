@@ -1,0 +1,29 @@
+main.legal{
+  padding: 2rem;
+  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  overflow-y: auto;
+  height: 100vh;
+
+  .wordmark{
+    color: var(--accent);
+    width: min(90%, 300px);
+    margin-inline: auto;
+    margin-bottom: 2rem;
+  }
+
+  h1{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  ul{
+    margin-left: 1rem;
+  }
+
+  strong{
+    font-weight: bold;
+  }
+}
