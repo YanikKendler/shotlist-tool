@@ -14,6 +14,7 @@ import SceneAttributeDefinition from "@/components/sceneAttributeDefinition/scen
 import {ShotlistOptionsDialogSubPage} from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
 import {AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
 import {apolloClient} from "@/ApolloWrapper"
+import Loader from "@/components/loader/loader"
 
 export default function AttributeTab(
     { shotlistId, shotAttributeDefinitions, setShotAttributeDefinitions, sceneAttributeDefinitions, setSceneAttributeDefinitions, selectedPage, dataChanged }
@@ -186,7 +187,7 @@ export default function AttributeTab(
                 </Tabs.List>
                 <Tabs.Content value={"shot"} className={"content"}>
                     {!shotAttributeDefinitions ?
-                        <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
+                        <Loader/> :
                         <>
                             <DndContext
                                 sensors={sensors}
@@ -229,7 +230,7 @@ export default function AttributeTab(
                 </Tabs.Content>
                 <Tabs.Content value={"scene"} className={"content"}>
                     {!sceneAttributeDefinitions ?
-                        <Image src={"/loadingBars.svg"} alt={"loading..."} width={60} height={75}/> :
+                        <Loader/> :
                         <>
                             <DndContext
                                 sensors={sensors}

@@ -8,4 +8,12 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class TemplateRepository implements PanacheRepositoryBase<Template, UUID> {
+    public Template delete(UUID id) {
+        Template template = findById(id);
+        if (template != null) {
+            delete(template);
+            return template;
+        }
+        return null;
+    }
 }

@@ -10,6 +10,7 @@ import {useRouter} from "next/navigation"
 import {is} from "@babel/types"
 import Image from "next/image"
 import Input from "@/components/input/input"
+import Loader from "@/components/loader/loader"
 
 export function useCreateShotlistDialog() {
     const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +59,7 @@ export function useCreateShotlistDialog() {
                         <>
                             <Dialog.Title className={"title"}>Creating shotlist "{name}"</Dialog.Title>
                             <div className={"loading"}>
-                                <Image src={"/loadingBars.svg"} alt={"loading..."} width={50} height={62.5}/>
+                                <Loader/>
                                 <p>You will be redirected shortly</p>
                             </div>
                         </>

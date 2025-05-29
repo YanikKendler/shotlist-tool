@@ -37,6 +37,8 @@ export type Mutation = {
   deleteShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
   deleteShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
   deleteShotlist?: Maybe<ShotlistDto>;
+  deleteUser?: Maybe<User>;
+  triggerPasswordReset?: Maybe<Scalars['String']['output']>;
   updateScene?: Maybe<SceneDto>;
   updateSceneAttribute?: Maybe<SceneAttributeBase>;
   updateSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBase>;
@@ -619,6 +621,7 @@ export type User = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  isPro: Scalars['Boolean']['output'];
   name?: Maybe<Scalars['String']['output']>;
   shotlists?: Maybe<Array<Maybe<Shotlist>>>;
   templates?: Maybe<Array<Maybe<Template>>>;

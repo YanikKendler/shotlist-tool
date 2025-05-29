@@ -9,6 +9,8 @@ import {useRouter} from "next/navigation"
 import "./generalTab.scss"
 import Input from "@/components/input/input"
 import LoadingPage from "@/pages/loadingPage/loadingPage"
+import Image from "next/image"
+import Loader from "@/components/loader/loader"
 
 export default function GeneralTab({shotlist, setShotlist}: { shotlist: ShotlistDto | null, setShotlist: (shotlist: ShotlistDto) => void }) {
     const client = useApolloClient()
@@ -84,7 +86,7 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
         }
     }
 
-    if(!shotlist) return <LoadingPage text={"loading shotlist"}/>
+    if(!shotlist) return (<Loader/>)
 
     return (
         <div className={"shotlistOptionsDialogGeneralTab"}>

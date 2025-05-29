@@ -6,9 +6,12 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.StartupListener;
 import me.kendler.yanik.UnauthorizedAccessException;
+import me.kendler.yanik.auth0.Auth0Service;
 import me.kendler.yanik.dto.user.UserEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
+import me.kendler.yanik.model.template.Template;
+import me.kendler.yanik.repositories.template.TemplateRepository;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
@@ -20,6 +23,12 @@ import java.util.UUID;
 public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     @Inject
     ShotlistRepository shotlistRepository;
+
+    @Inject
+    TemplateRepository templateRepository;
+
+    @Inject
+    Auth0Service auth0Service;
 
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class);
 
@@ -49,6 +58,25 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
         persist(user);
         LOGGER.infof("Updated user: %s", user.toString());
         return user;
+    }
+
+    public User delete(JsonWebToken jwt) {
+        User user = findOrCreateByJWT(jwt);
+        LOGGER.infof("Deleting user: %s", user.toString());
+        auth0Service.deleteUser(user.auth0Sub);
+        for (Shotlist shotlist : user.shotlists) {
+            shotlistRepository.delete(shotlist.id);
+        }
+        for (Template template : user.templates) {
+            templateRepository.delete(template.id);
+        }
+        delete(user);
+        return user;
+    }
+
+    public String triggerPasswordReset(JsonWebToken jwt) {
+        User user = findOrCreateByJWT(jwt);
+        return auth0Service.triggerPasswordReset(user.email);
     }
 
     public boolean userCanAccessShotlist(Shotlist shotlist, JsonWebToken jwt) {

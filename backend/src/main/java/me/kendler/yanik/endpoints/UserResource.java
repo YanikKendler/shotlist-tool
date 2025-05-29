@@ -26,4 +26,14 @@ public class UserResource {
     public User updateUser(UserEditDTO editDTO) {
         return userRepository.update(editDTO, jwt);
     }
+
+    @Mutation
+    public User deleteUser() {
+        return userRepository.delete(jwt);
+    }
+
+    @Mutation
+    public String triggerPasswordReset() {
+        return userRepository.triggerPasswordReset(jwt);
+    }
 }

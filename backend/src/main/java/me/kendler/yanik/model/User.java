@@ -25,6 +25,7 @@ public class User extends PanacheEntityBase {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     public Set<Template> templates = new HashSet<>();
     public ZonedDateTime createdAt;
+    public boolean isPro = false;
 
     public User() {
         this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
