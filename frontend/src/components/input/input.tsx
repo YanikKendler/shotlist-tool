@@ -7,7 +7,7 @@ export default function Input(
     {
         label,
         value = "",
-        setValue = () => {},
+        valueChange = () => {},
         placeholder = "",
         info,
         disabled = false,
@@ -18,7 +18,7 @@ export default function Input(
     {
         label?: string;
         value?: string;
-        setValue?: (value: string) => void;
+        valueChange?: (value: string) => void;
         placeholder?: string;
         info?: string;
         disabled?: boolean;
@@ -26,15 +26,16 @@ export default function Input(
         maxWidth?: string;
     }
 ) {
-    const [currentValue, setCurrentValue] = useState<string>(value);
+    const [currentValue, setCurrentValue] = useState<string>(value || "");
     const [error, setError] = useState<string>("");
     const [errorType, setErrorType] = useState<"warning" | "max">("warning");
 
     useEffect(() => {
-        handleInput(value);
+        validateInput(value)
+        setCurrentValue(value)
     }, [value]);
 
-    function handleInput(value: string){
+    function validateInput(value: string) {
         if(value.length > maxLength - 10) {
             setError(`${value.length}/${maxLength} characters`);
         }
@@ -47,21 +48,24 @@ export default function Input(
         else {
             setErrorType("warning");
         }
+    }
 
+    function handleInput(value: string){
+        validateInput(value)
         setCurrentValue(value)
-        setValue(value)
+        valueChange(value)
     }
 
     return (
         <div className="customInput">
             {
                 label &&
-                <label htmlFor="input">{label}</label>
+                <label htmlFor="{label}">{label}</label>
             }
             <div className="infoContainer">
                 <div className="errorContainer" style={{maxWidth: maxWidth}}>
                     <input
-                        id="input"
+                        id="{label}"
                         type="text"
                         placeholder={placeholder}
                         value={currentValue}

@@ -16,14 +16,15 @@ main.legal{
 
   h1{
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
+  }
+
+  h2{
+    font-size: 1.3rem;
+    margin-top: .5rem;
   }
 
   ul{
     margin-left: 1rem;
-  }
-
-  strong{
-    font-weight: bold;
   }
 }

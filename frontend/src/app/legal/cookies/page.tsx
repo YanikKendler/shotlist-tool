@@ -1,9 +1,11 @@
 export default function Cookies(){
     return (
         <>
-            <h1>Cookie-Hinweis</h1>
-            <p>Shotly verwendet nur technisch notwendige Cookies, um die grundlegende Funktionalität der Webanwendung zu gewährleisten (z. B. zur Anmeldung und Sitzungsverwaltung). Es werden keine Tracking- oder Marketing-Cookies verwendet.</p>
-            <p>Durch die Nutzung von Shotly stimmen Sie der Verwendung dieser notwendigen Cookies zu. Eine separate Einwilligung ist nicht erforderlich.</p>
+            <h1>Cookie Notice</h1>
+            <p>Shotly only uses technically necessary cookies to ensure the basic functionality of the web application
+                (e.g., for login and session management). No tracking or marketing cookies are used.</p>
+            <p>By using Shotly, you agree to the use of these necessary cookies. Separate consent is not required.</p>
+
         </>
     )
 }

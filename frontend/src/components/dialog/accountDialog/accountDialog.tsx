@@ -1,27 +1,29 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import "./accountDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
-import {Info, X} from "lucide-react"
+import {X} from "lucide-react"
 import Auth from "@/Auth"
 import {User} from "../../../../lib/graphql/generated"
-import {Separator, Tooltip, VisuallyHidden} from "radix-ui"
+import {Separator, VisuallyHidden} from "radix-ui"
 import Input from "@/components/input/input"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
-import LoadingPage from "@/pages/loadingPage/loadingPage"
-import Image from "next/image"
 import Loader from "@/components/loader/loader"
+import {NotificationContext} from "@/context/NotificationContext"
+import Link from "next/link"
 
 export function useAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [deleting, setDeleting] = useState(false);
+    const [passwordResetDisabled, setPasswordResetDisabled] = useState(false);
 
     const client = useApolloClient()
     const {confirm, ConfirmDialog} = useConfirmDialog()
+    const notificationContext = useContext(NotificationContext)
 
     function openAccountDialog() {
         setIsOpen(true);
@@ -55,6 +57,8 @@ export function useAccountDialog() {
     }
 
     async function resetPassword() {
+        setPasswordResetDisabled(true);
+
         const {data, errors} = await client.mutate({
                 mutation: gql`
                     mutation createShotlist{
@@ -65,10 +69,18 @@ export function useAccountDialog() {
 
         if(errors) {
             console.error("Error resetting password:", errors);
+            setPasswordResetDisabled(false)
             return;
         }
 
-        //TODO show notification and disable button for a few seconds
+        notificationContext.notify({
+            title: "Password reset request sent",
+            message: `Please check your email: "${user?.email}" for a link to reset your password.`,
+        })
+
+        setTimeout(() => {
+            setPasswordResetDisabled(false)
+        },10000)
     }
 
 
@@ -125,7 +137,7 @@ export function useAccountDialog() {
 
                 <div className="row">
                     <p>Send password reset request to your email</p>
-                    <button className={"logout"} onClick={resetPassword}>send email</button>
+                    <button disabled={passwordResetDisabled} className={"logout"} onClick={resetPassword}>send email</button>
                 </div>
 
                 <Separator.Root className={"Separator"}/>
@@ -138,6 +150,15 @@ export function useAccountDialog() {
                     <p>Delete your account</p>
                     <button className={"delete bad"} onClick={deleteAccount}>delete account</button>
                 </div>
+
+                <Separator.Root className={"Separator"}/>
+
+                <div className="row legal">
+                    <Link href={"./legal/cookies"}>cookies</Link>
+                    <Link href={"./legal/privacy"}>privacy</Link>
+                    <Link href={"./legal/legalNotice"}>legal notice</Link>
+                    <Link href={"./legal/termsOfUse"}>terms of use</Link>
+                </div>
             </>
         )
 
@@ -145,7 +166,7 @@ export function useAccountDialog() {
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
             <Dialog.Portal>
                 <Dialog.Overlay className={"accountDialogOverlay dialogOverlay"}/>
-                <Dialog.Content className={"accountContent dialogContent"} aria-describedby={"account dialog"}>
+                <Dialog.Content className={"accountContent dialogContent"} aria-describedby={"account dialog"} onOpenAutoFocus={e => e.preventDefault()}>
                     <VisuallyHidden.Root>
                         <Dialog.Description>Manage your account details and preferences.</Dialog.Description>
                     </VisuallyHidden.Root>

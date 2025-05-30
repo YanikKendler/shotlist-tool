@@ -14,6 +14,7 @@ import MultiSelect from "@/components/multiSelect/multiSelect"
 import {ShotAttributeParser} from "@/util/AttributeParser"
 //@ts-ignore
 import { downloadCSV } from "download-csv";
+import Loader from "@/components/loader/loader"
 
 export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
     const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
@@ -89,7 +90,8 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
                             }
                         }
                     }`,
-                variables: {id: shotlist.id}
+                variables: {id: shotlist.id},
+                fetchPolicy: "no-cache"
             }
         )
 
@@ -108,6 +110,8 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
             console.error("No data found for export");
             return;
         }
+
+        console.log(data)
 
         switch (selectedFileType) {
             case "CSV":
@@ -147,7 +151,7 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
         return `shotly_${shotlist?.name?.replace(/\s/g, "-") || "unnamed-shotlist"}_${wuTime.toFullDateTimeString(Date.now(), {timeSeparator: "-", dateSeparator: "-"}).replace(/\s/g, "_")}`
     }
 
-    if(!shotlist) return <p>loading</p>
+    if(!shotlist) return <Loader text={"loading shotlist export"}/>
 
     return (
         <div className={"shotlistOptionsDialogExportTab"}>

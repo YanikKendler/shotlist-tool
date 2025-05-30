@@ -24,9 +24,9 @@ export default function Home() {
                 </p>
                 <div className="legal">
                     <Link href={"./legal/cookies"}>cookies</Link>
-                    <Link href={"./legal/datenschutz"}>datenschutz</Link>
-                    <Link href={"./legal/impressum"}>impressum</Link>
-                    <Link href={"./legal/nutzungsbedingungen"}>nutzungsbedingungen</Link>
+                    <Link href={"./legal/privacy"}>privacy</Link>
+                    <Link href={"./legal/legalNotice"}>legal notice</Link>
+                    <Link href={"./legal/termsOfUse"}>terms of use</Link>
                 </div>
             </div>
         </main>

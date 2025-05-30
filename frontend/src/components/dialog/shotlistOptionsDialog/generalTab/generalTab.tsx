@@ -8,19 +8,15 @@ import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge
 import {useRouter} from "next/navigation"
 import "./generalTab.scss"
 import Input from "@/components/input/input"
-import LoadingPage from "@/pages/loadingPage/loadingPage"
-import Image from "next/image"
 import Loader from "@/components/loader/loader"
 
-export default function GeneralTab({shotlist, setShotlist}: { shotlist: ShotlistDto | null, setShotlist: (shotlist: ShotlistDto) => void }) {
+export default function GeneralTab({shotlist, setShotlist, dataChanged}: { shotlist: ShotlistDto | null, setShotlist: (shotlist: ShotlistDto) => void, dataChanged: () => void }) {
     const client = useApolloClient()
     const { confirm, ConfirmDialog } = useConfirmDialog();
     const router = useRouter()
 
     const updateShotlistName = async (name: string) => {
         if(!shotlist) return
-
-        console.log(shotlist)
 
         const { data, errors } = await client.mutate({
             mutation: gql`
@@ -34,7 +30,7 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
                     }
                 }
             `,
-            variables: { shotlistId: shotlist.id, name: name },
+            variables: { shotlistId: shotlist.id, name: name.trim() },
         });
 
         if (errors) {
@@ -46,6 +42,8 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
             ...shotlist,
             name: data.updateShotlist.name
         })
+
+        dataChanged()
     }
 
     const debounceUpdateShotlistName = wuGeneral.debounce(updateShotlistName)
@@ -95,7 +93,7 @@ export default function GeneralTab({shotlist, setShotlist}: { shotlist: Shotlist
                 label={"Name"}
                 value={shotlist.name || ""}
                 placeholder={"My shotlist"}
-                setValue={debounceUpdateShotlistName}
+                valueChange={debounceUpdateShotlistName}
             />
 
             <Separator.Root className={"Separator"}></Separator.Root>

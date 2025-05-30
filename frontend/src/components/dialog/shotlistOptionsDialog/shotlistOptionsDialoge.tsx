@@ -186,7 +186,11 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                 orientation="vertical"
                             />
                             <Tabs.Content value={"general"} className={"content"}>
-                                <GeneralTab shotlist={shotlist} setShotlist={setShotlist}/>
+                                <GeneralTab
+                                    shotlist={shotlist}
+                                    setShotlist={setShotlist}
+                                    dataChanged={() => setDataChanged(true)}
+                                />
                             </Tabs.Content>
                             <Tabs.Content value={"attributes"} className={"content"}>
                                 <AttributeTab

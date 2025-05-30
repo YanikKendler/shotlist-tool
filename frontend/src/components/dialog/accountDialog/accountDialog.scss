@@ -30,9 +30,21 @@
       width: fit-content;
       padding: .4rem 1rem;
 
-      &:hover{
+      &:not([disabled]):hover{
         background-color: var(--hover-bg-10);
         color: var(--text);
+      }
+    }
+
+    &.legal{
+      a{
+        font-size: .9rem;
+        color: var(--text-40);
+
+        &:hover{
+          color: var(--text);
+          text-decoration: underline;
+        }
       }
     }
   }

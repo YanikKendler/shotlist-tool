@@ -1,7 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "./createShotlistDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
@@ -30,6 +30,9 @@ export function useCreateShotlistDialog() {
     }
 
     async function handleConfirm() {
+        if (name.length <= 2) {
+            return;
+        }
         setIsLoading(true)
         const {data, errors} = await client.mutate({
                 mutation: gql`
@@ -51,10 +54,19 @@ export function useCreateShotlistDialog() {
     }
 
     const CreateShotlistDialog = (
-        <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog.Root open={isOpen || isLoading} onOpenChange={setIsOpen}>
             <Dialog.Portal>
                 <Dialog.Overlay className={"createShotlistDialogOverlay dialogOverlay"}/>
-                <Dialog.Content aria-describedby={"confirm action dialog"} className={"createShotlistDialogContent dialogContent"}>
+                <Dialog.Content
+                    aria-describedby={"confirm action dialog"}
+                    className={"createShotlistDialogContent dialogContent"} 
+                    onKeyDown={(e) => {
+                        if(e.key === "Enter" && !isLoading) {
+                            e.preventDefault()
+                            handleConfirm()
+                        }
+                    }}
+                >
                     {isLoading ?
                         <>
                             <Dialog.Title className={"title"}>Creating shotlist "{name}"</Dialog.Title>
@@ -68,7 +80,7 @@ export function useCreateShotlistDialog() {
                             <Dialog.Title className={"title"}>Create Shotlist</Dialog.Title>
                             <Input
                                 label={"Name"}
-                                setValue={setName}
+                                valueChange={setName}
                                 placeholder={"Interstellar"}
                             />
                             <div className={"buttons"}>
@@ -83,6 +95,7 @@ export function useCreateShotlistDialog() {
                                 }} className={"accent"}>create
                                 </button>
                             </div>
+                            <button onClick={() => {console.log(dialogContentRef.current)}}>test</button>
                         </>
                     }
                 </Dialog.Content>

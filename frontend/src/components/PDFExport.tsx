@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     },
     container: {
         borderBottom: '1px solid #000',
+        borderRight: '1px solid #000',
     },
     row: {
         display: "flex",
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     },
     cell: {
         flex: 1,
-        borderRight: '1px solid #000',
+        borderLeft: '1px solid #000',
         paddingVertical: 2,
         paddingHorizontal: 3,
         display: 'flex',
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
     },
     number: {
         maxWidth: 30,
-        borderLeft: '1px solid #000',
         justifyContent: 'center',
     },
     small: {
