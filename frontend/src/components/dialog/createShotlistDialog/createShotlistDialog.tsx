@@ -95,7 +95,6 @@ export function useCreateShotlistDialog() {
                                 }} className={"accent"}>create
                                 </button>
                             </div>
-                            <button onClick={() => {console.log(dialogContentRef.current)}}>test</button>
                         </>
                     }
                 </Dialog.Content>

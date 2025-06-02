@@ -5,11 +5,10 @@ import "./home.scss"
 import Link from "next/link"
 import Wordmark from "@/components/wordmark"
 import React from "react"
-import {BookText} from "lucide-react"
+import {BookText, Columns3Cog, Download, FileCode, Users} from "lucide-react"
 import Image from "next/image"
 
 export default function Home() {
-
     return (
         <main className="home">
             <nav>
@@ -29,7 +28,7 @@ export default function Home() {
                 <div className="center">
                     <Wordmark/>
                     <p className={"tagline"}>Shotlist creation made easy!</p>
-                    <button className={"accent"}>Get started for free</button>
+                    <button className={"accent"} onClick={() => Auth.login()}>Get started for free</button>
                     <div className="beta">Beta</div>
                 </div>
                 <Image id={"clapboard"} src={"/home-doodles/doodle-0.svg"} alt={"doodle"} width={128} height={118} fetchPriority={"low"}/>
@@ -41,26 +40,61 @@ export default function Home() {
                 <Image id={"thoughts"} src={"/home-doodles/doodle-6.svg"} alt={"doodle"} width={59} height={52} fetchPriority={"low"}/>
                 <Image id={"camera"} src={"/home-doodles/doodle-7.svg"} alt={"doodle"} width={120} height={94} fetchPriority={"low"}/>
             </section>
-            <div className="content">
-                <p className="mainText">
-                    This is an early alpha version of my shotlist creation tool. Log in to get started!
-                </p>
-                <button onClick={() => Auth.login()}>Log in</button>
+            <section className="features" id={"features"}>
+                <div className="content">
+                    <div className="feature">
+                        <div className="icon">
+                            <Columns3Cog size={40}/>
+                        </div>
+                        <h2>Customizable</h2>
+                        <p>Select which attributes you want per shot and per scene.</p>
+                    </div>
+                    <div className="feature">
+                        <div className="icon">
+                            <FileCode size={40}/>
+                        </div>
+                        <h2>Open Source</h2>
+                        <p>Self host your shotlists, add your own features or improve shotly.</p>
+                    </div>
+                    <div className="feature">
+                        <div className="icon">
+                            <Users size={40}/>
+                        </div>
+                        <h2>Live Collaboration</h2>
+                        <p>Share your shotlist with colleagues and create together.</p>
+                    </div>
+                    <div className="feature">
+                        <div className="icon">
+                            <Download size={40}/>
+                        </div>
+                        <h2>Easy Export</h2>
+                        <p>Export to PDF/CSV for print or distribution. Use filters to get only what you need.</p>
+                    </div>
+                </div>
+            </section>
+            <section className="pricing">
 
-                <p className="bottomText">
-                    Be aware that multiple features are still missing. If you find any bugs or have suggestions, please
-                    report them on <Link href="https://github.com/elYanuki/shotlist-tool/issues/new/choose" target={"_blank"}> the GitHub page</Link>.
-                    Thank you! :)
-                    Since this is an alpha release, I do NOT guarantee the safety of your data at this time.
-                </p>
-
-            </div>
+            </section>
             <footer>
-                <div className="legal">
-                    <Link href={"./legal/cookies"}>cookies</Link>
-                    <Link href={"./legal/privacy"}>privacy</Link>
-                    <Link href={"./legal/legalNotice"}>legal notice</Link>
-                    <Link href={"./legal/termsOfUse"}>terms of use</Link>
+                <div className={"credits"}>
+                    <Wordmark/>
+                    <p className={"createdBy"}>created with ♥ by <Link href={"https://yanik.kendler.me"} target={"_blank"} className={"noPadding"}>Yanik Kendler</Link></p>
+                    <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotlist-tool"} target={"_blank"}>github.com/YanikKendler/shotlist-tool</Link>
+                    <p className={"copyright"}>© 2025 Yanik Kendler. Open source under the MIT License.</p>
+                </div>
+                <div>
+                    <h3>Legal</h3>
+                    <Link className={"noPadding"} href={"./legal/cookies"}>cookies</Link>
+                    <Link className={"noPadding"} href={"./legal/privacy"}>privacy</Link>
+                    <Link className={"noPadding"} href={"./legal/legalNotice"}>legal notice</Link>
+                    <Link className={"noPadding"} href={"./legal/termsOfUse"}>terms of use</Link>
+                </div>
+
+                <div>
+                    <h3>Support</h3>
+                    <Link className={"noPadding"} href={"/"}>Documentation</Link>
+                    <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"}>Report a Bug</Link>
+                    <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"}>Suggest a Feature</Link>
                 </div>
             </footer>
         </main>

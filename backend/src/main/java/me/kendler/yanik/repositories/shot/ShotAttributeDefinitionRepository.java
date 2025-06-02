@@ -19,6 +19,8 @@ import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
 import me.kendler.yanik.model.shot.attributes.ShotSingleSelectAttribute;
 import me.kendler.yanik.model.shot.attributes.ShotTextAttribute;
 import me.kendler.yanik.repositories.ShotlistRepository;
+import me.kendler.yanik.repositories.UserRepository;
+import org.jboss.logging.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +33,8 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
     @Inject
     ShotAttributeRepository shotAttributeRepository;
+
+    private static final Logger LOGGER = Logger.getLogger(ShotAttributeDefinitionRepository.class);
 
     public List<ShotAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
@@ -45,7 +49,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
         Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlist.shotAttributeDefinitions;
 
-        List<ShotSelectAttributeOptionDefinition> options = ShotSelectAttributeOptionDefinition.find("shotAttributeDefinition in ?1", attributeDefinitions).list();
+        List<ShotSelectAttributeOptionDefinition> options = ShotSelectAttributeOptionDefinition.find("shotAttributeDefinition in ?1 order by name", attributeDefinitions).list();
 
         List<ShotAttributeDefinitionBaseDTO> attributeDefinitionDTOs = new ArrayList<>();
 
@@ -56,7 +60,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                             definition.id,
                             definition.name,
                             definition.position,
-                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).sorted(Comparator.comparing(option -> option.name.toLowerCase())).toList()
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
                     ));
                 }
                 case ShotMultiSelectAttributeDefinition multiSelectAttribute -> {
@@ -64,7 +68,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
                             definition.id,
                             definition.name,
                             definition.position,
-                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).sorted(Comparator.comparing(option -> option.name.toLowerCase())).toList()
+                            options.stream().filter(option -> option.shotAttributeDefinition.id.equals(definition.id)).toList()
                     ));
                 }
                 default -> {
@@ -178,9 +182,14 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
     }
 
     public Shotlist getShotlistByDefinitionId(Long id) {
-        return getEntityManager()
+        Shotlist result = getEntityManager()
                 .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
                 .setParameter("definitionId", id)
                 .getSingleResult();
+        if(result == null) {
+            throw new IllegalArgumentException("Shotlist not found for definition ID: " + id);
+        }
+
+        return result;
     }
 }
