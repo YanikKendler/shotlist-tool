@@ -38,6 +38,7 @@ import auth from "@/Auth"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
 import Iconmark from "@/components/iconmark"
+import {Metadata} from "next"
 
 export default function Shotlist() {
     const params = useParams<{ id: string }>()

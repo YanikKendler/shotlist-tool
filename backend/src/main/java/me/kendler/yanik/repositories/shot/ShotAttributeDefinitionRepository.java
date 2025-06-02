@@ -39,6 +39,10 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             throw new IllegalArgumentException("Shotlist not found");
         }
 
+        if(shotlist.shotAttributeDefinitions == null || shotlist.shotAttributeDefinitions.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         Set<ShotAttributeDefinitionBase> attributeDefinitions = shotlist.shotAttributeDefinitions;
 
         List<ShotSelectAttributeOptionDefinition> options = ShotSelectAttributeOptionDefinition.find("shotAttributeDefinition in ?1", attributeDefinitions).list();

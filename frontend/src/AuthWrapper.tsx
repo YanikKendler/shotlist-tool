@@ -18,7 +18,9 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
             try {
                 await auth.silentAuth();
                 console.log("silent auth result", auth.isAuthenticated())
-                forceUpdate()
+
+                if(pathname !== "/" && pathname !== "")
+                    forceUpdate()
             } catch (err: any) {
                 if (err.error === 'login_required') return;
                 console.error('Silent auth error:', err.error);
