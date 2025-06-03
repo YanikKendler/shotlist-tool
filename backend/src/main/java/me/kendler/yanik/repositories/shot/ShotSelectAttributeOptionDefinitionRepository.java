@@ -14,6 +14,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttribute
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributes.ShotMultiSelectAttribute;
+import org.jboss.logging.Logger;
 
 import java.util.List;
 
@@ -23,17 +24,19 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
     @Inject
     ShotAttributeDefinitionRepository shotAttributeDefinitionRepository;
 
+    private static final Logger LOGGER = Logger.getLogger(ShotSelectAttributeOptionDefinitionRepository.class);
+
+
     public ShotSelectAttributeOptionDefinition create(ShotSelectAttributeOptionCreateDTO createDTO){
+        if (createDTO.name() == null || createDTO.name().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+
         ShotAttributeDefinitionBase shotAttributeDefinition = shotAttributeDefinitionRepository.findById(createDTO.attributeDefinitionId());
 
         ShotSelectAttributeOptionDefinition shotSelectAttributeOptionDefinition;
 
-        if (shotAttributeDefinition.name != null && !shotAttributeDefinition.name.isEmpty()) {
-            shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(createDTO.name(), shotAttributeDefinition);
-        }
-        else {
-            shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(shotAttributeDefinition);
-        }
+        shotSelectAttributeOptionDefinition = new ShotSelectAttributeOptionDefinition(createDTO.name(), shotAttributeDefinition);
 
         persist(shotSelectAttributeOptionDefinition);
 
@@ -47,12 +50,16 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
     }
 
     public List<ShotSelectAttributeOptionDefinition> search(ShotSelectAttributeOptionSearchDTO searchDTO){
-        return find("lower(name) like lower(concat('%', ?2, '%')) " +
+        LOGGER.debugf("started search for ShotSelectAttributeOptionDefinition with search term '%s' and attribute definition id %d",
+                searchDTO.searchTerm(), searchDTO.shotAttributeDefinitionId());
+        List<ShotSelectAttributeOptionDefinition> result = find("lower(name) like lower(concat('%', ?2, '%')) " +
                         "and shotAttributeDefinition.id = ?1 " +
                         "order by name",
                 searchDTO.shotAttributeDefinitionId(),
                 searchDTO.searchTerm()
         ).list();
+        LOGGER.debugf("found %d ShotSelectAttributeOptionDefinitions", result.size());
+        return result;
     }
 
     public ShotSelectAttributeOptionDefinition update(ShotSelectAttributeOptionEditDTO editDTO) {

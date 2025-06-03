@@ -1,6 +1,6 @@
 'use client'
 
-import "./select.scss"
+import "./attributeValueSelect.scss"
 import {SelectOption} from "@/util/Types"
 import AsyncCreatableSelect from "react-select/async-creatable"
 import React, {useCallback, useEffect} from "react"
@@ -11,21 +11,10 @@ import {
     MenuProps,
     MultiValueProps,
     StylesConfig,
-    ThemeConfig,
     ValueContainerProps
 } from "react-select"
 import {Pen} from "lucide-react"
-
-export const selectTheme: ThemeConfig = (theme) => ({
-    ...theme,
-    colors: {
-        ...theme.colors,
-        primary: 'var(--accent)',
-        primary25: 'var(--accent-90)',
-        primary50: 'var(--accent-80)',
-        primary75: 'var(--accent-60',
-    },
-})
+import {reactSelectTheme} from "@/util/Utils"
 
 export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
     option: (baseStyles) => ({
@@ -118,7 +107,7 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
     }),
 }
 
-export default function Select(
+export default function AttributeValueSelect(
     {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, editAction, styles = selectBaseStyles}:
     {
         definitionId: number,
@@ -159,7 +148,7 @@ export default function Select(
         props: MultiValueProps<SelectOption, true>
     ) => {
         if (!props.selectProps.menuIsOpen) return <p style={{display: "inline"}}>{props.data.label}</p>;
-        return <components.MultiValue {...props} />;
+        return <components.MultiValue {...props}  children={props.children}/>;
     };
 
     const CustomValueContainer = useCallback((
@@ -220,7 +209,7 @@ export default function Select(
             openMenuOnFocus={false}
             className="select"
             components={getComponents(isMulti)}
-            theme={selectTheme}
+            theme={reactSelectTheme}
             styles={styles}
             menuPlacement="auto"
 /*

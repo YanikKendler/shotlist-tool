@@ -17,7 +17,6 @@ import me.kendler.yanik.repositories.shot.ShotRepository;
 import java.util.UUID;
 
 @ApplicationScoped
-@Transactional
 public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotlistRepository shotlistRepository;
@@ -25,6 +24,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotRepository shotRepository;
 
+    @Transactional
     public Scene create(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
         shotlist.registerEdit();
@@ -34,6 +34,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
         return scene;
     }
 
+    @Transactional
     public Scene update(SceneEditDTO editDTO) {
         Scene scene = findById(editDTO.id());
 
@@ -49,6 +50,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
         return scene;
     }
 
+    @Transactional
     public Scene delete(UUID id) {
         Scene scene = findById(id);
         if (scene != null) {

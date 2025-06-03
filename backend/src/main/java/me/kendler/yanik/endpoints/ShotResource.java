@@ -18,6 +18,7 @@ import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,8 @@ public class ShotResource {
     @Inject
     UserRepository userRepository;
 
+    private static final Logger LOGGER = Logger.getLogger(ShotResource.class);
+
     @Query
     public List<ShotDTO> getShots(UUID sceneId) {
         userRepository.checkUserAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
@@ -45,7 +48,11 @@ public class ShotResource {
 
     @Mutation
     public ShotDTO createShot(@PathParam("sceneId") UUID sceneId){
+        LOGGER.info("running createShot access check");
+
         userRepository.checkUserAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
+
+        LOGGER.info("finished createShot access check, creating shot");
 
         return shotRepository.create(sceneId).toDTO();
     }

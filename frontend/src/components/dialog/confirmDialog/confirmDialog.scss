@@ -21,15 +21,17 @@
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 
     :where(button){
       font-weight: bold;
       color: var(--text-10);
       padding-inline: 2rem;
 
-      &:where(:hover){
-        background-color: var(--hover-bg-10);
+      &:not([disabled]) {
+        &:where(:hover) {
+          background-color: var(--hover-bg-10);
+        }
       }
     }
   }

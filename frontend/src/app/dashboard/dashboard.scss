@@ -55,8 +55,15 @@ main.dashboard{
 
       .empty{
         margin-left: .4rem;
+        width: calc(100% - .4rem);
         color: var(--text-30);
         font-size: .9rem;
+        display: block;
+
+        span {
+          font-weight: bold;
+          text-decoration: underline;
+        }
       }
     }
   }

@@ -3,6 +3,7 @@
 import "./errorPage.scss"
 import React from "react"
 import Link from "next/link"
+import LoadingPage from "@/pages/loadingPage/loadingPage"
 
 export interface ErrorPageSettings {
     title: string
@@ -14,6 +15,7 @@ export interface ErrorPageSettings {
 }
 
 export default function ErrorPage({settings}: {settings: ErrorPageSettings}) {
+    if(!settings || !settings.link) return <LoadingPage/>
     return (
         <div className={"errorPage"}>
             <div className="content">

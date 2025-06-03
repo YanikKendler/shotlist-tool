@@ -4,19 +4,21 @@ import gql from "graphql-tag"
 import Link from "next/link"
 import {useApolloClient, useQuery, useSuspenseQuery} from "@apollo/client"
 import "./dashboard.scss"
-import LoadingPage from "@/components/loadingPage/loadingPage"
+import LoadingPage from "@/pages/loadingPage/loadingPage"
 import React, {useEffect, useState} from "react"
-import ErrorPage from "@/components/errorPage/errorPage"
+import ErrorPage from "@/pages/errorPage/errorPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {ChevronDown, House, NotepadText, Plus, User} from "lucide-react"
 import {ShotlistDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
-import {wuTime} from "@yanikkendler/web-utils/dist"
+import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import auth from "@/Auth"
 import {useRouter} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import Utils from "@/util/Utils"
+import Image from "next/image"
+import Iconmark from "@/components/iconmark"
 
 export default function Dashboard() {
     const [shotlists, setShotlists] = useState<{data: ShotlistDto[] , loading: boolean, error: any}>({data: [], loading: true, error: null})
@@ -66,13 +68,21 @@ export default function Dashboard() {
 
     return (
         <main className="dashboard">
-            <PanelGroup autoSaveId={"dashboard-sidebar"} direction="horizontal" className={"PanelGroup"}>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
+                test. An
+                acceptable mobile version will be available in the full release.</p>
+            <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">
                         <div className="top">
                             <Tooltip.Root>
                                 <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
-                                    <Link href={`../dashboard`}>
+                                    <Link href={`../dashboard`} onClick={e => {
+                                        wuGeneral.onNthClick(() => {
+                                            console.log("forward")
+                                            window.open("https://orteil.dashnet.org/cookieclicker", '_blank')?.focus()
+                                        }, e.nativeEvent, 10)
+                                    }}>
                                         <House strokeWidth={2.5} size={20}/>
                                     </Link>
                                 </Tooltip.Trigger>
@@ -95,13 +105,15 @@ export default function Dashboard() {
                                     className="CollapsibleContent dashboardSidebar"
                                 >
                                     {
-                                        shotlists.data.length === 0 ? (<p className={"empty"}>Start by creating a new shotlist :)</p>) :
-                                        shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
-                                            <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
-                                                <NotepadText size={18}/>
-                                                {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
-                                            </Link>
-                                        ))
+                                        shotlists.data.length === 0 ? (
+                                                <button onClick={openCreateShotlistDialog} className={"empty"}>Start
+                                                    by <span>creating a new shotlist</span> :)</button>) :
+                                            shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
+                                                <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
+                                                    <NotepadText size={18}/>
+                                                    {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
+                                                </Link>
+                                            ))
                                     }
                                 </Collapsible.Content>
                             </Collapsible.Root>
@@ -146,7 +158,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="bottom">
-                        <Link className="shotlistTool" href={"../dashboard"}>shotlist tool</Link>
+                        <Link className="shotlistTool" href={"../dashboard"}><Iconmark/>shotly.at</Link>
                     </div>
                 </Panel>
                 <PanelResizeHandle className="PanelResizeHandle"/>
@@ -160,12 +172,14 @@ export default function Dashboard() {
                         <div className="grid">
                             {/*TODO limit to X shotlists*/}
                             {shotlists.data.sort(Utils.oderShotlistsByChangeDate).map((shotlist: ShotlistDto) => (
-                                <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
+                                <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id}
+                                      className="gridItem shotlist">
                                     <label><NotepadText size={15}/>Shotlist</label>
                                     <h3>{shotlist.name || <span className='italic'>Unnamed</span>}</h3>
                                     <p className={"bold"}>{shotlist.sceneCount} scene • {shotlist.shotCount} shots</p>
                                     <p>created by: <span className={"bold"}>Yanik Kendler</span></p>
-                                    <p>last edited: <span className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
+                                    <p>last edited: <span
+                                        className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                                 </Link>
                             ))}
                             <button className={"gridItem add"} onClick={openCreateShotlistDialog}>

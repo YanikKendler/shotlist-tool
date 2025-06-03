@@ -13,6 +13,7 @@ import {onError} from "@apollo/client/link/error"
 
 export function makeClient() {
     const backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-v2-566625943723.europe-west1.run.app";
+    //const backendURL = "http://localhost:8080"
 
     console.log("node env", process.env.NODE_ENV)
     console.log("backendURL", backendURL)
@@ -46,11 +47,18 @@ export function makeClient() {
         }
     })
 
-    const errorLink = onError(({ networkError }) => {
-        console.log("networkError", networkError)
-        if (networkError && 'statusCode' in networkError && networkError.statusCode === 401) {
-            if (typeof window !== 'undefined') {
-                window.location.href = '/notAllowed';
+    const errorLink = onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors)
+            graphQLErrors.forEach(({ message, locations, path }) =>
+                console.error(`[GraphQL error]: Message: ${message}, Path: ${path}`)
+            );
+
+        if(networkError) {
+            console.error("networkError", networkError)
+            if (networkError && 'statusCode' in networkError && networkError.statusCode === 401) {
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/notAllowed';
+                }
             }
         }
     });

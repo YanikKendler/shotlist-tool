@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
@@ -17,6 +18,8 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotTextAttributeDefinit
 
 import org.jboss.logging.Logger;
 
+import java.time.LocalDateTime;
+
 @ApplicationScoped
 @io.quarkus.runtime.Startup
 public class StartupListener {
@@ -26,9 +29,14 @@ public class StartupListener {
     @Inject
     EntityManager entityManager;
 
+    @ConfigProperty(name = "quarkus.profile", defaultValue = "prod")
+    String profile;
+
     @PostConstruct
     @Transactional
     public void init() {
+        if (!"dev".equals(profile)) return;
+
         LOGGER.info("Initializing demo data...");
 
         createDemoData();
@@ -36,7 +44,7 @@ public class StartupListener {
 
     @Transactional
     public void createDemoData() {
-        User user = new User("a", "yanik", "yanik@mail");
+        User user = new User(LocalDateTime.now().toString(), "yanik", "yanik@mail");
         entityManager.persist(user);
 
         // Insert a new Shotlist

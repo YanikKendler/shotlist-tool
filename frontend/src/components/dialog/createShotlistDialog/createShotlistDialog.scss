@@ -25,10 +25,18 @@
       width: 100%;
       justify-content: center;
 
-      &:where(:hover){
+      &:where(:not([disabled]):hover){
         background-color: var(--hover-bg-10);
       }
     }
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 1rem;
   }
 }
 

@@ -9,21 +9,23 @@ import {
     ShotAttributeDefinitionBase,
     ShotlistDto
 } from "../../../../lib/graphql/generated"
-import {forbidden, useParams, useRouter, useSearchParams} from "next/navigation"
+import { useParams, useRouter, useSearchParams} from "next/navigation"
 import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
 import {FileSliders, House, Plus, User} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
-import { ScrollArea, Tooltip } from "radix-ui"
-import ErrorPage from "@/components/errorPage/errorPage"
-import { ShotlistContext } from "@/context/ShotlistContext"
-import ShotlistOptionsDialog from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
-import LoadingPage from "@/components/loadingPage/loadingPage"
+import { Tooltip } from "radix-ui"
+import ErrorPage from "@/pages/errorPage/errorPage"
+import {ShotlistContext} from "@/context/ShotlistContext"
+import ShotlistOptionsDialog, {
+    ShotlistOptionsDialogPage,
+    ShotlistOptionsDialogSubPage
+} from "@/components/dialog/shotlistOptionsDialog/shotlistOptionsDialoge"
+import LoadingPage from "@/pages/loadingPage/loadingPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
 import {
     closestCenter,
     DndContext,
-    DragOverlay,
     KeyboardSensor,
     PointerSensor,
     useSensor,
@@ -35,15 +37,19 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import auth from "@/Auth"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
+import Iconmark from "@/components/iconmark"
+import {Metadata} from "next"
 
 export default function Shotlist() {
-    const { id } = useParams()
+    const params = useParams<{ id: string }>()
+    const id = params?.id || ""
     const searchParams = useSearchParams()
-    const sceneId = searchParams.get('sceneId')
+    const sceneId = searchParams?.get('sceneId')
 
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {} as ShotlistDto, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
     const [optionsDialogOpen, setOptionsDialogOpen] = useState(false)
+    const [selectedOptionsDialogPage, setSelectedOptionsDialogPage] = useState<{main: ShotlistOptionsDialogPage, sub: ShotlistOptionsDialogSubPage}>({main: "general", sub: "shot"})
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
     const [reloadKey, setReloadKey] = useState(0)
 
@@ -62,7 +68,20 @@ export default function Shotlist() {
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
-    );
+    )
+
+    useEffect(() => {
+        const url = new URL(window.location.href)
+        if(url.searchParams.get("oo") == "true") {
+            let currentOptionsMainPage = url.searchParams.get("mp")
+            let currentOptionsSubPage = url.searchParams.get("sp")
+            setSelectedOptionsDialogPage({
+                main: currentOptionsMainPage as ShotlistOptionsDialogPage,
+                sub: currentOptionsSubPage as ShotlistOptionsDialogSubPage
+            })
+            setOptionsDialogOpen(true)
+        }
+    }, [])
 
     useEffect(() => {
         if(!auth.isAuthenticated()){
@@ -257,6 +276,11 @@ export default function Shotlist() {
         }
     }
 
+    const openShotlistOptionsDialog = (page: { main: ShotlistOptionsDialogPage, sub?: ShotlistOptionsDialogSubPage }) => {
+        setSelectedOptionsDialogPage({main: page.main, sub: page.sub || "shot"})
+        setOptionsDialogOpen(true)
+    }
+
     if(shotlist.error) return <ErrorPage settings={{
         title: 'Data could not be loaded',
         description: shotlist.error.message,
@@ -280,9 +304,17 @@ export default function Shotlist() {
     if(selectedSceneId == "" && shotlist?.data?.scenes && shotlist.data.scenes[0]?.id != undefined) setSelectedSceneId(shotlist?.data?.scenes[0].id)
 
     return (
-        <ShotlistContext.Provider value={{openShotlistOptionsDialog: () => setOptionsDialogOpen(true), elementIsBeingDragged: elementIsBeingDragged, setElementIsBeingDragged: setElementIsBeingDragged}}>
+        <ShotlistContext.Provider value={{
+            openShotlistOptionsDialog: openShotlistOptionsDialog,
+            elementIsBeingDragged: elementIsBeingDragged,
+            setElementIsBeingDragged: setElementIsBeingDragged
+        }}>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
+                test. An
+                acceptable mobile version will be available in the full release.</p>
             <main className="shotlist" key={reloadKey}>
-                <PanelGroup autoSaveId={"shotlist-sidebar"} direction="horizontal" className={"PanelGroup"}>
+                <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal"
+                            className={"PanelGroup"}>
                     <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                         <div className="content">
                             <div className="top">
@@ -308,37 +340,39 @@ export default function Shotlist() {
                                 />
                             </div>
                             <div className="list">
-                                { !shotlist.data.scenes || shotlist.data.scenes.length == 0 ? <p className={"empty"}>No scenes yet :(</p> :
+                                {!shotlist.data.scenes || shotlist.data.scenes.length == 0 ?
+                                    <p className={"empty"}>No scenes yet :(</p> :
                                     <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
-                                    onDragStart={() => {
-                                        setElementIsBeingDragged(true)
-                                    }}
-                                    modifiers={[restrictToVerticalAxis]}
-                                >
-                                    <SortableContext
-                                        items={(shotlist.data?.scenes as SceneDto[]).map(scene => scene.id) as string[]}
-                                        strategy={verticalListSortingStrategy}
+                                        sensors={sensors}
+                                        collisionDetection={closestCenter}
+                                        onDragEnd={handleDragEnd}
+                                        onDragStart={() => {
+                                            setElementIsBeingDragged(true)
+                                        }}
+                                        modifiers={[restrictToVerticalAxis]}
                                     >
-                                        {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                            <Scene key={scene.id} scene={scene} position={index}
-                                                   expanded={selectedSceneId == scene.id} onSelect={selectScene}
-                                                   onDelete={removeScene}/>
-                                        ))}
-                                    </SortableContext>
-                                </DndContext>
+                                        <SortableContext
+                                            items={(shotlist.data?.scenes as SceneDto[]).map(scene => scene.id) as string[]}
+                                            strategy={verticalListSortingStrategy}
+                                        >
+                                            {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
+                                                <Scene key={scene.id} scene={scene} position={index}
+                                                       expanded={selectedSceneId == scene.id} onSelect={selectScene}
+                                                       onDelete={removeScene}/>
+                                            ))}
+                                        </SortableContext>
+                                    </DndContext>
                                 }
                                 <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
-                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
+                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders
+                                        size={18}/></button>
                                     <button onClick={openAccountDialog}>Account <User size={18}/></button>
                                 </div>
                             </div>
                         </div>
                         <div className="bottom">
-                            <Link className="shotlistTool" href={"../dashboard"}>shotlist tool</Link>
+                            <Link className="shotlistTool" href={"../dashboard"}><Iconmark/>shotly.at</Link>
                         </div>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>
@@ -363,10 +397,12 @@ export default function Shotlist() {
             <ShotlistOptionsDialog
                 isOpen={optionsDialogOpen}
                 setIsOpen={setOptionsDialogOpen}
+                selectedPage={selectedOptionsDialogPage}
                 shotlistId={shotlist.data.id || ""}
                 refreshShotlist={() => {
-                    loadShotlist(true)
-                    setReloadKey(reloadKey + 1)
+                    loadShotlist(true).then(() => {
+                        setReloadKey(reloadKey + 1)
+                    })
                 }}
             ></ShotlistOptionsDialog>
             {AccountDialog}

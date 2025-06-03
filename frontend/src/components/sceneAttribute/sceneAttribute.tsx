@@ -19,10 +19,9 @@ import {useApolloClient} from "@apollo/client"
 import './sceneAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
-import Select, {selectSceneStyles} from "@/components/select/select"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
-import {SceneSingleSelectAttributeDto} from "../../../lib/graphql/generated"
+import AttributeValueSelect, {selectSceneStyles} from "@/components/attributeValueSelect/attributeValueSelect"
 
 const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -127,22 +126,42 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
     }
 
     const updateTextValue = () => {
-        if(!textInputRef.current) return;
+        if (!textInputRef.current) return;
 
-        // remove all newlines
-        let cleaned = textInputRef.current.innerText.replace(/[\r\n]+/g, " ");
+        const el = textInputRef.current;
 
-        textInputRef.current.innerText = cleaned;
+        // Get current selection
+        const selection = window.getSelection();
+        const range = selection?.getRangeAt(0);
 
-        wuGeneral.moveCursorToEnd(textInputRef.current);
+        const preCaretRange = range?.cloneRange();
+        preCaretRange?.selectNodeContents(el);
+        preCaretRange?.setEnd(range!.endContainer, range!.endOffset);
+        const caretOffset = preCaretRange?.toString().length ?? 0;
 
-        setTextValue(cleaned)
+        // Clean text
+        let cleaned = el.innerText.replace(/[\r\n]+/g, " ");
+        el.innerText = cleaned;
 
-        debouncedUpdateAttributeValue({textValue: cleaned})
+        // Restore selection
+        const newRange = document.createRange();
+        const textNode = el.firstChild;
+        let offset = Math.min(caretOffset, cleaned.length);
 
-        let newValue = {...attribute, textValue: cleaned}
-        attributeUpdated(newValue)
-    }
+        if (textNode) {
+            newRange.setStart(textNode, offset);
+            newRange.setEnd(textNode, offset);
+            selection?.removeAllRanges();
+            selection?.addRange(newRange);
+        }
+
+        setTextValue(cleaned);
+        debouncedUpdateAttributeValue({ textValue: cleaned });
+
+        let newValue = { ...attribute, textValue: cleaned };
+        attributeUpdated(newValue);
+    };
+
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
         setSingleSelectValue(value || undefined)
@@ -187,7 +206,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
         case "SceneSingleSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={false}
                         loadOptions={loadOptions}
@@ -196,9 +215,9 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"scene"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     <div className="icon">
                         <ChevronDown size={18} strokeWidth={2}/>
                     </div>
@@ -208,7 +227,7 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
         case "SceneMultiSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={true}
                         loadOptions={loadOptions}
@@ -217,9 +236,9 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"scene"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
                         styles={selectSceneStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     <div className="icon">
                         <List size={18} strokeWidth={2}/>
                     </div>

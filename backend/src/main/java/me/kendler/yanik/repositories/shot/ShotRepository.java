@@ -7,8 +7,11 @@ import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shot.ShotEditDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.shot.Shot;
+import me.kendler.yanik.repositories.UserRepository;
 import me.kendler.yanik.repositories.scene.SceneRepository;
+import org.jboss.logging.Logger;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -17,11 +20,15 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
     @Inject
     SceneRepository sceneRepository;
 
+    private static final Logger LOGGER = Logger.getLogger(ShotRepository.class);
+
     public Shot create(UUID sceneId) {
+        LOGGER.infof("started creating shot");
         Scene scene = sceneRepository.findById(sceneId);
         Shot shot = new Shot(scene);
         scene.shotlist.registerEdit();
         persist(shot);
+        LOGGER.infof("finished creating new shot: %s", shot.toString());
         return shot;
     }
 

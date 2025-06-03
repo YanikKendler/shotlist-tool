@@ -1,7 +1,6 @@
 import auth0, {Auth0DecodedHash, Auth0ParseHashError, WebAuth} from 'auth0-js';
 
 export interface AuthUser {
-    name: string;
     email: string;
     sub: string;
 }
@@ -11,28 +10,33 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
-    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotlist-tool-frontend-566625943723.europe-west1.run.app";
+    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotly.at"
+    //private FRONTEND_URL: string = "http://localhost:3000"
 
     constructor() {
         console.log("Auth constructor", this.FRONTEND_URL)
 
         this.auth0 = new auth0.WebAuth({
-            domain: 'dev-pvlm4i5qpteni14h.us.auth0.com',
+            domain: 'login.shotly.at',
             clientID: '4FPKDtlCQjAToOwAEiG6ZrL0eW2UXlx4',
             responseType: 'id_token token',
             redirectUri: this.FRONTEND_URL + '/callback',
             audience: 'https://dev-pvlm4i5qpteni14h.us.auth0.com/api/v2/',
             scope: 'openid profile email',
-        });
+            overrides: {
+                __tenant: "dev-pvlm4i5qpteni14h",
+                __token_issuer: 'https://login.shotly.at/'
+            },
+        })
 
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
-        this.handleAuthentication = this.handleAuthentication.bind(this);
-        this.isAuthenticated = this.isAuthenticated.bind(this);
-        this.getTokenSilently = this.getTokenSilently.bind(this);
-        this.silentAuth = this.silentAuth.bind(this);
+        this.login = this.login.bind(this)
+        this.logout = this.logout.bind(this)
+        this.handleAuthentication = this.handleAuthentication.bind(this)
+        this.isAuthenticated = this.isAuthenticated.bind(this)
+        this.getTokenSilently = this.getTokenSilently.bind(this)
+        this.silentAuth = this.silentAuth.bind(this)
 
-        this.authFlag = 'isLoggedIn';
+        this.authFlag = 'isLoggedIn'
     }
 
     login() {
@@ -58,12 +62,12 @@ class Auth {
         return new Promise((resolve, reject) => {
             this.auth0.checkSession({},(err, authResult) => {
                 if (err) {
-                    console.error("Silent auth error", err);
-                    return reject(err);
+                    console.error("Silent auth error", err)
+                    return reject(err)
                 }
 
-                this.setSession(authResult);
-                resolve(authResult.accessToken);
+                this.setSession(authResult)
+                resolve(authResult.accessToken)
             })
         })
     }
@@ -113,7 +117,6 @@ class Auth {
             return
         }
         this.authUser = {
-            name: authResult.idTokenPayload.name,
             email: authResult.idTokenPayload.email,
             sub: authResult.idTokenPayload.sub,
         }
@@ -127,6 +130,7 @@ class Auth {
         return new Promise<Auth0DecodedHash>((resolve, reject) => {
             this.auth0.checkSession({}, (err, authResult) => {
                 if (err) {
+                    console.error(err)
                     localStorage.removeItem(this.authFlag);
                     return reject(err);
                 }
@@ -137,6 +141,7 @@ class Auth {
     }
 
     isAuthenticated() {
+        if (typeof window === "undefined") return false;
         return JSON.parse(localStorage.getItem(this.authFlag) || 'false');
     }
 }

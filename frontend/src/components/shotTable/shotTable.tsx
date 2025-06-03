@@ -67,6 +67,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
     }, [shots])
 
     const loadShots = async () => {
+        console.time("loadShots-"+sceneId)
         const { data, errors, loading } = await client.query({
             query : gql`
                 query shots($sceneId: String!){
@@ -94,11 +95,13 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
             variables: { sceneId: sceneId },
             fetchPolicy: "no-cache",
         })
+        console.timeEnd("loadShots-"+sceneId)
 
         setShots({data: data.shots, loading: loading, error: errors})
     }
 
     const createShot = async (attributePosition: number) => {
+        console.time("createShot")
         const { data, errors } = await client.mutate({
             mutation: gql`
                 mutation createShot($sceneId: String!) {
@@ -125,6 +128,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
             `,
             variables: { sceneId: sceneId },
         });
+        console.timeEnd("createShot")
 
         if (errors) {
             console.error(errors);
@@ -200,7 +204,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
 
             {
                 shotAttributeDefinitions.length == 0 ?
-                <div className={"empty"}>No shots to display. Start by: <button onClick={shotlistContext.openShotlistOptionsDialog}>defining a shot attribute</button></div> :
+                <div className={"empty"}>No shots to display. Start by: <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button></div> :
                 <div className="shot new">
                     <div className="shotAttribute number first">
                         <span>#</span>

@@ -13,10 +13,10 @@ import {useApolloClient} from "@apollo/client"
 import './shotAttribute.scss'
 import {useSelectRefresh} from "@/context/SelectRefreshContext"
 import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
-import Select, {selectShotStyles} from "@/components/select/select"
 import ShotService from "@/service/ShotService"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
+import AttributeValueSelect, {selectShotStyles} from "@/components/attributeValueSelect/attributeValueSelect"
 
 const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: {attribute: AnyShotAttribute, className?: string}) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
@@ -123,19 +123,38 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
     }
 
     const updateTextValue = () => {
-        if(!textInputRef.current) return;
+        if (!textInputRef.current) return;
 
-        // remove all newlines
-        let cleaned = textInputRef.current.innerText.replace(/[\r\n]+/g, " ");
+        const el = textInputRef.current;
 
-        textInputRef.current.innerText = cleaned;
+        // Get current selection
+        const selection = window.getSelection();
+        const range = selection?.getRangeAt(0);
 
-        wuGeneral.moveCursorToEnd(textInputRef.current);
+        const preCaretRange = range?.cloneRange();
+        preCaretRange?.selectNodeContents(el);
+        preCaretRange?.setEnd(range!.endContainer, range!.endOffset);
+        const caretOffset = preCaretRange?.toString().length ?? 0;
 
-        setTextValue(cleaned)
+        // Clean text
+        let cleaned = el.innerText.replace(/[\r\n]+/g, " ");
+        el.innerText = cleaned;
 
-        debouncedUpdateAttributeValue(attribute.id, {textValue: cleaned})
-    }
+        // Restore caret position
+        const newRange = document.createRange();
+        const textNode = el.firstChild;
+        let offset = Math.min(caretOffset, cleaned.length);
+
+        if (textNode) {
+            newRange.setStart(textNode, offset);
+            newRange.setEnd(textNode, offset);
+            selection?.removeAllRanges();
+            selection?.addRange(newRange);
+        }
+
+        setTextValue(cleaned);
+        debouncedUpdateAttributeValue(attribute.id, { textValue: cleaned });
+    };
 
     const updateSingleSelectValue = (value: SelectOption | null) => {
         setSingleSelectValue(value || undefined)
@@ -155,7 +174,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
         case "ShotSingleSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={false}
                         loadOptions={loadOptions}
@@ -164,9 +183,9 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={singleSelectValue}
                         shotOrScene={"shot"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     {!singleSelectValue &&
                         <div className="icon">
                             <ChevronDown size={18} strokeWidth={2}/>
@@ -178,7 +197,7 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
         case "ShotMultiSelectAttributeDTO":
             content = (
                 <>
-                    <Select
+                    <AttributeValueSelect
                         definitionId={attribute.definition?.id}
                         isMulti={true}
                         loadOptions={loadOptions}
@@ -187,9 +206,9 @@ const ShotAttribute = React.memo(function ShotAttribute({attribute, className}: 
                         placeholder={attribute.definition?.name || "Unnamed"}
                         value={multiSelectValue}
                         shotOrScene={"shot"}
-                        editAction={shotlistContext.openShotlistOptionsDialog}
+                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}
                         styles={selectShotStyles}
-                    ></Select>
+                    ></AttributeValueSelect>
                     {(!multiSelectValue || multiSelectValue?.length == 0) &&
                         <div className="icon">
                             <List size={18} strokeWidth={2}/>

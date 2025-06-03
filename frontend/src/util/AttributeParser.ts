@@ -1,19 +1,28 @@
-import {AnySceneAttribute, AnySceneAttributeDefinition, AnyShotAttributeDefinition} from "@/util/Types"
+import {
+    AnySceneAttribute,
+    AnySceneAttributeDefinition,
+    AnyShotAttribute,
+    AnyShotAttributeDefinition
+} from "@/util/Types"
 import {ChevronDown, List, Type} from "lucide-react"
 import {JSX} from "react"
 import {wuText} from "@yanikkendler/web-utils/dist"
 
 export abstract class SceneAttributeParser {
-    static toValueString(attribute: AnySceneAttribute): string{
+    static toValueString(attribute: AnySceneAttribute, truncate = true): string{
+        let result = ""
         switch (attribute.__typename) {
             case "SceneTextAttributeDTO":
-                return wuText.truncateText(<string>attribute.textValue, 15, "..")
+                result = attribute?.textValue || ""
+                break
             case "SceneSingleSelectAttributeDTO":
-                return <string>attribute.singleSelectValue?.name
+                result = <string>attribute.singleSelectValue?.name
+                break
             case "SceneMultiSelectAttributeDTO":
-                return <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                result = <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                break
         }
-        return ""
+        return truncate ? wuText.truncateText(result, 15, "..") : result
     }
 
     static isEmpty(attribute: AnySceneAttribute): boolean{
@@ -26,6 +35,24 @@ export abstract class SceneAttributeParser {
                 return !attribute.multiSelectValue || attribute.multiSelectValue.length === 0
         }
         return true
+    }
+}
+
+export abstract class ShotAttributeParser {
+    static toValueString(attribute: AnyShotAttribute, truncate = true): string{
+        let result = ""
+        switch (attribute.__typename) {
+            case "ShotTextAttributeDTO":
+                result = attribute.textValue || ""
+                break
+            case "ShotSingleSelectAttributeDTO":
+                result = <string>attribute.singleSelectValue?.name
+                break
+            case "ShotMultiSelectAttributeDTO":
+                result = <string>attribute.multiSelectValue?.map((value) => value?.name).join(", ")
+                break
+        }
+        return truncate ? wuText.truncateText(result, 15, "..") : result
     }
 }
 
