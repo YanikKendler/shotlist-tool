@@ -23,7 +23,7 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
     private static final Logger LOGGER = Logger.getLogger(ShotRepository.class);
 
     public Shot create(UUID sceneId) {
-        LOGGER.debugf("started creating shot");
+        LOGGER.infof("started creating shot");
         Scene scene = sceneRepository.findById(sceneId);
         Shot shot = new Shot(scene);
         scene.shotlist.registerEdit();

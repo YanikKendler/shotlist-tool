@@ -18,7 +18,6 @@ import org.jboss.logging.Logger;
 import java.util.Optional;
 import java.util.UUID;
 
-@Transactional
 @ApplicationScoped
 public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     @Inject
@@ -32,6 +31,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
 
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class);
 
+    @Transactional
     public User findOrCreateByJWT(JsonWebToken jwt) {
         String auth0Sub = jwt.getClaim("sub");
         if (auth0Sub == null) {
@@ -50,6 +50,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
         }
     }
 
+    @Transactional
     public User update(UserEditDTO editDTO, JsonWebToken jwt) {
         User user = findOrCreateByJWT(jwt);
         if (editDTO.name() != null) {
@@ -60,6 +61,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
         return user;
     }
 
+    @Transactional
     public User delete(JsonWebToken jwt) {
         User user = findOrCreateByJWT(jwt);
         LOGGER.infof("Deleting user: %s", user.toString());
@@ -93,6 +95,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     }
 
     public void checkUserAccessRights(Shotlist shotlist, JsonWebToken jwt) {
+        LOGGER.info("In CheckUserAccessRights");
         if (!userCanAccessShotlist(shotlist, jwt)) {
             throw new UnauthorizedAccessException("You are not allowed to access this shotlist");
         }

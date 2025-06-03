@@ -2,7 +2,7 @@
 .accountContent{
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .8rem;
   max-width: 600px;
 
   .title{
@@ -21,16 +21,18 @@
 
     p{
       color: var(--text-20);
+      font-size: .95rem;
     }
 
-    button{
+    button, a{
       border: .15rem solid var(--default-interactable-border);
       color: var(--text-30);
       font-weight: 500;
       width: fit-content;
       padding: .4rem 1rem;
+      font-size: .95rem;
 
-      &:not([disabled]):hover{
+      &:not([disabled]):not(.bad):hover{
         background-color: var(--hover-bg-10);
         color: var(--text);
       }
@@ -39,7 +41,8 @@
     &.legal{
       a{
         font-size: .9rem;
-        color: var(--text-40);
+        color: var(--text-60);
+        border: none;
 
         &:hover{
           color: var(--text);

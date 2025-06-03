@@ -304,9 +304,17 @@ export default function Shotlist() {
     if(selectedSceneId == "" && shotlist?.data?.scenes && shotlist.data.scenes[0]?.id != undefined) setSelectedSceneId(shotlist?.data?.scenes[0].id)
 
     return (
-        <ShotlistContext.Provider value={{openShotlistOptionsDialog: openShotlistOptionsDialog, elementIsBeingDragged: elementIsBeingDragged, setElementIsBeingDragged: setElementIsBeingDragged}}>
+        <ShotlistContext.Provider value={{
+            openShotlistOptionsDialog: openShotlistOptionsDialog,
+            elementIsBeingDragged: elementIsBeingDragged,
+            setElementIsBeingDragged: setElementIsBeingDragged
+        }}>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
+                test. An
+                acceptable mobile version will be available in the full release.</p>
             <main className="shotlist" key={reloadKey}>
-                <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
+                <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal"
+                            className={"PanelGroup"}>
                     <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                         <div className="content">
                             <div className="top">
@@ -332,31 +340,33 @@ export default function Shotlist() {
                                 />
                             </div>
                             <div className="list">
-                                { !shotlist.data.scenes || shotlist.data.scenes.length == 0 ? <p className={"empty"}>No scenes yet :(</p> :
+                                {!shotlist.data.scenes || shotlist.data.scenes.length == 0 ?
+                                    <p className={"empty"}>No scenes yet :(</p> :
                                     <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
-                                    onDragStart={() => {
-                                        setElementIsBeingDragged(true)
-                                    }}
-                                    modifiers={[restrictToVerticalAxis]}
-                                >
-                                    <SortableContext
-                                        items={(shotlist.data?.scenes as SceneDto[]).map(scene => scene.id) as string[]}
-                                        strategy={verticalListSortingStrategy}
+                                        sensors={sensors}
+                                        collisionDetection={closestCenter}
+                                        onDragEnd={handleDragEnd}
+                                        onDragStart={() => {
+                                            setElementIsBeingDragged(true)
+                                        }}
+                                        modifiers={[restrictToVerticalAxis]}
                                     >
-                                        {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                            <Scene key={scene.id} scene={scene} position={index}
-                                                   expanded={selectedSceneId == scene.id} onSelect={selectScene}
-                                                   onDelete={removeScene}/>
-                                        ))}
-                                    </SortableContext>
-                                </DndContext>
+                                        <SortableContext
+                                            items={(shotlist.data?.scenes as SceneDto[]).map(scene => scene.id) as string[]}
+                                            strategy={verticalListSortingStrategy}
+                                        >
+                                            {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
+                                                <Scene key={scene.id} scene={scene} position={index}
+                                                       expanded={selectedSceneId == scene.id} onSelect={selectScene}
+                                                       onDelete={removeScene}/>
+                                            ))}
+                                        </SortableContext>
+                                    </DndContext>
                                 }
                                 <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
-                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders size={18}/></button>
+                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders
+                                        size={18}/></button>
                                     <button onClick={openAccountDialog}>Account <User size={18}/></button>
                                 </div>
                             </div>

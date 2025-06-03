@@ -68,6 +68,9 @@ export default function Dashboard() {
 
     return (
         <main className="dashboard">
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
+                test. An
+                acceptable mobile version will be available in the full release.</p>
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">
@@ -75,7 +78,7 @@ export default function Dashboard() {
                             <Tooltip.Root>
                                 <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
                                     <Link href={`../dashboard`} onClick={e => {
-                                        wuGeneral.onNthClick( () => {
+                                        wuGeneral.onNthClick(() => {
                                             console.log("forward")
                                             window.open("https://orteil.dashnet.org/cookieclicker", '_blank')?.focus()
                                         }, e.nativeEvent, 10)
@@ -102,13 +105,15 @@ export default function Dashboard() {
                                     className="CollapsibleContent dashboardSidebar"
                                 >
                                     {
-                                        shotlists.data.length === 0 ? (<button onClick={openCreateShotlistDialog} className={"empty"}>Start by <span>creating a new shotlist</span> :)</button>) :
-                                        shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
-                                            <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
-                                                <NotepadText size={18}/>
-                                                {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
-                                            </Link>
-                                        ))
+                                        shotlists.data.length === 0 ? (
+                                                <button onClick={openCreateShotlistDialog} className={"empty"}>Start
+                                                    by <span>creating a new shotlist</span> :)</button>) :
+                                            shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
+                                                <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
+                                                    <NotepadText size={18}/>
+                                                    {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
+                                                </Link>
+                                            ))
                                     }
                                 </Collapsible.Content>
                             </Collapsible.Root>
@@ -167,12 +172,14 @@ export default function Dashboard() {
                         <div className="grid">
                             {/*TODO limit to X shotlists*/}
                             {shotlists.data.sort(Utils.oderShotlistsByChangeDate).map((shotlist: ShotlistDto) => (
-                                <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
+                                <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id}
+                                      className="gridItem shotlist">
                                     <label><NotepadText size={15}/>Shotlist</label>
                                     <h3>{shotlist.name || <span className='italic'>Unnamed</span>}</h3>
                                     <p className={"bold"}>{shotlist.sceneCount} scene • {shotlist.shotCount} shots</p>
                                     <p>created by: <span className={"bold"}>Yanik Kendler</span></p>
-                                    <p>last edited: <span className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
+                                    <p>last edited: <span
+                                        className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                                 </Link>
                             ))}
                             <button className={"gridItem add"} onClick={openCreateShotlistDialog}>

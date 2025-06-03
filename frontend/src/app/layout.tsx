@@ -34,9 +34,6 @@ export default function RootLayout({
                         <NotificationWrapper>
                             <Tooltip.Provider>
                                 <SelectRefreshProvider>
-                                    <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
-                                        test. An
-                                        acceptable mobile version will be available in the full release.</p>
                                     {children}
                                 </SelectRefreshProvider>
                             </Tooltip.Provider>

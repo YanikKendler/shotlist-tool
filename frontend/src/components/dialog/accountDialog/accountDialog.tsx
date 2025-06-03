@@ -129,7 +129,7 @@ export function useAccountDialog() {
                     label={"email"}
                     value={user?.email || "unknown"}
                     disabled={true}/><Input
-                label={"name"}
+                label={"display name"}
                 value={user?.name || "unknown"}
                 info={"This a publicly visible name used for collaboration with others. You cannot use it to log in."}
                 maxLength={50}
@@ -138,6 +138,13 @@ export function useAccountDialog() {
                 <div className="row">
                     <p>Send password reset request to your email</p>
                     <button disabled={passwordResetDisabled} className={"logout"} onClick={resetPassword}>send email</button>
+                </div>
+
+                <Separator.Root className={"Separator"}/>
+
+                <div className="row">
+                    <p>Report a bug or request a feature</p>
+                    <Link href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"} target={"_blank"}>new issue</Link>
                 </div>
 
                 <Separator.Root className={"Separator"}/>
@@ -154,10 +161,10 @@ export function useAccountDialog() {
                 <Separator.Root className={"Separator"}/>
 
                 <div className="row legal">
-                    <Link href={"./legal/cookies"}>cookies</Link>
-                    <Link href={"./legal/privacy"}>privacy</Link>
-                    <Link href={"./legal/legalNotice"}>legal notice</Link>
-                    <Link href={"./legal/termsOfUse"}>terms of use</Link>
+                    <Link href={"./legal/cookies"} target={"_blank"}>cookies</Link>
+                    <Link href={"./legal/privacy"} target={"_blank"}>privacy</Link>
+                    <Link href={"./legal/legalNotice"} target={"_blank"}>legal notice</Link>
+                    <Link href={"./legal/termsOfUse"} target={"_blank"}>terms of use</Link>
                 </div>
             </>
         )
