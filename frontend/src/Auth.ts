@@ -10,7 +10,8 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
-    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotlist-tool-frontend-566625943723.europe-west1.run.app"
+    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotly.at"
+    //private FRONTEND_URL: string = "http://localhost:3000"
 
     constructor() {
         console.log("Auth constructor", this.FRONTEND_URL)
@@ -140,6 +141,7 @@ class Auth {
     }
 
     isAuthenticated() {
+        if (typeof window === "undefined") return false;
         return JSON.parse(localStorage.getItem(this.authFlag) || 'false');
     }
 }

@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.User;
@@ -28,9 +29,14 @@ public class StartupListener {
     @Inject
     EntityManager entityManager;
 
+    @ConfigProperty(name = "quarkus.profile", defaultValue = "prod")
+    String profile;
+
     @PostConstruct
     @Transactional
     public void init() {
+        if (!"dev".equals(profile)) return;
+
         LOGGER.info("Initializing demo data...");
 
         createDemoData();

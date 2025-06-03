@@ -31,9 +31,6 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/public ./public
 
-#  Install only production dependencies (if you have any in dependencies, not devDependencies)
-RUN npm install --production
-
 # Expose the port your Next.js app runs on (usually 3000)
 EXPOSE 3000
 
