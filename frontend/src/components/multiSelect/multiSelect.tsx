@@ -22,7 +22,7 @@ const CustomClearIndicator = (
     return <components.ClearIndicator {...props} children={<X size={18}/>}/>;
 }
 
-export default function MultiSelect({name, options, onChange, minWidth = '8rem', sorted = false}: {name: string, options: SelectOption[], onChange: (newValue: MultiValue<SelectOption>)=>void, minWidth?: string, sorted?: boolean}) {
+export default function MultiSelect({name, placeholder = "Select...", options, onChange, minWidth = '8rem', sorted = false}: {name: string, placeholder?: string, options: SelectOption[], onChange: (newValue: MultiValue<SelectOption>)=>void, minWidth?: string, sorted?: boolean}) {
     const [selectedOptions, setSelectedOptions] = useState<MultiValue<SelectOption>>([]);
 
     const handleChange = (selectedOptions: MultiValue<SelectOption>) => {
@@ -44,6 +44,7 @@ export default function MultiSelect({name, options, onChange, minWidth = '8rem',
             onChange={handleChange}
             theme={reactSelectTheme}
             closeMenuOnSelect={false}
+            placeholder={placeholder}
             components={{
                 DropdownIndicator: CustomDropdownIndicator,
                 ClearIndicator: CustomClearIndicator,

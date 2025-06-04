@@ -372,7 +372,7 @@ export default function Shotlist() {
                             </div>
                         </div>
                         <div className="bottom">
-                            <Link className="shotlistTool" href={"../dashboard"}><Iconmark/>shotly.at</Link>
+                            <Link className="shotlistTool" href={"/"}><Iconmark/>shotly.at</Link>
                         </div>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>

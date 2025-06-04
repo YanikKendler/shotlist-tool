@@ -8,16 +8,24 @@ import {useApolloClient} from "@apollo/client"
 import {SceneDto, ShotDto, ShotlistDto} from "../../../../../lib/graphql/generated"
 import "./exportTab.scss"
 import SimpleSelect from "@/components/simpleSelect/simpleSelect"
-import {AnyShotAttribute, AnyShotAttributeDefinition, SelectOption} from "@/util/Types"
+import {
+    AnySceneAttribute,
+    AnySceneAttributeDefinition,
+    AnyShotAttribute,
+    AnyShotAttributeDefinition,
+    SelectOption
+} from "@/util/Types"
 import Utils from "@/util/Utils"
 import MultiSelect from "@/components/multiSelect/multiSelect"
-import {ShotAttributeParser} from "@/util/AttributeParser"
+import {SceneAttributeParser, ShotAttributeParser} from "@/util/AttributeParser"
 //@ts-ignore
-import { downloadCSV } from "download-csv";
 import Loader from "@/components/loader/loader"
+import {downloadCSV} from "@/downloadCSV"
+
+type SelectedFileTypes = "PDF" | "CSV-small" | "CSV-full"
 
 export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
-    const [selectedFileType, setSelectedFileType] = useState<"PDF" | "CSV">("PDF")
+    const [selectedFileType, setSelectedFileType] = useState<SelectedFileTypes>("PDF")
     const [sceneOptions, setSceneOptions] = useState<SelectOption[]>([{value: "this is bad", label: "1"}]);
     const [selectedScenes, setSelectedScenes] = useState<number[]>([]);
 
@@ -102,7 +110,6 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
         return {...data.shotlist, scenes: filteredScenes} as ShotlistDto;
     }
 
-    //TODO properly test this with a new shotlist
     async function exportShotlist() {
         const data = await getData()
 
@@ -114,24 +121,60 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
         console.log(data)
 
         switch (selectedFileType) {
-            case "CSV":
-                let csvData: string[][] = [];
+            case "CSV-small":
+                let smallData: string[][] = []
+
+                let header: string[] = ["Shot"]; //this semicolon is actually needed :3 (typescript stupid)
+                (data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).forEach(attr => {
+                    header.push(attr.name || "Unnamed")
+                }); //this one too
 
                 (data.scenes as SceneDto[]).forEach((scene) => {
                     (scene.shots as ShotDto[]).forEach(shot => {
-                        let row: string[] = [scene.position+1 + Utils.numberToShotLetter(shot.position)];
+                        let row: string[] = [scene.position + 1 + Utils.numberToShotLetter(shot.position)]; //mmh
+
                         (shot.attributes as AnyShotAttribute[]).forEach(attribute => {
                             row.push(ShotAttributeParser.toValueString(attribute, false))
                         })
-                        csvData.push(row)
+                        smallData.push(row)
                     })
                 })
 
-                let headerArray = (data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).map(attr => attr.name)
+                downloadCSV(smallData, header, ";", generateFileName())
 
-                let headerString = ["Shot", ...headerArray].join(",");
+                break
+            case "CSV-full":
+                let fullData: string[][] = [];
 
-                downloadCSV(csvData, [headerString], generateFileName())
+                let sceneHeader: string[] = ["Scene"]; //ts :(
+                (data.sceneAttributeDefinitions as AnySceneAttributeDefinition[]).forEach(attr => {
+                    sceneHeader.push(attr.name || "Unnamed")
+                });
+
+                let shotHeader: string[] = ["Shot"]; //hrmmm
+                (data.shotAttributeDefinitions as AnyShotAttributeDefinition[]).forEach(attr => {
+                    shotHeader.push(attr.name || "Unnamed")
+                });
+
+                (data.scenes as SceneDto[]).forEach((scene) => {
+                    let sceneRow: string[] = ["Scene " + (scene.position + 1)]; // :(
+                    (scene.attributes as AnySceneAttribute[]).forEach((attribute) => {
+                        sceneRow.push(SceneAttributeParser.toValueString(attribute, false))
+                    })
+                    fullData.push(sceneRow)
+                    fullData.push(shotHeader); //...
+
+                    (scene.shots as ShotDto[]).forEach(shot => {
+                        let row: string[] = [Utils.numberToShotLetter(shot.position)]; //hrmpf
+
+                        (shot.attributes as AnyShotAttribute[]).forEach(attribute => {
+                            row.push(ShotAttributeParser.toValueString(attribute, false))
+                        })
+                        fullData.push(row)
+                    })
+                })
+
+                downloadCSV(fullData, sceneHeader, ";", generateFileName())
 
                 break
             case "PDF":
@@ -165,8 +208,12 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
 
                     <SimpleSelect
                         name="File Type"
-                        onChange={newValue => setSelectedFileType(newValue as "PDF" | "CSV")}
-                        options={[{value: "PDF", label: "PDF"}, {value: "CSV", label: "CSV"}]}
+                        onChange={newValue => setSelectedFileType(newValue as SelectedFileTypes)}
+                        options={[
+                            {value: "PDF", label: "PDF"},
+                            {value: "CSV-full", label: "CSV (full)"},
+                            {value: "CSV-small", label: "CSV (shots only)"},
+                        ]}
                         value={"PDF"}
                         fontSize={".95rem"}
                     />
@@ -179,6 +226,7 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
 
                     <MultiSelect
                         name={"Scenes"}
+                        placeholder={"All Scenes"}
                         options={sceneOptions}
                         onChange={newValue => {
                             setSelectedScenes(newValue.map((option: SelectOption) => parseInt(option.value)))
