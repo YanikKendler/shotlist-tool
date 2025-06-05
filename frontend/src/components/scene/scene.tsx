@@ -4,10 +4,10 @@ import {SceneAttributeParser} from "@/util/AttributeParser"
 import {SceneDto} from "../../../lib/graphql/generated"
 import "./scene.scss"
 import React, {useContext, useEffect, useState} from "react"
-import {Collapsible, Popover, Tooltip} from "radix-ui"
+import {Collapsible, Popover, Separator, Tooltip} from "radix-ui"
 import SceneAttribute from "@/components/sceneAttribute/sceneAttribute"
 import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
-import {CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
+import {CornerDownRight, GripVertical, List, NotepadText, Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
@@ -115,6 +115,8 @@ export default function Scene({scene, position, expanded, onSelect, onDelete}: {
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent sceneContextOptionsPopup" align={"start"} side={"right"} sideOffset={12} alignOffset={-10}>
                             <button className={"bad"} onClick={(e) => {e.stopPropagation(); deleteScene()}}><Trash size={18}/> delete</button>
+                            <Separator.Root className="Separator"/>
+                            <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}><List size={18}/> Edit scene attributes</button>
                         </Popover.Content>
                     </Popover.Portal>
                 </Popover.Root>

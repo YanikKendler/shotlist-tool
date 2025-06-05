@@ -105,7 +105,7 @@ export default function Shotlist() {
 
         if(!auth.getUser()) return
 
-        loadShotlist()
+        loadShotlist(true)
     }, [id])
 
     const loadShotlist = async (noCache: boolean = false) => {

@@ -180,49 +180,51 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
 
     return (
         <div className="shotTable" ref={shotTableElement}>
-        <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-                onDragStart={() => {
-                    shotlistContext.setElementIsBeingDragged(true)
-                }}
-                modifiers={[restrictToVerticalAxis]}
-            >
-                <SortableContext
-                    items={shots.data.map(shot => shot.id)}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {shots.data.map((shot: any, index) => (
-                        <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot}/>
-                    ))}
-                </SortableContext>
-                {/*<DragOverlay>
-                    {activeId ? <p>hallo welt</p> : null}
-                </DragOverlay>*/}
-            </DndContext>
-
             {
                 shotAttributeDefinitions.length == 0 ?
-                <div className={"empty"}>No shots to display. Start by: <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button></div> :
-                <div className="shot new">
-                    <div className="shotAttribute number first">
-                        <span>#</span>
-                    </div>
-                    {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
-                        let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
-                        return (
-                            <div className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
-                                 key={shotAttributeDefinition.id}
-                                 onClick={() => createShot(index)}>
-                                <p>{shotAttributeDefinition.name || "Unnamed"}</p>
-                                <div className="icon">
-                                    <Icon size={18}/>
+                <div className={"empty"}>
+                    No shots to display. Start by:
+                    <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
+                </div> :
+                <>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                        onDragStart={() => {
+                            shotlistContext.setElementIsBeingDragged(true)
+                        }}
+                        modifiers={[restrictToVerticalAxis]}
+                    >
+                        <SortableContext
+                            items={shots.data.map(shot => shot.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            {shots.data.map((shot: any, index) => (
+                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot}/>
+                            ))}
+                        </SortableContext>
+                    </DndContext>
+                    <div className="shot new">
+                        <div className="shotAttribute number first">
+                            <span>#</span>
+                        </div>
+                        {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                            let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                            return (
+                                <div
+                                    className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
+                                    key={shotAttributeDefinition.id}
+                                    onClick={() => createShot(index)}>
+                                    <p>{shotAttributeDefinition.name || "Unnamed"}</p>
+                                    <div className="icon">
+                                        <Icon size={18}/>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    })}
-                </div>
+                            )
+                        })}
+                    </div>
+                </>
             }
         </div>
     )

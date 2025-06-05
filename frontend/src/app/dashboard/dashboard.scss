@@ -129,7 +129,7 @@ main.dashboard{
 
       .grid{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
 
         @media (max-width: 1200px){
@@ -139,9 +139,10 @@ main.dashboard{
         .gridItem{
           display: flex;
           flex-direction: column;
+          align-items: start;
+          justify-content: flex-start;
           padding: .75rem 1rem;
           border-radius: .5rem;
-          align-items: start;
           gap: 0;
           border: 1px solid var(--text-60);
 
@@ -176,6 +177,7 @@ main.dashboard{
             font-weight: 600;
             margin-bottom: .3rem;
             color: var(--text-10);
+            white-space: wrap;
 
             span.italic{
               font-style: italic;
@@ -192,6 +194,7 @@ main.dashboard{
           .bold{
             font-weight: 500;
             color: var(--text-10);
+            white-space: wrap;
           }
         }
       }

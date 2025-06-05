@@ -68,9 +68,7 @@ export default function Dashboard() {
 
     return (
         <main className="dashboard">
-            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
-                test. An
-                acceptable mobile version will be available in the full release.</p>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha test. An acceptable mobile version will be available in the full release.</p>
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">
@@ -99,7 +97,7 @@ export default function Dashboard() {
                         <div className="list">
                             <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} defaultOpen={true}>
                                 <Collapsible.Trigger className={"noClickFx"}>
-                                    my shotlists <ChevronDown size={18} className={"chevron"}/>
+                                    My Shotlists <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
                                 <Collapsible.Content
                                     className="CollapsibleContent dashboardSidebar"
@@ -111,7 +109,7 @@ export default function Dashboard() {
                                             shotlists.data.sort(Utils.orderShotlistsByName).map((shotlist) => (
                                                 <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
                                                     <NotepadText size={18}/>
-                                                    {shotlist.name || (<span className={"italic"}>Unnamed</span>)}
+                                                    {shotlist.name ? <span className={"wrap"}>{shotlist.name}</span> : (<span className={"italic"}>Unnamed</span>)}
                                                 </Link>
                                             ))
                                     }
@@ -120,12 +118,12 @@ export default function Dashboard() {
 
                             <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} defaultOpen={false}>
                                 <Collapsible.Trigger className={"noClickFx"}>
-                                    shared shotlists <ChevronDown size={18} className={"chevron"}/>
+                                    Shared Shotlists <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
                                 <Collapsible.Content
                                     className="CollapsibleContent dashboardSidebar"
                                 >
-                                    <p>work in progress</p>
+                                    <p className={"empty"}>work in progress</p>
                                 </Collapsible.Content>
                             </Collapsible.Root>
 
@@ -133,22 +131,22 @@ export default function Dashboard() {
 
                             <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} defaultOpen={false}>
                                 <Collapsible.Trigger className={"noClickFx"}>
-                                    my templates <ChevronDown size={18} className={"chevron"}/>
+                                    My Templates <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
                                 <Collapsible.Content
                                     className="CollapsibleContent dashboardSidebar"
                                 >
-                                    <p>work in progress</p>
+                                    <p className={"empty"}>work in progress</p>
                                 </Collapsible.Content>
                             </Collapsible.Root>
                             <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} defaultOpen={false}>
                                 <Collapsible.Trigger className={"noClickFx"}>
-                                    shared templates <ChevronDown size={18} className={"chevron"}/>
+                                    Shared Templates <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
                                 <Collapsible.Content
                                     className="CollapsibleContent dashboardSidebar"
                                 >
-                                    <p>work in progress</p>
+                                    <p className={"empty"}>work in progress</p>
                                 </Collapsible.Content>
                             </Collapsible.Root>
 
@@ -165,7 +163,7 @@ export default function Dashboard() {
                 <Panel className="content">
                     <div className="header">
                         {/*<button className="template" disabled>new template</button>*/}
-                        <button className="shotlist" onClick={openCreateShotlistDialog}>new shotlist</button>
+                        <button className="shotlist" onClick={openCreateShotlistDialog}>New Shotlist</button>
                     </div>
                     <div className="main">
                         <h2>Shotlists</h2>
@@ -183,7 +181,7 @@ export default function Dashboard() {
                                 </Link>
                             ))}
                             <button className={"gridItem add"} onClick={openCreateShotlistDialog}>
-                                <span><Plus/>new shotlist</span>
+                                <span><Plus/>New Shotlist</span>
                             </button>
                         </div>
                     </div>

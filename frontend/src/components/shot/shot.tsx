@@ -5,10 +5,10 @@ import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import {AnyShotAttribute} from "@/util/Types"
 import {wuText} from "@yanikkendler/web-utils/dist"
 import './shot.scss'
-import {ArrowDownRight, CornerDownRight, GripVertical, NotepadText, Trash} from "lucide-react"
+import {ArrowDownRight, CornerDownRight, GripVertical, List, NotepadText, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
-import {Popover, Tooltip} from "radix-ui"
+import {Popover, Separator, Tooltip} from "radix-ui"
 import React, {useContext, useState} from "react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
@@ -16,8 +16,8 @@ import {ShotlistContext} from "@/context/ShotlistContext"
 import Utils from "@/util/Utils"
 
 export default function Shot({shot, position, onDelete}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void}) {
-    const [isBeingEdited, setIsBeingEdited] = useState(false);
-    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [isBeingEdited, setIsBeingEdited] = useState(false)
+    const [tooltipVisible, setTooltipVisible] = useState(false)
 
     // @ts-ignore
     const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: shot.id});
@@ -75,9 +75,11 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
                 </Tooltip.Root>
                 <Popover.Portal>
                     <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
-                        <button disabled={true}><CornerDownRight size={18}/> make subshot</button>
-                        <button disabled={true}><NotepadText size={18}/> notes</button>
-                        <button className={"bad"} onClick={deleteShot}><Trash size={18}/> delete</button>
+                        <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
+                        <button disabled={true}><NotepadText size={18}/> Notes</button>
+                        <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
+                        <Separator.Root className="Separator"/>
+                        <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
                     </Popover.Content>
                 </Popover.Portal>
             </Popover.Root>
