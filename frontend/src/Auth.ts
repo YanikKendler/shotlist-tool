@@ -141,7 +141,6 @@ class Auth {
     }
 
     isAuthenticated() {
-        if (typeof window === "undefined") return false;
         return JSON.parse(localStorage.getItem(this.authFlag) || 'false');
     }
 }

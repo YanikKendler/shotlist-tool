@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import {Popover, Separator, Tooltip} from "radix-ui"
+import AuthSwitcher from "@/components/authSwitcher/authSwitcher"
 
 export default function Home() {
     const pageRef = useRef<HTMLDivElement>(null);
@@ -63,10 +64,10 @@ export default function Home() {
                     <Link href={"#pricing"}>Pricing</Link>
                 </div>
                 <div className="right">
-                    {Auth.isAuthenticated() ?
-                        <Link href={"/dashboard"}>Your Dashboard</Link> :
-                        <button onClick={() => Auth.login()}>Log in</button>
-                    }
+                    <AuthSwitcher
+                        authenticated={<Link href={"/dashboard"}>Your Dashboard</Link>}
+                        unauthenticated={<button onClick={() => Auth.login()}>Log in</button>}
+                    />
                 </div>
             </nav>
             <span id="hero"></span>
@@ -75,10 +76,10 @@ export default function Home() {
                     <div className="center">
                         <Wordmark/>
                         <p className={"tagline"}>Shotlist creation made easy!</p>
-                        {Auth.isAuthenticated() ?
-                            <Link href={"/dashboard"}>To your Dashboard</Link> :
-                            <button onClick={() => Auth.login()}>Get started for free</button>
-                        }
+                        <AuthSwitcher
+                            authenticated={<Link href={"/dashboard"}>To your Dashboard</Link>}
+                            unauthenticated={<button onClick={() => Auth.login()}>Get started for free</button>}
+                        />
 
                         <div className="beta">Beta</div>
                     </div>
@@ -123,19 +124,19 @@ export default function Home() {
                             </div>
                             <h2>Live Collaboration</h2>
                             <p>Share your shotlist with colleagues and create together.</p>
-                            <Tooltip.Root delayDuration={200}>
-                                <Tooltip.Trigger className={"noPadding info"}>
+                            <Popover.Root>
+                                <Popover.Trigger className={"noPadding info"}>
                                     <ClockAlert/>
-                                </Tooltip.Trigger>
-                                <Tooltip.Portal>
-                                    <Tooltip.Content className={"TooltipContent left"}>
-                                        <Tooltip.Arrow/>
+                                </Popover.Trigger>
+                                <Popover.Portal>
+                                    <Popover.Content className={"PopoverContent left"} side={"top"}>
+                                        <Popover.Arrow/>
                                         <p>
                                             Since Shotly is currently in beta, live collaboration is not yet available.
                                         </p>
-                                    </Tooltip.Content>
-                                </Tooltip.Portal>
-                            </Tooltip.Root>
+                                    </Popover.Content>
+                                </Popover.Portal>
+                            </Popover.Root>
                         </div>
                         <div className="feature">
                             <div className="icon">
@@ -153,26 +154,24 @@ export default function Home() {
                                 <p className="name">Basic</p>
                                 <div className="price">
                                     <p className={"cost"}>Free forever</p>
-                                    <Tooltip.Root delayDuration={200}>
-                                        <Tooltip.Trigger className={"noPadding info"}>
+                                    <Popover.Root>
+                                        <Popover.Trigger className={"noPadding info"}>
                                             <Info size={20}/>
-                                        </Tooltip.Trigger>
-                                        <Tooltip.Portal>
-                                            <Tooltip.Content className={"TooltipContent left"}>
-                                                <Tooltip.Arrow/>
+                                        </Popover.Trigger>
+                                        <Popover.Portal>
+                                            <Popover.Content className={"PopoverContent left"} side={"top"}>
+                                                <Popover.Arrow/>
                                                 <p>
-                                                    Shotly's basic tier will always stay free. You will also always be
-                                                    able
-                                                    to export your data.
+                                                    Shotly's basic tier will always stay free, and you will always be
+                                                    able to export your data.
                                                 </p>
                                                 <p>
                                                     Servers cost money though and this app is a lot of work, so if you
-                                                    end
-                                                    up using Shotly a lot, please consider the pro tier.
+                                                    end up using Shotly a lot, please consider the pro tier.
                                                 </p>
-                                            </Tooltip.Content>
-                                        </Tooltip.Portal>
-                                    </Tooltip.Root>
+                                            </Popover.Content>
+                                        </Popover.Portal>
+                                    </Popover.Root>
                                 </div>
                             </div>
                             <Separator.Root className={"Separator"}/>
