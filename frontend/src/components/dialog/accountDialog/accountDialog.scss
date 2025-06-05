@@ -35,6 +35,7 @@
       &:not([disabled]):not(.bad):hover{
         background-color: var(--hover-bg-10);
         color: var(--text);
+        border-color: var(--default-interactable-border-hover);
       }
     }
 

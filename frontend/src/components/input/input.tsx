@@ -78,7 +78,7 @@ export default function Input(
                 {
                     info &&
                     <Tooltip.Root delayDuration={100}>
-                        <Tooltip.Trigger className={"noPadding"} asChild>
+                        <Tooltip.Trigger className={"noPadding"}>
                             <Info/>
                         </Tooltip.Trigger>
                         <Tooltip.Portal>

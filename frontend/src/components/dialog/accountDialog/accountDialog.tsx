@@ -135,10 +135,13 @@ export function useAccountDialog() {
                 maxLength={50}
                 placeholder={"John Doe"}/>
 
-                <div className="row">
-                    <p>Send password reset request to your email</p>
-                    <button disabled={passwordResetDisabled} className={"logout"} onClick={resetPassword}>send email</button>
-                </div>
+                { !Auth.getUser()?.isSocial &&
+                    <div className="row">
+                        <p>Send password reset request to your email</p>
+                        <button disabled={passwordResetDisabled} className={"logout"} onClick={resetPassword}>send email
+                        </button>
+                    </div>
+                }
 
                 <Separator.Root className={"Separator"}/>
 

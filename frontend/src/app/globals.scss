@@ -139,9 +139,18 @@ img{
   color: hsl(0, 0%, 0%);
 }
 
-.rootStack{
+.root{
   position: relative;
   z-index: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.AuthWrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 input{

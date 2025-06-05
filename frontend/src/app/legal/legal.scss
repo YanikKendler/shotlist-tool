@@ -5,7 +5,7 @@ main.legal{
   flex-direction: column;
   gap: .3rem;
   overflow-y: auto;
-  height: 100vh;
+  height: 100%;
 
   .wordmark{
     color: var(--accent);

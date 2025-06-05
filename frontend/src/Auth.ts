@@ -3,6 +3,7 @@ import auth0, {Auth0DecodedHash, Auth0ParseHashError, WebAuth} from 'auth0-js';
 export interface AuthUser {
     email: string;
     sub: string;
+    isSocial?: boolean;
 }
 
 class Auth {
@@ -74,14 +75,6 @@ class Auth {
 
     handleAuthentication() {
         return new Promise((resolve, reject) => {
-            /*this.auth0.parseHash((err, authResult) => {
-                if (err) return reject(err)
-                if (!authResult || !authResult.idToken) {
-                    return reject(err)
-                }
-                this.setSession(authResult)
-                resolve()
-            })*/
             this.auth0.parseHash({ hash: window.location.hash }, (error: Auth0ParseHashError | null, authResult: Auth0DecodedHash | null) => {
                 if (error) {
                     reject(error)
@@ -112,16 +105,19 @@ class Auth {
             return
         }
         this.idToken = authResult.idToken;
+
         if(!authResult.idTokenPayload.sub || !authResult.idTokenPayload.email || !authResult.idTokenPayload.name){
             console.error("missing data in id token payload")
             return
         }
+
         this.authUser = {
             email: authResult.idTokenPayload.email,
             sub: authResult.idTokenPayload.sub,
+            isSocial: authResult.idTokenPayload.sub.startsWith("google-oauth2|")
         }
-        console.log(authResult);
-        localStorage.setItem(this.authFlag, JSON.stringify(true));
+        console.log(authResult)
+        localStorage.setItem(this.authFlag, JSON.stringify(true))
     }
 
     silentAuth() {

@@ -28,12 +28,12 @@ export default function RootLayout({
         <html lang="en" className={inter.className}>
         <body>
         <Toast.Provider>
-            <div className="rootStack">
-                <AuthWrapper>
-                    <ApolloWrapper>
-                        <NotificationWrapper>
-                            <Tooltip.Provider>
-                                <SelectRefreshProvider>
+            <div className="root">
+                <AuthWrapper data-test={"AuthWrapper"}>
+                    <ApolloWrapper data-test={"ApolloWrapper"}>
+                        <NotificationWrapper data-test={"NotificationWrapper"}>
+                            <Tooltip.Provider data-test={"Tooltip.Provider"}>
+                                <SelectRefreshProvider data-test={"SelectRefreshProvider"}>
                                     {children}
                                 </SelectRefreshProvider>
                             </Tooltip.Provider>

@@ -1,7 +1,9 @@
 main.dashboard{
-  height: 100lvh;
+  height: 100%;
   width: 100%;
   background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
 
   .sidebar{
     >.content{
