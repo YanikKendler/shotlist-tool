@@ -36,8 +36,16 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
         Shot shot = findById(editDTO.id());
 
         if(shot.position != editDTO.position()){
-            shot.scene.shots.stream().filter(s -> s.position < shot.position && s.position >= editDTO.position()).forEach(a -> a.position++);
-            shot.scene.shots.stream().filter(s -> s.position > shot.position && s.position <= editDTO.position()).forEach(a -> a.position--);
+            //shot was moved back
+            //0 1 2 3 New 5 6 Old
+            shot.scene.shots.stream()
+                    .filter(s -> s.position < shot.position && s.position >= editDTO.position())
+                    .forEach(a -> a.position++);
+            //shot was moved forward
+            //0 1 2 3 Old 5 6 New
+            shot.scene.shots.stream()
+                    .filter(s -> s.position > shot.position && s.position <= editDTO.position())
+                    .forEach(a -> a.position--);
         }
 
         shot.position = editDTO.position();

@@ -39,8 +39,16 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
         Scene scene = findById(editDTO.id());
 
         if(scene.position != editDTO.position()){
-            scene.shotlist.scenes.stream().filter(s -> s.position < scene.position && s.position >= editDTO.position()).forEach(a -> a.position++);
-            scene.shotlist.scenes.stream().filter(s -> s.position > scene.position && s.position <= editDTO.position()).forEach(a -> a.position--);
+            //scene was moved back
+            //0 1 2 3 New 5 6 Old
+            scene.shotlist.scenes.stream()
+                    .filter(s -> s.position < scene.position && s.position >= editDTO.position())
+                    .forEach(a -> a.position++);
+            //scene was moved forward
+            //0 1 2 3 Old 5 6 New
+            scene.shotlist.scenes.stream()
+                    .filter(s -> s.position > scene.position && s.position <= editDTO.position())
+                    .forEach(a -> a.position--);
         }
 
         scene.position = editDTO.position();

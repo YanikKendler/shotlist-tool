@@ -53,6 +53,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
         List<ShotAttributeDefinitionBaseDTO> attributeDefinitionDTOs = new ArrayList<>();
 
+        //map attribute definitions to DTOs (cannot be a class method because of mapping the options)
         attributeDefinitions.forEach(definition -> {
             switch (definition) {
                 case ShotSingleSelectAttributeDefinition singleSelectAttribute -> {
@@ -96,6 +97,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
         shotlist.registerEdit();
 
+        //create different definition type based on selected type in create DTO
         switch (createDTO.type()) {
             case ShotSingleSelectAttribute -> {
                 attributeDefinition = new ShotSingleSelectAttributeDefinition(shotlist);
@@ -114,6 +116,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
         persist(attributeDefinition);
 
+        //add the newly created definition to all existing shots
         ShotAttributeDefinitionBase finalAttributeDefinition = attributeDefinition;
         shotlist.scenes.forEach(scene -> {
             scene.shots.forEach(shot -> {
@@ -138,9 +141,13 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
 
+            //attr was moved back
+            //0 1 2 3 New 5 6 Old
             shotlist.shotAttributeDefinitions.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
                     .forEach(a -> a.position++);
+            //attr was moved forward
+            //0 1 2 3 Old 5 6 New
             shotlist.shotAttributeDefinitions.stream()
                     .filter(a -> a.position > attribute.position && a.position <= editDTO.position())
                     .forEach(a -> a.position--);

@@ -26,7 +26,6 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
 
     private static final Logger LOGGER = Logger.getLogger(ShotSelectAttributeOptionDefinitionRepository.class);
 
-
     public ShotSelectAttributeOptionDefinition create(ShotSelectAttributeOptionCreateDTO createDTO){
         if (createDTO.name() == null || createDTO.name().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty");

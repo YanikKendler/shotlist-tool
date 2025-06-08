@@ -41,6 +41,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         List<SceneAttributeDefinitionBaseDTO> attributeDefinitionDTOs = new ArrayList<>();
 
+        //map attribute definitions to DTOs (cannot be a class method because of mapping the options)
         attributeDefinitions.forEach(definition -> {
             switch (definition) {
                 case SceneSingleSelectAttributeDefinition singleSelectAttribute -> {
@@ -84,6 +85,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         shotlist.registerEdit();
 
+        //create different definition type based on selected type in create DTO
         switch (createDTO.type()) {
             case SceneSingleSelectAttribute -> {
                 attributeDefinition = new SceneSingleSelectAttributeDefinition(shotlist);
@@ -102,6 +104,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         persist(attributeDefinition);
 
+        // add the newly created definition to all existing scenes in the shotlist
         SceneAttributeDefinitionBase finalAttributeDefinition = attributeDefinition;
         shotlist.scenes.forEach(scene -> {
             sceneAttributeRepository.persist(finalAttributeDefinition.createAttribute(scene));
@@ -120,13 +123,17 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         shotlist.registerEdit();
 
-        if(editDTO.name() != null && !editDTO.name().isEmpty()) {
+        if(editDTO.name() != null && !editDTO.name().isEmpty()) { //update name
             attribute.name = editDTO.name();
         }
-        if(editDTO.position() != null && attribute.position != editDTO.position()){
+        if(editDTO.position() != null && attribute.position != editDTO.position()){ //update position
+            //attr was moved back
+            //0 1 2 3 New 5 6 Old
             shotlist.sceneAttributeDefinitions.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
                     .forEach(a -> a.position++);
+            //attr was moved forward
+            //0 1 2 3 Old 5 6 New
             shotlist.sceneAttributeDefinitions.stream()
                     .filter(a -> a.position > attribute.position && a.position <= editDTO.position())
                     .forEach(a -> a.position--);
