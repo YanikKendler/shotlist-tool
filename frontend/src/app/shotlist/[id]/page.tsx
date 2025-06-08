@@ -45,7 +45,7 @@ export default function Shotlist() {
     const params = useParams<{ id: string }>()
     const id = params?.id || ""
     const searchParams = useSearchParams()
-    const sceneId = searchParams?.get('sceneId')
+    const sceneId = searchParams?.get('sid')
 
     const [shotlist, setShotlist] = useState<{data: ShotlistDto , loading: boolean, error: any}>({data: {} as ShotlistDto, loading: true, error: null})
     const [selectedSceneId, setSelectedSceneId] = useState(sceneId || "")
@@ -191,6 +191,10 @@ export default function Shotlist() {
 
     const selectScene = (sceneId: string) => {
         setSelectedSceneId(sceneId)
+
+        const url = new URL(window.location.href)
+        url.searchParams.set("sid", sceneId)
+        router.push(url.toString())
     }
 
     const removeScene = (sceneId: string) => {
@@ -256,7 +260,7 @@ export default function Shotlist() {
             }
         })
 
-        setSelectedSceneId(data.createScene.id)
+        selectScene(data.createScene.id)
     }
 
     function handleDragEnd(event: any) {
@@ -374,9 +378,14 @@ export default function Shotlist() {
                                             strategy={verticalListSortingStrategy}
                                         >
                                             {(shotlist.data?.scenes as SceneDto[]).map((scene: SceneDto, index) => (
-                                                <Scene key={scene.id} scene={scene} position={index}
-                                                       expanded={selectedSceneId == scene.id} onSelect={selectScene}
-                                                       onDelete={removeScene}/>
+                                                <Scene
+                                                    key={scene.id}
+                                                    scene={scene}
+                                                    position={index}
+                                                    expanded={selectedSceneId == scene.id}
+                                                    onSelect={selectScene}
+                                                    onDelete={removeScene}
+                                                />
                                             ))}
                                         </SortableContext>
                                     </DndContext>

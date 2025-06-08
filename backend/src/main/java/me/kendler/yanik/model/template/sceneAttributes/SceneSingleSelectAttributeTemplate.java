@@ -3,6 +3,8 @@ package me.kendler.yanik.model.template.sceneAttributes;
 import java.util.*;
 
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateBaseDTO;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneSingleSelectAttributeTemplateDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
@@ -29,5 +31,15 @@ public class SceneSingleSelectAttributeTemplate extends SceneAttributeTemplateBa
         }
 
         return attributeDefinition;
+    }
+
+    @Override
+    public SceneAttributeTemplateBaseDTO toDTO() {
+        return new SceneSingleSelectAttributeTemplateDTO(
+            this.id,
+            this.name,
+            this.position,
+            this.options.stream().toList()
+        );
     }
 }

@@ -4,7 +4,6 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import me.kendler.yanik.StartupListener;
 import me.kendler.yanik.UnauthorizedAccessException;
 import me.kendler.yanik.auth0.Auth0Service;
 import me.kendler.yanik.dto.user.UserEditDTO;
@@ -94,16 +93,38 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
         return false;
     }
 
-    public void checkUserAccessRights(Shotlist shotlist, JsonWebToken jwt) {
+    public void checkShotlistAccessRights(Shotlist shotlist, JsonWebToken jwt) {
         LOGGER.info("In CheckUserAccessRights");
         if (!userCanAccessShotlist(shotlist, jwt)) {
             throw new UnauthorizedAccessException("You are not allowed to access this shotlist");
         }
     }
 
-    public void checkUserAccessRights(UUID shotlistId, JsonWebToken jwt) {
-        if (!userCanAccessShotlist(shotlistRepository.findById(shotlistId), jwt)) {
-            throw new UnauthorizedAccessException("You are not allowed to access this shotlist");
+    public void checkShotlistAccessRights(UUID shotlistId, JsonWebToken jwt) {
+        checkShotlistAccessRights(shotlistRepository.findById(shotlistId), jwt);
+    }
+
+    public boolean userCanAccessTemplate(Template template, JsonWebToken jwt) {
+        User user = findOrCreateByJWT(jwt);
+        return userCanAccessTemplate(template, user);
+    }
+
+    public boolean userCanAccessTemplate(Template template, User user) {
+        // TODO Add collaborator support
+        if (template != null && user.equals(template.owner)) {
+            return true;
         }
+        return false;
+    }
+
+    public void checkTemplateAccessRights(Template template, JsonWebToken jwt) {
+        LOGGER.info("In CheckUserAccessRights");
+        if (!userCanAccessTemplate(template, jwt)) {
+            throw new UnauthorizedAccessException("You are not allowed to access this template");
+        }
+    }
+
+    public void checkTemplateAccessRights(UUID templateId, JsonWebToken jwt) {
+        checkTemplateAccessRights(templateRepository.findById(templateId), jwt);
     }
 }

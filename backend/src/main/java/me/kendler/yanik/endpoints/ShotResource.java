@@ -41,7 +41,7 @@ public class ShotResource {
 
     @Query
     public List<ShotDTO> getShots(UUID sceneId) {
-        userRepository.checkUserAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
+        userRepository.checkShotlistAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
 
         return shotRepository.list("scene.id = ?1 order by position", sceneId).stream().map(Shot::toDTO).toList();
     }
@@ -50,7 +50,7 @@ public class ShotResource {
     public ShotDTO createShot(@PathParam("sceneId") UUID sceneId){
         LOGGER.info("running createShot access check");
 
-        userRepository.checkUserAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
+        userRepository.checkShotlistAccessRights(sceneRepository.findById(sceneId).shotlist, jwt);
 
         LOGGER.info("finished createShot access check, creating shot");
 
@@ -59,14 +59,14 @@ public class ShotResource {
 
     @Mutation
     public ShotDTO deleteShot(@PathParam("id") UUID id) {
-        userRepository.checkUserAccessRights(shotRepository.findById(id).scene.shotlist, jwt);
+        userRepository.checkShotlistAccessRights(shotRepository.findById(id).scene.shotlist, jwt);
 
         return shotRepository.delete(id).toDTO();
     }
 
     @Mutation
     public ShotDTO updateShot(ShotEditDTO editDTO) {
-        userRepository.checkUserAccessRights(shotRepository.findById(editDTO.id()).scene.shotlist, jwt);
+        userRepository.checkShotlistAccessRights(shotRepository.findById(editDTO.id()).scene.shotlist, jwt);
 
         return shotRepository.update(editDTO).toDTO();
     }
@@ -80,28 +80,28 @@ public class ShotResource {
 
     @Query
     public List<ShotAttributeDefinitionBaseDTO> getShotAttributeDefinitions(UUID shotlistId){
-        userRepository.checkUserAccessRights(shotlistId, jwt);
+        userRepository.checkShotlistAccessRights(shotlistId, jwt);
 
         return shotAttributeDefinitionRepository.getAll(shotlistId);
     }
 
     @Mutation
     public ShotAttributeDefinitionBaseDTO createShotAttributeDefinition(ShotAttributeDefinitionCreateDTO createDTO){
-        userRepository.checkUserAccessRights(createDTO.shotlistId(), jwt);
+        userRepository.checkShotlistAccessRights(createDTO.shotlistId(), jwt);
 
         return shotAttributeDefinitionRepository.create(createDTO).toDTO();
     }
 
     @Mutation
     public ShotAttributeDefinitionBase deleteShotAttributeDefinition(Long id){
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(id), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(id), jwt);
 
         return shotAttributeDefinitionRepository.delete(id);
     }
 
     @Mutation
     public ShotAttributeDefinitionBase updateShotAttributeDefinition(ShotAttributeDefinitionEditDTO editDTO) {
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(editDTO.id()), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(editDTO.id()), jwt);
 
         return shotAttributeDefinitionRepository.update(editDTO);
     }
@@ -116,7 +116,7 @@ public class ShotResource {
     @Mutation
     public ShotAttributeBase updateShotAttribute(ShotAttributeEditDTO editDTO) {
         ShotAttributeDefinitionBase shotAttributeDefinitionBase = shotAttributeRepository.findById(editDTO.id()).definition;
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
 
         return shotAttributeRepository.update(editDTO);
     }
@@ -130,21 +130,21 @@ public class ShotResource {
 
     @Query
     public List<ShotSelectAttributeOptionDefinition> getShotSelectAttributeOptions(Long attributeDefinitionId) {
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(attributeDefinitionId), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(attributeDefinitionId), jwt);
 
         return shotSelectAttributeOptionDefinitionRepository.list("shotAttributeDefinition.id = ?1 order by name", attributeDefinitionId);
     }
 
     @Query
     public List<ShotSelectAttributeOptionDefinition> searchShotSelectAttributeOptions(ShotSelectAttributeOptionSearchDTO searchDTO){
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(searchDTO.shotAttributeDefinitionId()), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(searchDTO.shotAttributeDefinitionId()), jwt);
 
         return shotSelectAttributeOptionDefinitionRepository.search(searchDTO);
     }
 
     @Mutation
     public ShotSelectAttributeOptionDefinition createShotSelectAttributeOption(ShotSelectAttributeOptionCreateDTO createDTO) {
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(createDTO.attributeDefinitionId()), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(createDTO.attributeDefinitionId()), jwt);
 
         return shotSelectAttributeOptionDefinitionRepository.create(createDTO);
     }
@@ -152,7 +152,7 @@ public class ShotResource {
     @Mutation
     public ShotSelectAttributeOptionDefinition deleteShotSelectAttributeOption(Long id){
         ShotAttributeDefinitionBase shotAttributeDefinitionBase = shotSelectAttributeOptionDefinitionRepository.findById(id).shotAttributeDefinition;
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
 
         return shotSelectAttributeOptionDefinitionRepository.delete(id);
     }
@@ -160,7 +160,7 @@ public class ShotResource {
     @Mutation
     public ShotSelectAttributeOptionDefinition updateShotSelectAttributeOption(ShotSelectAttributeOptionEditDTO editDTO) {
         ShotAttributeDefinitionBase shotAttributeDefinitionBase = shotSelectAttributeOptionDefinitionRepository.findById(editDTO.id()).shotAttributeDefinition;
-        userRepository.checkUserAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
+        userRepository.checkShotlistAccessRights(shotAttributeDefinitionRepository.getShotlistByDefinitionId(shotAttributeDefinitionBase.id), jwt);
 
         return shotSelectAttributeOptionDefinitionRepository.update(editDTO);
     }

@@ -37,7 +37,7 @@ public class ShotlistResource {
         if (shotlist == null) {
             return null;
         }
-        userRepository.checkUserAccessRights(shotlist, jwt);
+        userRepository.checkShotlistAccessRights(shotlist, jwt);
         return shotlist.toDTO();
     }
 
@@ -48,13 +48,13 @@ public class ShotlistResource {
 
     @Mutation
     public ShotlistDTO updateShotlist(ShotlistEditDTO editDTO) {
-        userRepository.checkUserAccessRights(shotlistRepository.findById(editDTO.id()), jwt);
+        userRepository.checkShotlistAccessRights(shotlistRepository.findById(editDTO.id()), jwt);
         return shotlistRepository.update(editDTO).toDTO();
     }
 
     @Mutation
     public ShotlistDTO deleteShotlist(UUID id) {
-        userRepository.checkUserAccessRights(shotlistRepository.findById(id), jwt);
+        userRepository.checkShotlistAccessRights(shotlistRepository.findById(id), jwt);
         return shotlistRepository.delete(id).toDTO();
     }
 }
