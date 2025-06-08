@@ -89,6 +89,10 @@ export default function Shotlist() {
         if(url.searchParams.get("oo") == "true") {
             let currentOptionsMainPage = url.searchParams.get("mp")
             let currentOptionsSubPage = url.searchParams.get("sp")
+
+            if(!currentOptionsMainPage || currentOptionsMainPage == "") currentOptionsMainPage = "general"
+            if(!currentOptionsSubPage || currentOptionsSubPage == "") currentOptionsSubPage = "shot"
+
             setSelectedOptionsDialogPage({
                 main: currentOptionsMainPage as ShotlistOptionsDialogPage,
                 sub: currentOptionsSubPage as ShotlistOptionsDialogSubPage

@@ -17,7 +17,7 @@ import {apolloClient} from "@/ApolloWrapper"
 import Loader from "@/components/loader/loader"
 
 export default function AttributeTab(
-    { shotlistId, shotAttributeDefinitions, setShotAttributeDefinitions, sceneAttributeDefinitions, setSceneAttributeDefinitions, selectedPage, dataChanged }
+    { shotlistId, shotAttributeDefinitions, setShotAttributeDefinitions, sceneAttributeDefinitions, setSceneAttributeDefinitions, selectedPage = "shot", dataChanged }
         :
     {
         shotlistId: string,
@@ -45,7 +45,6 @@ export default function AttributeTab(
         url.searchParams.set("oo", "true") // options open
         if(page)
             url.searchParams.set("mp", page) // main page
-
 
         router.push(url.toString())
     }

@@ -189,6 +189,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
     }
 
     public Shotlist getShotlistByDefinitionId(Long id) {
+        LOGGER.infof("finding shotlist by shot definition id " + id);
         Shotlist result = getEntityManager()
                 .createQuery("select s from Shotlist s join s.shotAttributeDefinitions d where d.id = :definitionId", Shotlist.class)
                 .setParameter("definitionId", id)
