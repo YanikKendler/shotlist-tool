@@ -61,7 +61,7 @@ export function useAccountDialog() {
 
         const {data, errors} = await client.mutate({
                 mutation: gql`
-                    mutation createShotlist{
+                    mutation triggerPasswordReset {
                         triggerPasswordReset
                     }`
             },

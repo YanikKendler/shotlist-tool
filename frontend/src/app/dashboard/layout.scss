@@ -1,0 +1,124 @@
+main.dashboard{
+  height: 100%;
+  width: 100%;
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+
+  .sidebar{
+    >.content{
+      gap: 1rem;
+
+      .list{
+        gap: .5rem;
+      }
+    }
+
+    .CollapsibleRoot.dashboardSidebar{
+      button{
+        width: 100%;
+        font-size: .9rem;
+        font-weight: 500;
+        color: var(--text-30);
+        padding: .3rem;
+
+        &:hover{
+          background-color: var(--hover-bg-10);
+          color: var(--text);
+        }
+
+        svg.chevron{
+          transition: rotate .2s;
+        }
+      }
+
+      a{
+        padding: .2rem;
+        padding-left: .4rem;
+        justify-content: left;
+        gap: .3rem;
+        color: var(--text-20);
+        font-weight: 500;
+
+        &:hover{
+          background-color: var(--hover-bg-10);
+          text-decoration: underline;
+          color: var(--text);
+        }
+
+        span.italic{
+          font-style: italic;
+        }
+      }
+
+      &[data-state="open"] svg.chevron{
+        rotate: 180deg;
+      }
+
+      .empty{
+        margin-left: .4rem;
+        width: calc(100% - .4rem);
+        color: var(--text-30);
+        font-size: .9rem;
+        display: block;
+        text-align: center;
+
+        span {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .content{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin-left: 1px;
+
+    .header{
+      display: flex;
+      justify-content: end;
+      padding: .3rem .5rem;
+      gap: .5rem;
+
+      button{
+        padding: .4rem .8rem;
+        box-sizing: border-box;
+        font-size: .95rem;
+        transition: none;
+
+        &.shotlist{
+          background-color: var(--accent);
+          color: var(--contrast);
+
+          &:hover{
+            background-color: var(--accent-55);
+          }
+        }
+
+        &.template{
+          font-weight: 600;
+          color: var(--accent);
+          border: .15rem solid var(--accent);
+
+          /*&:hover{
+            color: var(--accent-60);
+            border-color: var(--accent-60);
+          }*/
+        }
+      }
+    }
+
+    .dashboardContent{
+      background-color: var(--contrast);
+      height: 100%;
+      width: 100%;
+      border-top-left-radius: 1rem;
+      padding: 1.5rem;
+      padding-bottom: 5rem;
+    }
+  }
+}

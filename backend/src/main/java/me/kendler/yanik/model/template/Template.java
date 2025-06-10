@@ -20,15 +20,21 @@ public class Template extends PanacheEntityBase {
     @ManyToOne
     @JsonIgnore
     public User owner;
-    @OneToMany(mappedBy = "template")
-    public Set<SceneAttributeTemplateBase> sceneAttributes;
-    @OneToMany(mappedBy = "template")
-    public Set<ShotAttributeTemplateBase> shotAttributes;
+    @OneToMany(mappedBy = "template", fetch = FetchType.EAGER)
+    public Set<SceneAttributeTemplateBase> sceneAttributes = new HashSet<>();
+    @OneToMany(mappedBy = "template", fetch = FetchType.EAGER)
+    public Set<ShotAttributeTemplateBase> shotAttributes = new HashSet<>();
     public String name;
     public ZonedDateTime createdAt;
 
     public Template() {
         this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+
+    public Template(User owner, String name) {
+        this();
+        this.owner = owner;
+        this.name = name;
     }
 
     public TemplateDTO toDTO(){
@@ -38,7 +44,9 @@ public class Template extends PanacheEntityBase {
             name,
             sceneAttributes.stream().map(SceneAttributeTemplateBase::toDTO).toList(),
             shotAttributes.stream().map(ShotAttributeTemplateBase::toDTO).toList(),
-            createdAt
+            createdAt,
+            sceneAttributes.size(),
+            shotAttributes.size()
         );
     }
 }

@@ -1,7 +1,9 @@
 package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
+import me.kendler.yanik.dto.template.TemplateCreateDTO;
 import me.kendler.yanik.dto.template.TemplateDTO;
+import me.kendler.yanik.dto.template.TemplateEditDTO;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.UserRepository;
 import me.kendler.yanik.repositories.template.TemplateRepository;
@@ -39,20 +41,20 @@ public class TemplateResource {
         return template.toDTO();
     }
 
-    /*@Mutation
+    @Mutation
     public TemplateDTO createTemplate(TemplateCreateDTO createDTO) {
-        return shotlistRepository.create(createDTO, jwt).toDTO();
+        return templateRepository.create(createDTO, jwt).toDTO();
     }
 
     @Mutation
     public TemplateDTO updateTemplate(TemplateEditDTO editDTO) {
-        userRepository.checkUserAccessRights(shotlistRepository.findById(editDTO.id()), jwt);
-        return shotlistRepository.update(editDTO).toDTO();
+        userRepository.checkTemplateAccessRights(templateRepository.findById(editDTO.id()), jwt);
+        return templateRepository.update(editDTO).toDTO();
     }
 
     @Mutation
     public TemplateDTO deleteTemplate(UUID id) {
-        userRepository.checkUserAccessRights(shotlistRepository.findById(id), jwt);
-        return shotlistRepository.delete(id).toDTO();
-    }*/
+        userRepository.checkTemplateAccessRights(templateRepository.findById(id), jwt);
+        return templateRepository.delete(id).toDTO();
+    }
 }

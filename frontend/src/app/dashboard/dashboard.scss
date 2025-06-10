@@ -1,113 +1,83 @@
-main.dashboard{
-  height: 100%;
-  width: 100%;
-  background-color: var(--sidebar-bg);
-  display: flex;
-  flex-direction: column;
+main.overview{
 
-  .sidebar{
-    >.content{
-      gap: 1rem;
+  h2{
+    font-size: .95rem;
+    color: var(--text-40);
+    font-weight: 500;
+    margin-bottom: .5rem;
+    margin-left: .1rem;
+  }
 
-      .list{
-        gap: .5rem;
-      }
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 1200px){
+      grid-template-columns: 1fr 1fr 1fr;
     }
 
-    .CollapsibleRoot.dashboardSidebar{
-      button{
-        width: 100%;
-        font-size: .9rem;
-        font-weight: 500;
-        color: var(--text-30);
-        padding: .3rem;
+    .gridItem{
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: flex-start;
+      padding: .75rem 1rem;
+      border-radius: .5rem;
+      gap: 0;
+      border: 1px solid var(--text-60);
 
-        &:hover{
-          background-color: var(--hover-bg-10);
-          color: var(--text);
-        }
+      &.add{
+        display: grid;
+        place-content: center;
+        min-height: 3rem;
 
-        svg.chevron{
-          transition: rotate .2s;
+        span{
+          display: flex;
+          align-items: center;
+          color: var(--text-60);
+          font-size: .95rem;
+          gap: .2rem;
         }
       }
 
-      a{
-        padding: .2rem;
-        padding-left: .4rem;
-        justify-content: left;
-        gap: .3rem;
-        color: var(--text-20);
-        font-weight: 500;
+      &:hover{
+        background-color: var(--accent-98);
+        border-color: var(--accent);
+      }
 
-        &:hover{
-          background-color: var(--hover-bg-10);
-          text-decoration: underline;
-          color: var(--text);
-        }
+      label{
+        display: flex;
+        gap: .2rem;
+        align-items: center;
+        font-size: .9rem;
+        color: var(--text-30);
+      }
+
+      h3{
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: .3rem;
+        color: var(--text-10);
+        white-space: wrap;
 
         span.italic{
           font-style: italic;
+          color: var(--text-30);
         }
       }
 
-      &[data-state="open"] svg.chevron{
-        rotate: 180deg;
-      }
-
-      .empty{
-        margin-left: .4rem;
-        width: calc(100% - .4rem);
-        color: var(--text-30);
-        font-size: .9rem;
-        display: block;
-
-        span {
-          font-weight: bold;
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-
-  .content{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    margin-left: 1px;
-
-    .header{
-      display: flex;
-      justify-content: end;
-      padding: .3rem .5rem;
-      gap: .5rem;
-
-      button{
-        padding: .4rem .8rem;
-        box-sizing: border-box;
+      p{
+        color: var(--text-35);
+        margin-top: .2rem;
         font-size: .95rem;
-        transition: none;
+      }
 
-        &.shotlist{
-          background-color: var(--accent);
-          color: var(--contrast);
-
-          &:hover{
-            background-color: var(--accent-55);
-          }
-        }
-
-        &.template{
-          font-weight: 600;
-          color: var(--accent);
-          border: .15rem solid var(--accent);
-
-          /*&:hover{
-            color: var(--accent-60);
-            border-color: var(--accent-60);
-          }*/
-        }
+      .bold{
+        font-weight: 500;
+        color: var(--text-10);
+        white-space: wrap;
       }
     }
   }

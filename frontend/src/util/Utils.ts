@@ -1,9 +1,10 @@
-import {ShotlistDto} from "../../lib/graphql/generated"
+import {ShotlistDto, TemplateDto} from "../../lib/graphql/generated"
 import {wuText} from "@yanikkendler/web-utils/dist"
 import {ThemeConfig} from "react-select"
+import {ShotlistOrTemplate} from "@/util/Types"
 
 export default class Utils {
-    static orderShotlistsByName(a: ShotlistDto, b: ShotlistDto) {
+    static orderShotlistsOrTemplatesByName(a: ShotlistOrTemplate, b: ShotlistOrTemplate) {
         if(!a.name) return 1
         if(!b.name) return -1
 
@@ -16,7 +17,7 @@ export default class Utils {
         return 0;
     }
 
-    static oderShotlistsByChangeDate(a: ShotlistDto, b: ShotlistDto) {
+    static oderShotlistsOrTemplatesByChangeDate(a: ShotlistOrTemplate, b: ShotlistOrTemplate) {
         if(!a.editedAt) return -1
         if(!b.editedAt) return 1
 

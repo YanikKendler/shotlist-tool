@@ -28,6 +28,8 @@ public class ShotlistResource {
 
     @Query
     public List<ShotlistDTO> getShotlists() {
+        //TODO add maximum number
+        //not ordering them here because the frontend will display them ordered by name or createdAt so it will do the ordering itself
         return userRepository.findOrCreateByJWT(jwt).shotlists.stream().map(Shotlist::toDTO).toList();
     }
 

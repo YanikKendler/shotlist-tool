@@ -48,7 +48,7 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
             shotlist = new Shotlist(user, template, createDTO.name());
         }
 
-        LOGGER.infof("Created new shotlist: %s", shotlist.toString());
+        LOGGER.infof("Created new shotlist: %s for user %s", shotlist.name, user.email);
 
         persist(shotlist);
 

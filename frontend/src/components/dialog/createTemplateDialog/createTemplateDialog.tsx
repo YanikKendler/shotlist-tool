@@ -1,18 +1,16 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, {useEffect, useState} from 'react';
-import "./createShotlistDialog.scss"
+import React, { useState} from 'react';
+import "./createTemplateDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
 import auth from "@/Auth"
 import {useRouter} from "next/navigation"
-import {is} from "@babel/types"
-import Image from "next/image"
 import Input from "@/components/input/input"
 import Loader from "@/components/loader/loader"
 
-export function useCreateShotlistDialog() {
+export function useCreateTemplateDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const [promiseResolver, setPromiseResolver] = useState<(value: boolean) => void>();
     const [name, setName] = useState<string>("")
@@ -21,7 +19,7 @@ export function useCreateShotlistDialog() {
     const router = useRouter()
     const client = useApolloClient()
 
-    function openCreateShotlistDialog(): Promise<boolean> {
+    function openCreateTemplateDialog(): Promise<boolean> {
         setIsOpen(true)
         setIsLoading(false)
         return new Promise((resolve) => {
@@ -36,15 +34,15 @@ export function useCreateShotlistDialog() {
         setIsLoading(true)
         const {data, errors} = await client.mutate({
                 mutation: gql`
-                    mutation createShotlist($name: String!){
-                        createShotlist(createDTO: {
+                    mutation createTemplate($name: String!){
+                        createTemplate(createDTO: {
                             name: $name
                         }){ id }
                     }`,
                 variables: {name: name}
             },
         )
-        router.push(`/shotlist/${data.createShotlist.id}`)
+        router.push(`/dashboard/template/${data.createTemplate.id}`)
         promiseResolver?.(true)
     }
 
@@ -53,13 +51,13 @@ export function useCreateShotlistDialog() {
         promiseResolver?.(false)
     }
 
-    const CreateShotlistDialog = (
+    const CreateTemplateDialog = (
         <Dialog.Root open={isOpen || isLoading} onOpenChange={setIsOpen}>
             <Dialog.Portal>
-                <Dialog.Overlay className={"createShotlistDialogOverlay dialogOverlay"}/>
+                <Dialog.Overlay className={"createTemplateDialogOverlay dialogOverlay"}/>
                 <Dialog.Content
                     aria-describedby={"confirm action dialog"}
-                    className={"createShotlistDialogContent dialogContent"} 
+                    className={"createTemplateDialogContent dialogContent"}
                     onKeyDown={(e) => {
                         if(e.key === "Enter" && !isLoading) {
                             e.preventDefault()
@@ -69,7 +67,7 @@ export function useCreateShotlistDialog() {
                 >
                     {isLoading ?
                         <>
-                            <Dialog.Title className={"title"}>Creating shotlist "{name}"</Dialog.Title>
+                            <Dialog.Title className={"title"}>Creating template "{name}"</Dialog.Title>
                             <div className={"loading"}>
                                 <Loader/>
                                 <p>You will be redirected shortly</p>
@@ -77,11 +75,11 @@ export function useCreateShotlistDialog() {
                         </>
                         :
                         <>
-                            <Dialog.Title className={"title"}>Create Shotlist</Dialog.Title>
+                            <Dialog.Title className={"title"}>Create Template</Dialog.Title>
                             <Input
                                 label={"Name"}
                                 valueChange={setName}
-                                placeholder={"Interstellar"}
+                                placeholder={"Personal Projects"}
                             />
                             <div className={"buttons"}>
                                 <button onClick={e => {
@@ -102,6 +100,6 @@ export function useCreateShotlistDialog() {
         </Dialog.Root>
     );
 
-    return {openCreateShotlistDialog, CreateShotlistDialog};
+    return {openCreateTemplateDialog, CreateTemplateDialog};
 }
 

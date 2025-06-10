@@ -3,10 +3,10 @@ import {
     SceneMultiSelectAttributeDto, SceneSingleSelectAttributeDefinitionDto,
     SceneSingleSelectAttributeDto, SceneTextAttributeDefinitionDto,
     SceneTextAttributeDto,
-    ShotAttributeDefinitionBase, ShotMultiSelectAttributeDefinitionDto,
+    ShotAttributeDefinitionBase, ShotlistDto, ShotMultiSelectAttributeDefinitionDto,
     ShotMultiSelectAttributeDto, ShotSingleSelectAttributeDefinitionDto,
     ShotSingleSelectAttributeDto, ShotTextAttributeDefinitionDto,
-    ShotTextAttributeDto
+    ShotTextAttributeDto, TemplateDto
 } from "../../lib/graphql/generated"
 
 export type AnySceneAttribute = SceneTextAttributeDto | SceneSingleSelectAttributeDto | SceneMultiSelectAttributeDto
@@ -19,6 +19,8 @@ export type ShotSingleOrMultiSelectAttributeDefinition = ShotSingleSelectAttribu
 export type SceneSingleOrMultiSelectAttributeDefinition = SceneSingleSelectAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto
 
 export type AnyAttributeDefinition = AnyShotAttributeDefinition | AnySceneAttributeDefinition
+
+export type ShotlistOrTemplate = ShotlistDto | TemplateDto
 
 export interface SelectOption {
     label: string
