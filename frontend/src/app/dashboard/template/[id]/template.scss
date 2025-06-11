@@ -1,7 +1,11 @@
 main.template{
+  --interactable-border: hsl(0, 0%, 60%);
+  --attribute-hover-border: hsl(0, 0%, 70%);
+
   h2{
     position: relative;
     display: grid;
+    translate: -.5rem 0;
 
     *{
       grid-area: 1/1/2/2;
@@ -14,6 +18,15 @@ main.template{
       font-weight: 600;
     }
 
+    input.templateName{
+      &:hover{
+        background-color: var(--hover-bg-10);
+      }
+      &:focus{
+        background-color: var(--hover-bg-accent-10);
+      }
+    }
+
     .spacerContainer{
       pointer-events: none;
       display: flex;
@@ -24,19 +37,40 @@ main.template{
         visibility: hidden;
         width: fit-content;
       }
+
+      svg{
+        color: var(--text-30);
+      }
     }
+
+    &:has(*:hover){
+      .spacerContainer {
+        svg {
+          color: var(--text);
+        }
+      }
+    }
+  }
+
+  .info{
+    font-size: .9rem;
+    color: var(--text-40);
+    max-width: 80ch;
   }
 
   h3{
     font-weight: 500;
-    color: var(--text-50);
+    color: var(--text-35);
     margin-top: 1rem;
-    margin-bottom: .3rem;
+    margin-bottom: .5rem;
   }
 
   .add{
     color: var(--text-50);
     font-size: .95rem;
+    margin-top: .8rem;
+    translate: -.2rem 0;
+    min-width: 20ch;
 
     &:hover{
       color: var(--text);
@@ -44,10 +78,34 @@ main.template{
     }
   }
 
-  .empty{
-    margin-left: 1rem;
-    font-size: .9rem;
-    color: var(--text-50);
-    margin-block: 1rem;
+
+  .attributeTemplates{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    .empty{
+      margin-left: 1rem;
+      font-size: .9rem;
+      color: var(--text-50);
+      margin-block: 1rem;
+    }
+  }
+}
+
+.addAttributeTemplatePopup{
+  button{
+    justify-content: flex-start;
+    color: var(--text-20);
+    font-weight: 500;
+
+    svg{
+      color: var(--accent-40);
+    }
+
+    &:hover{
+      background-color: var(--hover-bg-10);
+      color: var(--text);
+    }
   }
 }

@@ -4,8 +4,15 @@ import jakarta.inject.Inject;
 import me.kendler.yanik.dto.template.TemplateCreateDTO;
 import me.kendler.yanik.dto.template.TemplateDTO;
 import me.kendler.yanik.dto.template.TemplateEditDTO;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateBaseDTO;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
+import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateBaseDTO;
+import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateCreateDTO;
+import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.UserRepository;
+import me.kendler.yanik.repositories.template.SceneAttributeTemplateRepository;
+import me.kendler.yanik.repositories.template.ShotAttributeTemplateRepository;
 import me.kendler.yanik.repositories.template.TemplateRepository;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -56,5 +63,31 @@ public class TemplateResource {
     public TemplateDTO deleteTemplate(UUID id) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(id), jwt);
         return templateRepository.delete(id).toDTO();
+    }
+
+    /*
+     * SHOT ATTRIBUTE DEFINITIONS
+     */
+
+    @Inject
+    ShotAttributeTemplateRepository shotAttributeTemplateRepository;
+
+    @Mutation
+    public ShotAttributeTemplateBaseDTO createShotAttributeTemplate(ShotAttributeTemplateCreateDTO createDTO) {
+        userRepository.checkTemplateAccessRights(templateRepository.findById(createDTO.templateId()), jwt);
+        return shotAttributeTemplateRepository.create(createDTO).toDTO();
+    }
+
+    /*
+     * SCENE ATTRIBUTE DEFINITIONS
+     */
+
+    @Inject
+    SceneAttributeTemplateRepository sceneAttributeTemplateRepository;
+
+    @Mutation
+    public SceneAttributeTemplateBaseDTO createSceneAttributeTemplate(SceneAttributeTemplateCreateDTO createDTO) {
+        userRepository.checkTemplateAccessRights(templateRepository.findById(createDTO.templateId()), jwt);
+        return sceneAttributeTemplateRepository.create(createDTO).toDTO();
     }
 }

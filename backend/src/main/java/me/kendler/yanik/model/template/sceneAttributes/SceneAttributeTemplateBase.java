@@ -17,6 +17,14 @@ public abstract class SceneAttributeTemplateBase extends PanacheEntity {
     public String name;
     public int position;
 
+    public SceneAttributeTemplateBase() { }
+
+    public SceneAttributeTemplateBase(Template template) {
+        this.template = template;
+        this.position = template.sceneAttributes.size();
+        template.sceneAttributes.add(this);
+    }
+
     abstract public String getType();
 
     abstract public SceneAttributeDefinitionBase createDefinition(Shotlist shotlist);

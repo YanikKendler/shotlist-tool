@@ -63,7 +63,7 @@
   --drag-handle-hover: hsl(0, 0%, 80%);
 
   --default-interactable-border: hsl(0, 0%, 82%);
-  --default-interactable-hover-border: hsl(0, 0%, 20%);
+  --default-interactable-hover-border: hsl(0, 0%, 25%);
 
   --sidebar-width: 400px;
 }
@@ -223,6 +223,10 @@ button, a{
 
 span.bold, b, strong{
   font-weight: bold;
+}
+
+span.italic, i{
+  font-style: italic;
 }
 
 span.wrap{

@@ -8,7 +8,7 @@ import LoadingPage from "@/pages/loadingPage/loadingPage"
 import React, {useEffect, useState} from "react"
 import ErrorPage from "@/pages/errorPage/errorPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
-import {ChevronDown, House, NotepadText, Plus, User} from "lucide-react"
+import {ChevronDown, House, NotepadText, NotepadTextDashed, Plus, User} from "lucide-react"
 import {ShotlistDto, TemplateDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
 import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
@@ -47,7 +47,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
     const loadData = async () => {
         const { data, error, loading } = await client.query({query: gql`
-                query dashboard{
+                query home{
                     shotlists{
                         id
                         name
@@ -122,7 +122,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                                 Start by <span>creating a new shotlist</span> :)
                                             </button>) :
                                             shotlists.sort(Utils.orderShotlistsOrTemplatesByName).map((shotlist) => (
-                                                <Link key={shotlist.id} href={`../shotlist/${shotlist.id}`}>
+                                                <Link key={shotlist.id} href={`/shotlist/${shotlist.id}`}>
                                                     <NotepadText size={18}/>
                                                     {shotlist.name ? <span className={"wrap"}>{shotlist.name}</span> : (<span className={"italic"}>Unnamed</span>)}
                                                 </Link>
@@ -157,7 +157,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                             :
                                             templates.sort(Utils.orderShotlistsOrTemplatesByName).map((template) => (
                                                 <Link key={template.id} href={`/dashboard/template/${template.id}`}>
-                                                    <NotepadText size={18}/>
+                                                    <NotepadTextDashed size={18}/>
                                                     {template.name ? <span className={"wrap"}>{template.name}</span> : (<span className={"italic"}>Unnamed</span>)}
                                                 </Link>
                                             ))

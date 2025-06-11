@@ -18,10 +18,26 @@ public abstract class ShotAttributeTemplateBase extends PanacheEntity {
     public String name;
     public int position;
 
+    public ShotAttributeTemplateBase() { }
+
+    public ShotAttributeTemplateBase(Template template) {
+        this.template = template;
+        this.position = template.shotAttributes.size();
+        template.shotAttributes.add(this);
+    }
+
     abstract public String getType();
 
     abstract public ShotAttributeDefinitionBase createDefinition(Shotlist shotlist);
 
     public abstract ShotAttributeTemplateBaseDTO toDTO();
 
+    @Override
+    public String toString() {
+        return "ShotAttributeTemplateBase{" +
+                "template=" + template +
+                ", name='" + name + '\'' +
+                ", position=" + position +
+                '}';
+    }
 }

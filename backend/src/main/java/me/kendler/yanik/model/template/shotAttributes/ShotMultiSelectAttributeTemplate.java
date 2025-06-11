@@ -12,12 +12,19 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOpt
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
+import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.model.template.sceneAttributes.SceneSelectAttributeOptionTemplate;
 
 @Entity
 public class ShotMultiSelectAttributeTemplate extends ShotAttributeTemplateBase {
     @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotSelectAttributeOptionTemplate> options = new HashSet<>();
+
+    public ShotMultiSelectAttributeTemplate() { }
+
+    public ShotMultiSelectAttributeTemplate(Template template) {
+        super(template);
+    }
 
     @Override
     public String getType() {

@@ -1,101 +1,99 @@
-'use client'
-
 import {
-    AnyShotAttribute,
-    AnyShotAttributeDefinition,
-    SceneAttributeValueCollection,
-    ShotSingleOrMultiSelectAttributeDefinition
+    SceneSelectAttributeOptionDefinition,
+    ShotAttributeTemplateBaseDto,
+    ShotSelectAttributeOptionDefinition
+} from "../../../lib/graphql/generated"
+import {Grip, GripVertical, Pencil, Plus, Trash} from "lucide-react"
+import {useEffect, useState} from "react"
+import {
+    AnyShotAttributeTemplate,
+    SceneSingleOrMultiSelectAttributeDefinition
 } from "@/util/Types"
-import './shotAttributeDefinition.scss'
-import {GripVertical, Pencil, Plus, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
-import {CSS} from '@dnd-kit/utilities';
-import {ShotAttributeDefinitionParser} from "@/util/AttributeParser"
-import gql from "graphql-tag"
+import {CSS} from "@dnd-kit/utilities"
+import {ShotAttributeTemplateParser} from "@/util/AttributeParser"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
 import {useApolloClient} from "@apollo/client"
-import {SceneDto, ShotSelectAttributeOptionDefinition} from "../../../lib/graphql/generated"
-import { Popover } from "radix-ui"
-import {useEffect, useState} from "react"
+import gql from "graphql-tag"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
+import {Popover} from "radix-ui"
+import "./shotAttributeTemplate.scss"
+import Input from "@/components/input/input"
 
-export default function ShotAttributeDefinition({attributeDefinition, onDelete, dataChanged}: {attributeDefinition: AnyShotAttributeDefinition, onDelete: (id: number) => void, dataChanged: () => void}) {
-
-    const [definition, setDefinition] = useState<AnyShotAttributeDefinition>({} as AnyShotAttributeDefinition)
+export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { attributeTemplate: ShotAttributeTemplateBaseDto, onDelete: (id: number) => void }) {
+    const [attribute, setAttribute] = useState<AnyShotAttributeTemplate>({} as AnyShotAttributeTemplate)
 
     // @ts-ignore
-    const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: attributeDefinition.id});
+    const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition} = useSortable({id: attributeTemplate.id});
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
 
-    const Icon = ShotAttributeDefinitionParser.toIcon(definition);
+    const Icon = ShotAttributeTemplateParser.toIcon(attribute);
 
     const { confirm, ConfirmDialog } = useConfirmDialog();
     const client = useApolloClient()
 
     useEffect(() => {
-        setDefinition(attributeDefinition)
-    }, [attributeDefinition])
+        setAttribute(attributeTemplate)
+    }, [attributeTemplate])
 
     async function updateDefinition(newName: string) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation updateShotAttributeDefinition($id: BigInteger!, $name: String!) {
-                    updateShotAttributeDefinition(editDTO: {
+                mutation updateSceneAttributeDefinition($id: BigInteger!, $name: String!) {
+                    updateSceneAttributeDefinition(editDTO: {
                         id: $id
                         name: $name
                     }){ id }
                 }
             `,
-            variables: {id: definition.id, name: newName},
+            variables: {id: attribute.id, name: newName},
         });
         if (errors) {
             console.error(errors)
         }
 
-        setDefinition({
-            ...definition,
+        setAttribute({
+            ...attribute,
             name: newName
         })
-
-        dataChanged()
     }
 
     const debouncedUpdateDefinition = wuGeneral.debounce(updateDefinition)
 
     const deleteDefinition = async () => {
         if(!await confirm({
-            message: `The attribute definition "${definition.name || 'unnamed'}" will be deleted. All scenes in this shotlist will lose the column "${definition.name || 'unnamed'}" and with that: all the values in that column.`,
+            message: `The attribute definition "${attribute.name || 'unnamed'}" will be deleted. All scenes in this shotlist will lose the column "${attribute.name || 'unnamed'}" and with that: all the values in that column.`,
             buttons: {confirm: {className: "bad"}}}
         )) return
 
         const { errors } = await client.mutate({
             mutation: gql`
-                mutation deleteShotAttributeDefinition($definitionId: BigInteger!) {
-                    deleteShotAttributeDefinition(id: $definitionId) {
+                mutation deleteSceneAttributeDefinition($definitionId: BigInteger!) {
+                    deleteSceneAttributeDefinition(id: $definitionId) {
                         id
                     }
                 }
             `,
-            variables: { definitionId: definition.id },
+            variables: { definitionId: attribute.id },
         });
 
         if(errors) {
             console.error(errors)
         }
         else{
-            onDelete(definition.id)
+            onDelete(attribute.id)
         }
     }
 
     const createSelectOption = async () => {
         const { data, errors } = await client.mutate({
             mutation: gql`
-                mutation createShotSelectAttributeOption($definitionId: BigInteger!) {
-                    createShotSelectAttributeOption(createDTO: {
+                mutation createSceneSelectAttributeOption($definitionId: BigInteger!) {
+                    createSceneSelectAttributeOption(createDTO: {
                         attributeDefinitionId: $definitionId
                     }) {
                         id
@@ -103,7 +101,7 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
                     }
                 }
             `,
-            variables: { definitionId: definition.id },
+            variables: { definitionId: attribute.id },
         });
 
         if (errors) {
@@ -111,24 +109,22 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
             return;
         }
 
-        let currentOptions = (definition as ShotSingleOrMultiSelectAttributeDefinition).options as ShotSelectAttributeOptionDefinition[]
-        let newOptions: ShotSelectAttributeOptionDefinition[] = []
+        let currentOptions = (attribute as SceneSingleOrMultiSelectAttributeDefinition).options as SceneSelectAttributeOptionDefinition[]
+        let newOptions: SceneSelectAttributeOptionDefinition[] = []
         if(currentOptions) newOptions = [...currentOptions]
-        newOptions.push(data.createShotSelectAttributeOption)
+        newOptions.push(data.createSceneSelectAttributeOption)
 
-        setDefinition({
-            ...definition,
+        /*setAttribute({
+            ...attribute,
             options: newOptions
-        })
-
-        dataChanged()
+        })*/
     }
 
     const deleteSelectOption = async (optionId: number) => {
         const { errors } = await client.mutate({
             mutation: gql`
-                mutation deleteShotSelectAttributeOption($optionId: BigInteger!) {
-                    deleteShotSelectAttributeOption(id: $optionId) {
+                mutation deleteSceneSelectAttributeOption($optionId: BigInteger!) {
+                    deleteSceneSelectAttributeOption(id: $optionId) {
                         id
                     }
                 }
@@ -140,21 +136,19 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
             console.error(errors)
         }
 
-        let newOptions: ShotSelectAttributeOptionDefinition[] = (definition as ShotSingleOrMultiSelectAttributeDefinition)?.options?.filter(option => option?.id != optionId) as ShotSelectAttributeOptionDefinition[] || []
+        let newOptions: SceneSelectAttributeOptionDefinition[] = (attribute as SceneSingleOrMultiSelectAttributeDefinition)?.options?.filter(option => option?.id != optionId) as SceneSelectAttributeOptionDefinition[] || []
 
-        setDefinition({
-            ...definition,
+        /*setAttribute({
+            ...attribute,
             options: newOptions
-        })
-
-        dataChanged()
+        })*/
     }
 
     const updateOptionName = async (optionId: number, newName: string) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
-                mutation updateShotSelectAttributeOption($id: BigInteger!, $name: String!) {
-                    updateShotSelectAttributeOption(editDTO: {
+                mutation updateSceneSelectAttributeOption($id: BigInteger!, $name: String!) {
+                    updateSceneSelectAttributeOption(editDTO: {
                         id: $id
                         name: $name
                     }){ id }
@@ -166,8 +160,8 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
             console.error(errors)
         }
 
-        let currentOptions = (definition as ShotSingleOrMultiSelectAttributeDefinition).options as ShotSelectAttributeOptionDefinition[]
-        let newOptions: ShotSelectAttributeOptionDefinition[] = currentOptions.map(option => {
+        let currentOptions = (attribute as SceneSingleOrMultiSelectAttributeDefinition).options as SceneSelectAttributeOptionDefinition[]
+        let newOptions: SceneSelectAttributeOptionDefinition[] = currentOptions.map(option => {
             if(option.id == optionId) {
                 return {
                     ...option,
@@ -177,20 +171,16 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
             return option
         })
 
-        setDefinition({
-            ...definition,
+        /*setAttribute({
+            ...attribute,
             options: newOptions
-        })
-
-        dataChanged()
+        })*/
     }
 
     const debouncedUpdateOptionName = wuGeneral.debounce(updateOptionName)
 
-    if(!definition || !definition.id) return (<p>Loading...</p>)
-
     return (
-        <div className={"shotAttributeDefinition"} ref={setNodeRef} style={style}>
+        <div className={"shotAttributeTemplate"} ref={setNodeRef} style={style}>
             <div
                 className="grip"
                 ref={setActivatorNodeRef}
@@ -200,18 +190,19 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
                 <GripVertical/>
             </div>
             <Icon size={20} strokeWidth={3}/>
-            <input
-                type="text"
-                defaultValue={definition.name || ""}
+            <Input
+                value={attribute.name || ""}
+                valueChange={debouncedUpdateDefinition}
                 placeholder={"Attribute name"}
-                onInput={(e) => debouncedUpdateDefinition(e.currentTarget.value)}
+                inputClass={"nameInput"}
             />
-            {(definition.__typename == "ShotMultiSelectAttributeDefinitionDTO" || definition.__typename == "ShotSingleSelectAttributeDefinitionDTO") && (
+            {(attribute.__typename == "ShotMultiSelectAttributeTemplateDTO" || attribute.__typename == "ShotSingleSelectAttributeTemplateDTO") && (
                 <Popover.Root>
-                    <Popover.Trigger>edit options <Pencil size={16}/></Popover.Trigger>
+                    <Popover.Trigger className={"editOptions"}>Edit options <Pencil size={16}/></Popover.Trigger>
                     <Popover.Portal>
-                        <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5} align={"start"}>
-                            {(definition.options as ShotSelectAttributeOptionDefinition[])?.map((option, index) => (
+                        <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5}
+                                         align={"start"}>
+                            {(attribute.options as ShotSelectAttributeOptionDefinition[])?.map((option, index) => (
                                 <div className="option" key={option.id}>
                                     <p>{index + 1}</p>
                                     <input
@@ -220,7 +211,8 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
                                         placeholder="Option name"
                                         onInput={(event) => debouncedUpdateOptionName(option.id, event.currentTarget.value)}
                                     />
-                                    <button className="bad" onClick={() => deleteSelectOption(option.id)}><Trash size={18}/></button>
+                                    <button className="bad" onClick={() => deleteSelectOption(option.id)}><Trash
+                                        size={18}/></button>
                                 </div>
                             ))}
                             <button onClick={createSelectOption}><Plus size={18}/>Add option</button>

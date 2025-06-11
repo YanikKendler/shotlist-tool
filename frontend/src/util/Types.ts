@@ -1,12 +1,12 @@
 import {
     SceneAttributeDefinitionBase, SceneMultiSelectAttributeDefinitionDto,
-    SceneMultiSelectAttributeDto, SceneSingleSelectAttributeDefinitionDto,
-    SceneSingleSelectAttributeDto, SceneTextAttributeDefinitionDto,
-    SceneTextAttributeDto,
+    SceneMultiSelectAttributeDto, SceneMultiSelectAttributeTemplateDto, SceneSingleSelectAttributeDefinitionDto,
+    SceneSingleSelectAttributeDto, SceneSingleSelectAttributeTemplateDto, SceneTextAttributeDefinitionDto,
+    SceneTextAttributeDto, SceneTextAttributeTemplateDto,
     ShotAttributeDefinitionBase, ShotlistDto, ShotMultiSelectAttributeDefinitionDto,
-    ShotMultiSelectAttributeDto, ShotSingleSelectAttributeDefinitionDto,
-    ShotSingleSelectAttributeDto, ShotTextAttributeDefinitionDto,
-    ShotTextAttributeDto, TemplateDto
+    ShotMultiSelectAttributeDto, ShotMultiSelectAttributeTemplateDto, ShotSingleSelectAttributeDefinitionDto,
+    ShotSingleSelectAttributeDto, ShotSingleSelectAttributeTemplateDto, ShotTextAttributeDefinitionDto,
+    ShotTextAttributeDto, ShotTextAttributeTemplateDto, TemplateDto
 } from "../../lib/graphql/generated"
 
 export type AnySceneAttribute = SceneTextAttributeDto | SceneSingleSelectAttributeDto | SceneMultiSelectAttributeDto
@@ -14,6 +14,9 @@ export type AnyShotAttribute = ShotTextAttributeDto | ShotSingleSelectAttributeD
 
 export type AnyShotAttributeDefinition = ShotTextAttributeDefinitionDto | ShotSingleSelectAttributeDefinitionDto | ShotMultiSelectAttributeDefinitionDto
 export type AnySceneAttributeDefinition = SceneTextAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto | SceneSingleSelectAttributeDefinitionDto
+
+export type AnyShotAttributeTemplate = ShotTextAttributeTemplateDto | ShotSingleSelectAttributeTemplateDto | ShotMultiSelectAttributeTemplateDto
+export type AnySceneAttributeTemplate = SceneTextAttributeTemplateDto | SceneSingleSelectAttributeTemplateDto | SceneMultiSelectAttributeTemplateDto
 
 export type ShotSingleOrMultiSelectAttributeDefinition = ShotSingleSelectAttributeDefinitionDto | ShotMultiSelectAttributeDefinitionDto
 export type SceneSingleOrMultiSelectAttributeDefinition = SceneSingleSelectAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto

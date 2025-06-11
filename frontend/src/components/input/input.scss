@@ -52,13 +52,17 @@ div.customInput{
     max-width: 40ch;
     width: 100%;
 
+    &:not([disabled]):not(:focus-visible):hover{
+      border-color: var(--default-interactable-border-hover);
+    }
+
     &:focus-visible{
       outline: none;
       border-color: var(--accent);
-    }
 
-    &:not([disabled]):hover{
-      border-color: var(--default-interactable-border-hover);
+      &:hover{
+        border-color: var(--accent-40);
+      }
     }
   }
 }

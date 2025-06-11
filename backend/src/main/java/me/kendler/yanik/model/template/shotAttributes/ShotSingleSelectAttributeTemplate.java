@@ -10,11 +10,18 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionB
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttributeDefinition;
+import me.kendler.yanik.model.template.Template;
 
 @Entity
 public class ShotSingleSelectAttributeTemplate extends ShotAttributeTemplateBase {
     @OneToMany(fetch = FetchType.EAGER)
     public Set<ShotSelectAttributeOptionTemplate> options = new HashSet<>();
+
+    public ShotSingleSelectAttributeTemplate() { }
+
+    public ShotSingleSelectAttributeTemplate(Template template) {
+        super(template);
+    }
 
     @Override
     public String getType() {

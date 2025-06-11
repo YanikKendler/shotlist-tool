@@ -68,12 +68,12 @@ export default function Input(
         <div className="customInput">
             {
                 label &&
-                <label htmlFor="{label}">{label}</label>
+                <label htmlFor={label}>{label}</label>
             }
             <div className="infoContainer">
                 <div className="errorContainer" style={{maxWidth: maxWidth}}>
                     <input
-                        id="{label}"
+                        id={label}
                         type="text"
                         placeholder={placeholder}
                         value={currentValue}

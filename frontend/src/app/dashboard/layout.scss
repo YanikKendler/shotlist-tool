@@ -45,10 +45,6 @@ main.home{
           text-decoration: underline;
           color: var(--text);
         }
-
-        span.italic{
-          font-style: italic;
-        }
       }
 
       &[data-state="open"] svg.chevron{

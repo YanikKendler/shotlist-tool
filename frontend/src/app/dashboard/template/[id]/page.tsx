@@ -6,11 +6,23 @@ import {useApolloClient} from "@apollo/client"
 import ErrorPage from "@/pages/errorPage/errorPage"
 import LoadingPage from "@/pages/loadingPage/loadingPage"
 import React, {useEffect, useState} from "react"
-import {ShotlistDto, TemplateDto} from "../../../../../lib/graphql/generated"
+import {
+    ShotAttributeBase,
+    ShotAttributeTemplateBase,
+    ShotAttributeType,
+    ShotlistDto,
+    TemplateDto
+} from "../../../../../lib/graphql/generated"
 import gql from "graphql-tag"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
-import {Pen, Pencil, Plus} from "lucide-react"
+import {ChevronDown, List, Pen, Pencil, Plus, Type} from "lucide-react"
 import Input from "@/components/input/input"
+import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
+import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
+import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
+import {Popover} from "radix-ui"
+import {apolloClient} from "@/ApolloWrapper"
+import ShotAttributeTemplate from "@/components/shotAttributeTemplate/shotAttributeTemplate"
 
 export default function Template (){
     const params = useParams<{ id: string }>()
@@ -19,6 +31,13 @@ export default function Template (){
     const [template, setTemplate] = useState<{data: TemplateDto, loading: boolean, error: any}>({data: {} as TemplateDto, loading: true, error: null})
 
     const client = useApolloClient()
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     useEffect(() => {
         if(!id || id.length !== 36)
@@ -96,6 +115,65 @@ export default function Template (){
 
     const debounceUpdateTemplateName = wuGeneral.debounce(updateTemplateName)
 
+    async function createShotAttributeDefinition(type: ShotAttributeType) {
+        const {data, errors} = await client.mutate({
+            mutation: gql`
+                mutation createShotAttributeTemplate($templateId: String!, $attributeType: ShotAttributeType!) {
+                    createShotAttributeTemplate(createDTO: {templateId: $templateId, type: $attributeType}) {
+                        id
+                        name
+                        position
+                    }
+                }
+            `,
+            variables: {templateId: id, attributeType: type},
+        });
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setTemplate({
+            ...template,
+            data: {
+                ...template.data,
+                shotAttributes: [...(template.data.shotAttributes || []), data.createShotAttributeTemplate]
+            }
+        });
+    }
+
+    function handleShotDragEnd(event: any) {
+        const {active, over} = event;
+
+        if (active.id !== over.id && template.data.shotAttributes) {
+            const oldIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === active.id);
+            const newIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === over.id);
+
+            apolloClient.mutate({
+                mutation: gql`
+                    mutation updateShotDefinition($id: BigInteger!, $position: Int!) {
+                        updateShotAttributeDefinition(editDTO:{
+                            id: $id,
+                            position: $position
+                        }){
+                            id
+                            position
+                        }
+                    }
+                `,
+                variables: {id: active.id, position: newIndex},
+            })
+
+            setTemplate({
+                ...template,
+                data: {
+                    ...template.data,
+                    shotAttributes: arrayMove(template.data.shotAttributes, oldIndex, newIndex)
+                }
+            });
+        }
+    }
+
     if(template.error) return <main className={"dashboardContent"}><ErrorPage settings={{
         title: 'Data could not be loaded',
         description: template.error.message,
@@ -133,15 +211,40 @@ export default function Template (){
                     <Pencil size={18} style={{display: template.data.name == "" ? "none" : "block"}}/>
                 </div>
             </h2>
+            <p className="info">
+                None of the changes made to this templated will be reflected in the shotlists that were based on it.
+                Every shotlist manages its own attributes, only those that are created based on this template <i>after</i> it has been edited will use the updated attributes.</p>
             <h3>Shot Attributes</h3>
-            {
-                !template.data.shotAttributes || template.data.shotAttributes?.length <= 0 ?
-                <p className={"empty"}>Nothing here yet</p> :
-                template.data.shotAttributes.map(attr => (
-                    <p>attr</p>
-                ))
-            }
-            <button className="add">Add Shot Attribute <Plus size={20}/></button>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleShotDragEnd}
+            >
+                <SortableContext
+                    items={template.data.shotAttributes?.map(def => def!.id) || []}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <div className="attributeTemplates">
+                        {
+                            !template.data.shotAttributes || template.data.shotAttributes?.length <= 0 ?
+                            <p className={"empty"}>Nothing here yet</p> :
+                            (template.data.shotAttributes as ShotAttributeTemplateBase[]).map(attr => (
+                                <ShotAttributeTemplate attributeTemplate={attr} onDelete={() => {}} key={attr.id}/>
+                            ))
+                        }
+                    </div>
+                </SortableContext>
+            </DndContext>
+            <Popover.Root>
+                <Popover.Trigger className={"add"}>Add Shot Attribute <Plus size={20}/></Popover.Trigger>
+                <Popover.Portal>
+                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5} align={"start"}>
+                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotTextAttribute)}><Type size={16} strokeWidth={3}/>Text</button>
+                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotSingleSelectAttribute)}><ChevronDown size={16} strokeWidth={3}/>Single select</button>
+                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotMultiSelectAttribute)}><List size={16} strokeWidth={3}/>Multi select</button>
+                    </Popover.Content>
+                </Popover.Portal>
+            </Popover.Root>
             <h3>Scene Attributes</h3>
             <button className="add">Add Scene Attribute <Plus size={20}/></button>
         </main>

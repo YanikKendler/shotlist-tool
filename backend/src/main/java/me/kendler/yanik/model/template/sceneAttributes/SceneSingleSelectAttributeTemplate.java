@@ -10,11 +10,18 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitio
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSingleSelectAttributeDefinition;
+import me.kendler.yanik.model.template.Template;
 
 @Entity
 public class SceneSingleSelectAttributeTemplate extends SceneAttributeTemplateBase {
     @OneToMany(fetch = FetchType.EAGER)
     public Set<SceneSelectAttributeOptionTemplate> options = new HashSet<>();
+
+    public SceneSingleSelectAttributeTemplate() {}
+
+    public SceneSingleSelectAttributeTemplate(Template template) {
+        super(template);
+    }
 
     @Override
     public String getType() {

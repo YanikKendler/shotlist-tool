@@ -75,6 +75,7 @@ main.home{
 
   section.hero{
     height: 80vh;
+    min-height: 80vh;
     display: flex;
     position: sticky;
     top: 30px;
