@@ -208,7 +208,7 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
             />
             {(definition.__typename == "ShotMultiSelectAttributeDefinitionDTO" || definition.__typename == "ShotSingleSelectAttributeDefinitionDTO") && (
                 <Popover.Root>
-                    <Popover.Trigger>edit options <Pencil size={16}/></Popover.Trigger>
+                    <Popover.Trigger>Edit options <Pencil size={16}/></Popover.Trigger>
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5} align={"start"}>
                             {(definition.options as ShotSelectAttributeOptionDefinition[])?.map((option, index) => (

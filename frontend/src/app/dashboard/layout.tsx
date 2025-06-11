@@ -82,7 +82,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
     return (
         <main className="home">
-            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha test. An acceptable mobile version will be available in the full release.</p>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a beta test. An acceptable mobile version will be available in the full release.</p>
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
                     <div className="content">

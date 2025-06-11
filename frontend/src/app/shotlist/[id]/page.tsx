@@ -339,9 +339,7 @@ export default function Shotlist() {
             elementIsBeingDragged: elementIsBeingDragged,
             setElementIsBeingDragged: setElementIsBeingDragged
         }}>
-            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha
-                test. An
-                acceptable mobile version will be available in the full release.</p>
+            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a beta test. An acceptable mobile version will be available in the full release.</p>
             <main className="shotlist" key={reloadKey}>
                 <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal"
                             className={"PanelGroup"}>

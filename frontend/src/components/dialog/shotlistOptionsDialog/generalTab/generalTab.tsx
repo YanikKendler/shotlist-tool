@@ -99,8 +99,8 @@ export default function GeneralTab({shotlist, setShotlist, dataChanged}: { shotl
             <Separator.Root className={"Separator"}></Separator.Root>
 
             <div className="details">
-                <p>created at <b>{wuTime.toFullDateTimeString(shotlist.createdAt)}</b> by <b>{shotlist.owner?.name}</b></p>
-                <p>last edited at: <b>{wuTime.toFullDateTimeString(shotlist.editedAt)}</b></p>
+                <p>Created at <b>{wuTime.toFullDateTimeString(shotlist.createdAt)}</b> by <b>{shotlist.owner?.name}</b></p>
+                <p>Last edited at: <b>{wuTime.toFullDateTimeString(shotlist.editedAt)}</b></p>
                 <p><b>{shotlist.sceneCount}</b> scenes • <b>{shotlist.shotCount}</b> shots</p>
             </div>
 

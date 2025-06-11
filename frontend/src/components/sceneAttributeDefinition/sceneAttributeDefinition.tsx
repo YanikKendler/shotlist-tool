@@ -202,7 +202,7 @@ export default function SceneAttributeDefinition({attributeDefinition, onDelete,
             <input type="text" defaultValue={definition.name || ""} placeholder={"Attribute name"} onInput={(e) => debouncedUpdateDefinition(e.currentTarget.value)}/>
             {(definition.__typename == "SceneMultiSelectAttributeDefinitionDTO" || definition.__typename == "SceneSingleSelectAttributeDefinitionDTO") && (
                 <Popover.Root>
-                    <Popover.Trigger>edit options <Pencil size={16}/></Popover.Trigger>
+                    <Popover.Trigger>Edit options <Pencil size={16}/></Popover.Trigger>
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5} align={"start"}>
                             {(definition.options as SceneSelectAttributeOptionDefinition[])?.map((option, index) => (
