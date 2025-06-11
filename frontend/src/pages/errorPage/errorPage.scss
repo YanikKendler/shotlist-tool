@@ -15,9 +15,11 @@
 
     .main{
       h1{
-        font-size: 4rem;
+        font-size: 3rem;
+        line-height: 90%;
         font-weight: bold;
         color: var(--text);
+        margin-bottom: .5rem;
       }
 
       p.description{

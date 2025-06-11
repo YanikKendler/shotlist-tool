@@ -113,48 +113,56 @@ export default function Shotlist() {
     }, [id])
 
     const loadShotlist = async (noCache: boolean = false) => {
-        const { data, errors, loading } = await client.query({query: gql`
-                query shotlist($id: String!){
-                    shotlist(id: $id){
-                        id
-                        name
-                        scenes{
+        try {
+            const {data, errors, loading} = await client.query({
+                query: gql`
+                    query shotlist($id: String!){
+                        shotlist(id: $id){
                             id
-                            position
-                            attributes{
+                            name
+                            scenes{
                                 id
-                                definition{id, name, position}
+                                position
+                                attributes{
+                                    id
+                                    definition{id, name, position}
 
-                                ... on SceneSingleSelectAttributeDTO{
-                                    singleSelectValue{id,name}
-                                }
+                                    ... on SceneSingleSelectAttributeDTO{
+                                        singleSelectValue{id,name}
+                                    }
 
-                                ... on SceneMultiSelectAttributeDTO{
-                                    multiSelectValue{id,name}
-                                }
-                                ... on SceneTextAttributeDTO{
-                                    textValue
+                                    ... on SceneMultiSelectAttributeDTO{
+                                        multiSelectValue{id,name}
+                                    }
+                                    ... on SceneTextAttributeDTO{
+                                        textValue
+                                    }
                                 }
                             }
+                            sceneAttributeDefinitions{
+                                id
+                                name
+                                position
+                            }
+                            shotAttributeDefinitions{
+                                id
+                                name
+                                position
+                            }
                         }
-                        sceneAttributeDefinitions{
-                            id
-                            name
-                            position
-                        }
-                        shotAttributeDefinitions{
-                            id
-                            name
-                            position
-                        }
-                    }
-                }`,
-            variables: {id: id},
-            fetchPolicy: noCache ? "no-cache" : "cache-first"})
+                    }`,
+                variables: {id: id},
+                fetchPolicy: noCache ? "no-cache" : "cache-first"
+            })
 
-        console.log(data.shotlist)
+            console.log(data.shotlist)
 
-        setShotlist({data: data.shotlist, loading: loading, error: errors})
+            setShotlist({data: data.shotlist, loading: loading, error: errors})
+        }
+        catch (e) {
+            console.error(e)
+            setShotlist({data: {} as ShotlistDto, loading: false, error: e})
+        }
     }
 
     const updateShotlistName = async (name: string) => {
@@ -359,6 +367,7 @@ export default function Shotlist() {
                                     defaultValue={shotlist.data.name || ""}
                                     placeholder={"shotlist name"}
                                     onInput={e => debounceUpdateShotlistName(e.currentTarget.value)}
+                                    role={"heading"}
                                 />
                             </div>
                             <div className="list">

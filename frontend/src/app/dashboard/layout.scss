@@ -1,4 +1,4 @@
-main.dashboard{
+main.home{
   height: 100%;
   width: 100%;
   background-color: var(--sidebar-bg);
@@ -71,7 +71,7 @@ main.dashboard{
     }
   }
 
-  .content{
+  .headerContainer{
     display: flex;
     flex-direction: column;
     width: 100%;

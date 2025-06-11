@@ -1,0 +1,53 @@
+main.template{
+  h2{
+    position: relative;
+    display: grid;
+
+    *{
+      grid-area: 1/1/2/2;
+    }
+
+    input.templateName, .spacer{
+      font-size: 1.25rem;
+      outline: none;
+      border: none;
+      font-weight: 600;
+    }
+
+    .spacerContainer{
+      pointer-events: none;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      .spacer{
+        visibility: hidden;
+        width: fit-content;
+      }
+    }
+  }
+
+  h3{
+    font-weight: 500;
+    color: var(--text-50);
+    margin-top: 1rem;
+    margin-bottom: .3rem;
+  }
+
+  .add{
+    color: var(--text-50);
+    font-size: .95rem;
+
+    &:hover{
+      color: var(--text);
+      background-color: var(--hover-bg-10);
+    }
+  }
+
+  .empty{
+    margin-left: 1rem;
+    font-size: .9rem;
+    color: var(--text-50);
+    margin-block: 1rem;
+  }
+}

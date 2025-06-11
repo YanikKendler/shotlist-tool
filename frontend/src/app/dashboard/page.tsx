@@ -41,14 +41,24 @@ export default function Overview() {
                         sceneCount
                         shotCount
                         editedAt
+                        owner {
+                            name
+                        }
                     }
                     templates {
                         id
                         name
+                        shotAttributeCount
+                        sceneAttributeCount
+                        owner {
+                            name
+                        }
                     }
                 }`,
             fetchPolicy: "no-cache"
         })
+
+        console.log(data)
 
         setQuery({error, loading})
 
@@ -71,11 +81,11 @@ export default function Overview() {
             <h2>Shotlists</h2>
             <div className="grid">
                 {shotlists.sort(Utils.oderShotlistsOrTemplatesByChangeDate).map((shotlist: ShotlistDto) => (
-                    <Link href={`./shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
+                    <Link href={`/shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
                         <label><NotepadText size={15}/>Shotlist</label>
                         <h3>{shotlist.name || <span className='italic'>Unnamed</span>}</h3>
                         <p className={"bold"}>{shotlist.sceneCount} scene • {shotlist.shotCount} shots</p>
-                        <p>created by: <span className={"bold"}>Yanik Kendler</span></p>
+                        <p>created by: <span className={"bold"}>{shotlist.owner?.name}</span></p>
                         <p>last edited: <span
                             className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                     </Link>
@@ -87,12 +97,12 @@ export default function Overview() {
             <h2>Templates</h2>
             <div className="grid">
                 {templates.sort(Utils.oderShotlistsOrTemplatesByChangeDate).map((template: TemplateDto) => (
-                    <Link href={`./template/${template.id}`} key={template.id} className="gridItem template">
+                    <Link href={`dashboard/template/${template.id}`} key={template.id} className="gridItem template">
                         <label><NotepadTextDashed size={15}/>Template</label>
                         <h3>{template.name || <span className='italic'>Unnamed</span>}</h3>
                         <p>Shots: <span className={"bold"}>{template.shotAttributeCount} Attributes</span></p>
                         <p>Scenes: <span className={"bold"}>{template.sceneAttributeCount} Attributes</span></p>
-                        <p>created by: <span className={"bold"}>Yanik Kendler</span></p>
+                        <p>created by: <span className={"bold"}>{template.owner?.name}</span></p>
                     </Link>
                 ))}
                 <button className={"gridItem add"} onClick={openCreateTemplateDialog}>

@@ -1,7 +1,11 @@
-import {ShotlistDto, TemplateDto} from "../../lib/graphql/generated"
 import {wuText} from "@yanikkendler/web-utils/dist"
 import {ThemeConfig} from "react-select"
 import {ShotlistOrTemplate} from "@/util/Types"
+
+export interface fontSizeBreakpoint {
+    length: number
+    fontSize: number
+}
 
 export default class Utils {
     static orderShotlistsOrTemplatesByName(a: ShotlistOrTemplate, b: ShotlistOrTemplate) {
@@ -30,12 +34,23 @@ export default class Utils {
         return 0;
     }
 
-    static numberToShotLetter = (number: number) => {
+    static numberToShotLetter(number: number){
         let result = wuText.numberToLetter(number)
         for (let i = 0; i < Math.floor(number / 26); i++) {
             result += wuText.numberToLetter(number)
         }
         return result;
+    }
+
+    static clampFontSizeByTextLength(text: string, bottom: fontSizeBreakpoint, top: fontSizeBreakpoint){
+        if(text.length <= bottom.length) {
+            return bottom.fontSize
+        } else if(text.length >= top.length) {
+            return top.fontSize
+        } else {
+            const ratio = (text.length - bottom.length) / (top.length - bottom.length)
+            return bottom.fontSize + (top.fontSize - bottom.fontSize) * ratio
+        }
     }
 }
 

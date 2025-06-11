@@ -12,7 +12,9 @@ export default function Input(
         info,
         disabled = false,
         maxLength = 255,
-        maxWidth = "40ch"
+        maxWidth = "40ch",
+        inputClass = "",
+        showError = true
     }
     :
     {
@@ -24,6 +26,8 @@ export default function Input(
         disabled?: boolean;
         maxLength?: number;
         maxWidth?: string;
+        inputClass?: string;
+        showError?: boolean;
     }
 ) {
     const [currentValue, setCurrentValue] = useState<string>(value || "");
@@ -36,6 +40,10 @@ export default function Input(
     }, [value]);
 
     function validateInput(value: string) {
+        setError("")
+
+        if(!showError) return
+
         if(value.length > maxLength - 10) {
             setError(`${value.length}/${maxLength} characters`);
         }
@@ -72,6 +80,8 @@ export default function Input(
                         onInput={e => handleInput(e.currentTarget.value)}
                         maxLength={maxLength}
                         disabled={disabled}
+                        className={inputClass}
+                        style={{maxWidth: maxWidth}}
                     />
                     <p className={"error " + errorType}>{error}</p>
                 </div>

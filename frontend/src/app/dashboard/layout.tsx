@@ -81,7 +81,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     if(query.loading) return <LoadingPage text={"loading your dashboard"}/>
 
     return (
-        <main className="dashboard">
+        <main className="home">
             <p className="noMobile">Sorry, mobile mode is not supported yet since this is a alpha test. An acceptable mobile version will be available in the full release.</p>
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
                 <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
@@ -185,7 +185,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                     </div>
                 </Panel>
                 <PanelResizeHandle className="PanelResizeHandle"/>
-                <Panel className="content">
+                <Panel className="headerContainer">
                     <div className="header">
                         <button className="template" onClick={openCreateTemplateDialog}>New Template</button>
                         <button className="shotlist" onClick={openCreateShotlistDialog}>New Shotlist</button>
