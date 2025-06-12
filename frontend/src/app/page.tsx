@@ -210,8 +210,8 @@ export default function Home() {
                         <p className={"createdBy"}>created with ♥ by <Link href={"https://yanik.kendler.me"}
                                                                            target={"_blank"} className={"noPadding"}>Yanik
                             Kendler</Link></p>
-                        <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotlist-tool"}
-                              target={"_blank"}>github.com/YanikKendler/shotlist-tool</Link>
+                        <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotly"}
+                              target={"_blank"}>github.com/YanikKendler/shotly</Link>
                         <p className={"copyright"}>© 2025 Yanik Kendler. Open source under the MIT License.</p>
                     </div>
                     <div>
@@ -226,10 +226,10 @@ export default function Home() {
                         <h3>Support</h3>
                         <Link className={"noPadding"} href={"/"}>Documentation</Link>
                         <Link className={"noPadding"}
-                              href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"}>Report a
+                              href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Report a
                             Bug</Link>
                         <Link className={"noPadding"}
-                              href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"}>Suggest a
+                              href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Suggest a
                             Feature</Link>
                     </div>
                 </footer>

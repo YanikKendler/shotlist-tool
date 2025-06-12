@@ -112,6 +112,7 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
         }
 
         //TODO this is not reached
+        //fails after a while with a backend error
         console.log(data)
 
         let currentOptions = (attribute as ShotSingleOrMultiSelectAttributeTemplate).options as ShotSelectAttributeOptionTemplate[]

@@ -147,7 +147,7 @@ export function useAccountDialog() {
 
                 <div className="row">
                     <p>Report a bug or request a feature</p>
-                    <Link href={"https://github.com/YanikKendler/shotlist-tool/issues/new/choose"} target={"_blank"}>new issue</Link>
+                    <Link href={"https://github.com/YanikKendler/shotly/issues/new/choose"} target={"_blank"}>new issue</Link>
                 </div>
 
                 <Separator.Root className={"Separator"}/>
