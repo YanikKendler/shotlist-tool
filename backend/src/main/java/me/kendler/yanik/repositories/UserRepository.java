@@ -2,6 +2,8 @@ package me.kendler.yanik.repositories;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.UnauthorizedAccessException;
@@ -31,6 +33,7 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class);
 
     @Transactional
+    @ActivateRequestContext // gpt said to do this because of "RequestScoped context was not active" error
     public User findOrCreateByJWT(JsonWebToken jwt) {
         String auth0Sub = jwt.getClaim("sub");
         if (auth0Sub == null) {

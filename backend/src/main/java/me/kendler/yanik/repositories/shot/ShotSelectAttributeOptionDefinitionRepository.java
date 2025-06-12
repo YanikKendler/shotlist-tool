@@ -36,10 +36,10 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
         persist(shotSelectAttributeOptionDefinition);
 
         getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
-                    , Shotlist.class)
+                        , Shotlist.class)
                 .setParameter("definition", shotAttributeDefinition)
                 .getSingleResult()
-        .registerEdit();
+                .registerEdit();
 
         return shotSelectAttributeOptionDefinition;
     }
@@ -65,10 +65,10 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
         option.name = editDTO.name();
 
         getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
-                , Shotlist.class)
+                        , Shotlist.class)
                 .setParameter("definition", option.shotAttributeDefinition)
                 .getSingleResult()
-        .registerEdit();
+                .registerEdit();
 
         return option;
     }
@@ -101,10 +101,10 @@ public class ShotSelectAttributeOptionDefinitionRepository implements PanacheRep
             delete(shotSelectAttributeOptionDefinition);
 
             getEntityManager().createQuery("select s from Shotlist s join s.shotAttributeDefinitions sad where sad = :definition"
-                    , Shotlist.class)
+                            , Shotlist.class)
                     .setParameter("definition", shotSelectAttributeOptionDefinition.shotAttributeDefinition)
                     .getSingleResult()
-            .registerEdit();
+                    .registerEdit();
         }
         return shotSelectAttributeOptionDefinition;
     }

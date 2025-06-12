@@ -1,13 +1,15 @@
 import {
-    SceneSelectAttributeOptionDefinition,
+    SceneSelectAttributeOptionDefinition, SceneSelectAttributeOptionTemplate,
     ShotAttributeTemplateBaseDto,
-    ShotSelectAttributeOptionDefinition
+    ShotSelectAttributeOptionDefinition, ShotSelectAttributeOptionTemplate
 } from "../../../lib/graphql/generated"
 import {Grip, GripVertical, Pencil, Plus, Trash} from "lucide-react"
 import {useEffect, useState} from "react"
 import {
     AnyShotAttributeTemplate,
-    SceneSingleOrMultiSelectAttributeDefinition
+    SceneSingleOrMultiSelectAttributeDefinition,
+    SceneSingleOrMultiSelectAttributeTemplate,
+    ShotSingleOrMultiSelectAttributeTemplate
 } from "@/util/Types"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from "@dnd-kit/utilities"
@@ -90,34 +92,37 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     }
 
     const createSelectOption = async () => {
+        console.log("creating select option for attribute", attribute)
+
         const { data, errors } = await client.mutate({
             mutation: gql`
-                mutation createSceneSelectAttributeOption($definitionId: BigInteger!) {
-                    createSceneSelectAttributeOption(createDTO: {
-                        attributeDefinitionId: $definitionId
-                    }) {
+                mutation createShotSelectAttributeOptionTemplate($templateId: BigInteger!) {
+                    createShotSelectAttributeOptionTemplate(attributeTemplateId: $templateId) {
                         id
                         name
                     }
                 }
             `,
-            variables: { definitionId: attribute.id },
-        });
+            variables: { templateId: attribute.id },
+        })
 
         if (errors) {
             console.error(errors);
             return;
         }
 
-        let currentOptions = (attribute as SceneSingleOrMultiSelectAttributeDefinition).options as SceneSelectAttributeOptionDefinition[]
-        let newOptions: SceneSelectAttributeOptionDefinition[] = []
-        if(currentOptions) newOptions = [...currentOptions]
-        newOptions.push(data.createSceneSelectAttributeOption)
+        //TODO this is not reached
+        console.log(data)
 
-        /*setAttribute({
+        let currentOptions = (attribute as ShotSingleOrMultiSelectAttributeTemplate).options as ShotSelectAttributeOptionTemplate[]
+        let newOptions: ShotSelectAttributeOptionTemplate[] = []
+        if(currentOptions) newOptions = [...currentOptions]
+        newOptions.push(data.createShotSelectAttributeOption)
+
+        setAttribute({
             ...attribute,
             options: newOptions
-        })*/
+        })
     }
 
     const deleteSelectOption = async (optionId: number) => {
@@ -202,12 +207,12 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5}
                                          align={"start"}>
-                            {(attribute.options as ShotSelectAttributeOptionDefinition[])?.map((option, index) => (
-                                <div className="option" key={option.id}>
+                            {(attribute.options as ShotSelectAttributeOptionTemplate[])?.map((option, index) => (
+                                <div className="option" key={option?.id}>
                                     <p>{index + 1}</p>
                                     <input
                                         type="text"
-                                        defaultValue={option.name || ""}
+                                        defaultValue={option?.name || ""}
                                         placeholder="Option name"
                                         onInput={(event) => debouncedUpdateOptionName(option.id, event.currentTarget.value)}
                                     />

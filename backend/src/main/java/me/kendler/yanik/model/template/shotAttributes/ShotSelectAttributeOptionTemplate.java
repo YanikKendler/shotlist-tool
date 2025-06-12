@@ -10,14 +10,23 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptio
 @Entity
 @Table(name = "shotselectattributeoptiontemplate")
 public class ShotSelectAttributeOptionTemplate extends PanacheEntity {
-    public String name;
-    public int position;
+    public String name = "";
+    @ManyToOne
+    public ShotAttributeTemplateBase shotAttributeTemplate;
 
     public ShotSelectAttributeOptionTemplate() { }
 
-    public ShotSelectAttributeOptionTemplate(String name, int position) {
-        this.name = name;
-        this.position = position;
+    public ShotSelectAttributeOptionTemplate(ShotAttributeTemplateBase shotAttributeTemplate) {
+        switch (shotAttributeTemplate) {
+            case ShotSingleSelectAttributeTemplate singleSelectTemplate -> {
+                singleSelectTemplate.options.add(this);
+            }
+            case ShotMultiSelectAttributeTemplate multiSelectTemplate -> {
+                multiSelectTemplate.options.add(this);
+            }
+            default -> throw new IllegalArgumentException("Unsupported shot attribute template type");
+        }
+        this.shotAttributeTemplate = shotAttributeTemplate;
     }
 
     public ShotSelectAttributeOptionDefinition createDefinition(ShotAttributeDefinitionBase attributeDefinition) {

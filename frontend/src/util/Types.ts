@@ -21,6 +21,9 @@ export type AnySceneAttributeTemplate = SceneTextAttributeTemplateDto | SceneSin
 export type ShotSingleOrMultiSelectAttributeDefinition = ShotSingleSelectAttributeDefinitionDto | ShotMultiSelectAttributeDefinitionDto
 export type SceneSingleOrMultiSelectAttributeDefinition = SceneSingleSelectAttributeDefinitionDto | SceneMultiSelectAttributeDefinitionDto
 
+export type ShotSingleOrMultiSelectAttributeTemplate = ShotSingleSelectAttributeTemplateDto | ShotMultiSelectAttributeTemplateDto
+export type SceneSingleOrMultiSelectAttributeTemplate = SceneSingleSelectAttributeTemplateDto | SceneMultiSelectAttributeTemplateDto
+
 export type AnyAttributeDefinition = AnyShotAttributeDefinition | AnySceneAttributeDefinition
 
 export type ShotlistOrTemplate = ShotlistDto | TemplateDto

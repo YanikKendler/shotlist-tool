@@ -54,17 +54,46 @@ export default function Template (){
                         template(id: $id) {
                             id
                             name
-                            sceneAttributes {
-                                id
-                                name
-                                position
-                                __typename
-                            }
                             shotAttributes {
                                 id
                                 name
                                 position
                                 __typename
+
+
+                                ... on ShotSingleSelectAttributeTemplateDTO {
+                                    options {
+                                        id
+                                        name
+                                    }
+                                }
+
+                                ... on ShotMultiSelectAttributeTemplateDTO {
+                                    options {
+                                        id
+                                        name
+                                    }
+                                }
+                            }
+                            sceneAttributes {
+                                id
+                                name
+                                position
+                                __typename
+                                
+                                ... on SceneSingleSelectAttributeTemplateDTO {
+                                    options {
+                                        id
+                                        name
+                                    }
+                                }
+                                
+                                ... on SceneMultiSelectAttributeTemplateDTO {
+                                    options {
+                                        id
+                                        name
+                                    }
+                                }
                             }
                         }
                     }`,
@@ -152,7 +181,6 @@ export default function Template (){
 
             console.log(oldIndex, newIndex)
 
-            //TODO does not work
             apolloClient.mutate({
                 mutation: gql`
                     mutation updateShotAttributeTemplatePosition($id: BigInteger!, $position: Int!) {

@@ -1,20 +1,20 @@
 package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
+import me.kendler.yanik.dto.shot.ShotSelectAttributeOptionEditDTO;
 import me.kendler.yanik.dto.template.TemplateCreateDTO;
 import me.kendler.yanik.dto.template.TemplateDTO;
 import me.kendler.yanik.dto.template.TemplateEditDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateBaseDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateEditDTO;
-import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateBaseDTO;
-import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateCreateDTO;
-import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
+import me.kendler.yanik.dto.template.shotAttributes.*;
+import me.kendler.yanik.model.shot.attributeDefinitions.ShotSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.template.Template;
+import me.kendler.yanik.model.template.sceneAttributes.SceneSelectAttributeOptionTemplate;
+import me.kendler.yanik.model.template.shotAttributes.ShotSelectAttributeOptionTemplate;
 import me.kendler.yanik.repositories.UserRepository;
-import me.kendler.yanik.repositories.template.SceneAttributeTemplateRepository;
-import me.kendler.yanik.repositories.template.ShotAttributeTemplateRepository;
-import me.kendler.yanik.repositories.template.TemplateRepository;
+import me.kendler.yanik.repositories.template.*;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Query;
@@ -114,5 +114,61 @@ public class TemplateResource {
     public SceneAttributeTemplateBaseDTO deleteSceneAttributeTemplate(Long id) {
         userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(id).template, jwt);
         return sceneAttributeTemplateRepository.delete(id).toDTO();
+    }
+
+    /*
+     * SHOT ATTRIBUTE OPTIONS
+    */
+
+    @Inject
+    ShotSelectAttributeOptionTemplateRepository shotSelectAttributeOptionTemplateRepository;
+
+    @Mutation
+    public ShotSelectAttributeOptionTemplate createShotSelectAttributeOptionTemplate(Long attributeTemplateId){
+        userRepository.checkTemplateAccessRights(shotAttributeTemplateRepository.findById(attributeTemplateId).template, jwt);
+
+        return shotSelectAttributeOptionTemplateRepository.create(attributeTemplateId);
+    }
+
+    @Mutation
+    public ShotSelectAttributeOptionTemplate deleteShotSelectAttributeOptionTemplate(Long id){
+        userRepository.checkTemplateAccessRights(shotSelectAttributeOptionTemplateRepository.findById(id).shotAttributeTemplate.template, jwt);
+
+        return shotSelectAttributeOptionTemplateRepository.delete(id);
+    }
+
+    @Mutation
+    public ShotSelectAttributeOptionTemplate updateShotSelectAttributeOptionTemplate(ShotSelectAttributeOptionTemplateEditDTO editDTO) {
+        userRepository.checkTemplateAccessRights(shotSelectAttributeOptionTemplateRepository.findById(editDTO.id()).shotAttributeTemplate.template, jwt);
+
+        return shotSelectAttributeOptionTemplateRepository.update(editDTO);
+    }
+
+    /*
+     * SCENE ATTRIBUTE OPTIONS
+     */
+
+    @Inject
+    SceneSelectAttributeOptionTemplateRepository sceneSelectAttributeOptionTemplateRepository;
+
+    @Mutation
+    public SceneSelectAttributeOptionTemplate createSceneSelectAttributeOptionTemplate(Long attributeTemplateId){
+        userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(attributeTemplateId).template, jwt);
+
+        return sceneSelectAttributeOptionTemplateRepository.create(attributeTemplateId);
+    }
+
+    @Mutation
+    public SceneSelectAttributeOptionTemplate deleteSceneSelectAttributeOptionTemplate(Long id){
+        userRepository.checkTemplateAccessRights(sceneSelectAttributeOptionTemplateRepository.findById(id).sceneAttributeTemplate.template, jwt);
+
+        return sceneSelectAttributeOptionTemplateRepository.delete(id);
+    }
+
+    @Mutation
+    public SceneSelectAttributeOptionTemplate updateSceneSelectAttributeOptionTemplate(SceneSelectAttributeOptionTemplateEditDTO editDTO) {
+        userRepository.checkTemplateAccessRights(sceneSelectAttributeOptionTemplateRepository.findById(editDTO.id()).sceneAttributeTemplate.template, jwt);
+
+        return sceneSelectAttributeOptionTemplateRepository.update(editDTO);
     }
 }

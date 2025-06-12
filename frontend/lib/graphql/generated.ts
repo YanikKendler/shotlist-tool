@@ -27,20 +27,24 @@ export type Mutation = {
   createSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBaseDto>;
   createSceneAttributeTemplate?: Maybe<SceneAttributeTemplateBaseDto>;
   createSceneSelectAttributeOption?: Maybe<SceneSelectAttributeOptionDefinition>;
+  createSceneSelectAttributeOptionTemplate?: Maybe<SceneSelectAttributeOptionTemplate>;
   createShot?: Maybe<ShotDto>;
   createShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBaseDto>;
   createShotAttributeTemplate?: Maybe<ShotAttributeTemplateBaseDto>;
   createShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
+  createShotSelectAttributeOptionTemplate?: Maybe<ShotSelectAttributeOptionTemplate>;
   createShotlist?: Maybe<ShotlistDto>;
   createTemplate?: Maybe<TemplateDto>;
   deleteScene?: Maybe<SceneDto>;
   deleteSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBase>;
   deleteSceneAttributeTemplate?: Maybe<SceneAttributeTemplateBaseDto>;
   deleteSceneSelectAttributeOption?: Maybe<SceneSelectAttributeOptionDefinition>;
+  deleteSceneSelectAttributeOptionTemplate?: Maybe<SceneSelectAttributeOptionTemplate>;
   deleteShot?: Maybe<ShotDto>;
   deleteShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
   deleteShotAttributeTemplate?: Maybe<ShotAttributeTemplateBaseDto>;
   deleteShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
+  deleteShotSelectAttributeOptionTemplate?: Maybe<ShotSelectAttributeOptionTemplate>;
   deleteShotlist?: Maybe<ShotlistDto>;
   deleteTemplate?: Maybe<TemplateDto>;
   deleteUser?: Maybe<User>;
@@ -50,11 +54,13 @@ export type Mutation = {
   updateSceneAttributeDefinition?: Maybe<SceneAttributeDefinitionBase>;
   updateSceneAttributeTemplate?: Maybe<SceneAttributeTemplateBaseDto>;
   updateSceneSelectAttributeOption?: Maybe<SceneSelectAttributeOptionDefinition>;
+  updateSceneSelectAttributeOptionTemplate?: Maybe<SceneSelectAttributeOptionTemplate>;
   updateShot?: Maybe<ShotDto>;
   updateShotAttribute?: Maybe<ShotAttributeBase>;
   updateShotAttributeDefinition?: Maybe<ShotAttributeDefinitionBase>;
   updateShotAttributeTemplate?: Maybe<ShotAttributeTemplateBaseDto>;
   updateShotSelectAttributeOption?: Maybe<ShotSelectAttributeOptionDefinition>;
+  updateShotSelectAttributeOptionTemplate?: Maybe<ShotSelectAttributeOptionTemplate>;
   updateShotlist?: Maybe<ShotlistDto>;
   updateTemplate?: Maybe<TemplateDto>;
   updateUser?: Maybe<User>;
@@ -86,6 +92,12 @@ export type MutationCreateSceneSelectAttributeOptionArgs = {
 
 
 /** Mutation root */
+export type MutationCreateSceneSelectAttributeOptionTemplateArgs = {
+  attributeTemplateId?: InputMaybe<Scalars['BigInteger']['input']>;
+};
+
+
+/** Mutation root */
 export type MutationCreateShotArgs = {
   sceneId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -106,6 +118,12 @@ export type MutationCreateShotAttributeTemplateArgs = {
 /** Mutation root */
 export type MutationCreateShotSelectAttributeOptionArgs = {
   createDTO?: InputMaybe<ShotSelectAttributeOptionCreateDtoInput>;
+};
+
+
+/** Mutation root */
+export type MutationCreateShotSelectAttributeOptionTemplateArgs = {
+  attributeTemplateId?: InputMaybe<Scalars['BigInteger']['input']>;
 };
 
 
@@ -146,6 +164,12 @@ export type MutationDeleteSceneSelectAttributeOptionArgs = {
 
 
 /** Mutation root */
+export type MutationDeleteSceneSelectAttributeOptionTemplateArgs = {
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+};
+
+
+/** Mutation root */
 export type MutationDeleteShotArgs = {
   id?: InputMaybe<Scalars['String']['input']>;
 };
@@ -165,6 +189,12 @@ export type MutationDeleteShotAttributeTemplateArgs = {
 
 /** Mutation root */
 export type MutationDeleteShotSelectAttributeOptionArgs = {
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+};
+
+
+/** Mutation root */
+export type MutationDeleteShotSelectAttributeOptionTemplateArgs = {
   id?: InputMaybe<Scalars['BigInteger']['input']>;
 };
 
@@ -212,6 +242,12 @@ export type MutationUpdateSceneSelectAttributeOptionArgs = {
 
 
 /** Mutation root */
+export type MutationUpdateSceneSelectAttributeOptionTemplateArgs = {
+  editDTO?: InputMaybe<SceneSelectAttributeOptionTemplateEditDtoInput>;
+};
+
+
+/** Mutation root */
 export type MutationUpdateShotArgs = {
   editDTO?: InputMaybe<ShotEditDtoInput>;
 };
@@ -238,6 +274,12 @@ export type MutationUpdateShotAttributeTemplateArgs = {
 /** Mutation root */
 export type MutationUpdateShotSelectAttributeOptionArgs = {
   editDTO?: InputMaybe<ShotSelectAttributeOptionEditDtoInput>;
+};
+
+
+/** Mutation root */
+export type MutationUpdateShotSelectAttributeOptionTemplateArgs = {
+  editDTO?: InputMaybe<ShotSelectAttributeOptionTemplateEditDtoInput>;
 };
 
 
@@ -485,7 +527,12 @@ export type SceneSelectAttributeOptionTemplate = {
   __typename?: 'SceneSelectAttributeOptionTemplate';
   id?: Maybe<Scalars['BigInteger']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  position: Scalars['Int']['output'];
+  sceneAttributeTemplate?: Maybe<SceneAttributeTemplateBase>;
+};
+
+export type SceneSelectAttributeOptionTemplateEditDtoInput = {
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SceneSingleSelectAttributeDto = SceneAttributeBaseDto & {
@@ -681,7 +728,12 @@ export type ShotSelectAttributeOptionTemplate = {
   __typename?: 'ShotSelectAttributeOptionTemplate';
   id?: Maybe<Scalars['BigInteger']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  position: Scalars['Int']['output'];
+  shotAttributeTemplate?: Maybe<ShotAttributeTemplateBase>;
+};
+
+export type ShotSelectAttributeOptionTemplateEditDtoInput = {
+  id?: InputMaybe<Scalars['BigInteger']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ShotSingleSelectAttributeDto = ShotAttributeBaseDto & {
@@ -833,7 +885,7 @@ export type TemplateQueryVariables = Exact<{
 }>;
 
 
-export type TemplateQuery = { __typename?: 'Query', template?: { __typename?: 'TemplateDTO', id?: string | null, name?: string | null, sceneAttributes?: Array<{ __typename: 'SceneMultiSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | { __typename: 'SceneSingleSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | { __typename: 'SceneTextAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | null> | null, shotAttributes?: Array<{ __typename: 'ShotMultiSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | { __typename: 'ShotSingleSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | { __typename: 'ShotTextAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | null> | null } | null };
+export type TemplateQuery = { __typename?: 'Query', template?: { __typename?: 'TemplateDTO', id?: string | null, name?: string | null, shotAttributes?: Array<{ __typename: 'ShotMultiSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionTemplate', id?: any | null, name?: string | null } | null> | null } | { __typename: 'ShotSingleSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionTemplate', id?: any | null, name?: string | null } | null> | null } | { __typename: 'ShotTextAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | null> | null, sceneAttributes?: Array<{ __typename: 'SceneMultiSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionTemplate', id?: any | null, name?: string | null } | null> | null } | { __typename: 'SceneSingleSelectAttributeTemplateDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionTemplate', id?: any | null, name?: string | null } | null> | null } | { __typename: 'SceneTextAttributeTemplateDTO', id?: any | null, name?: string | null, position: number } | null> | null } | null };
 
 export type UpdateTemplateMutationVariables = Exact<{
   templateId: Scalars['String']['input'];
@@ -1117,6 +1169,13 @@ export type UpdateShotAttributeTemplateNameMutationVariables = Exact<{
 
 export type UpdateShotAttributeTemplateNameMutation = { __typename?: 'Mutation', updateShotAttributeTemplate?: { __typename?: 'ShotMultiSelectAttributeTemplateDTO', id?: any | null } | { __typename?: 'ShotSingleSelectAttributeTemplateDTO', id?: any | null } | { __typename?: 'ShotTextAttributeTemplateDTO', id?: any | null } | null };
 
+export type DeleteShotAttributeTemplateMutationVariables = Exact<{
+  definitionId: Scalars['BigInteger']['input'];
+}>;
+
+
+export type DeleteShotAttributeTemplateMutation = { __typename?: 'Mutation', deleteShotAttributeTemplate?: { __typename?: 'ShotMultiSelectAttributeTemplateDTO', id?: any | null } | { __typename?: 'ShotSingleSelectAttributeTemplateDTO', id?: any | null } | { __typename?: 'ShotTextAttributeTemplateDTO', id?: any | null } | null };
+
 export type ShotsQueryVariables = Exact<{
   sceneId: Scalars['String']['input'];
 }>;
@@ -1239,17 +1298,41 @@ export const TemplateDocument = gql`
   template(id: $id) {
     id
     name
-    sceneAttributes {
-      id
-      name
-      position
-      __typename
-    }
     shotAttributes {
       id
       name
       position
       __typename
+      ... on ShotSingleSelectAttributeTemplateDTO {
+        options {
+          id
+          name
+        }
+      }
+      ... on ShotMultiSelectAttributeTemplateDTO {
+        options {
+          id
+          name
+        }
+      }
+    }
+    sceneAttributes {
+      id
+      name
+      position
+      __typename
+      ... on SceneSingleSelectAttributeTemplateDTO {
+        options {
+          id
+          name
+        }
+      }
+      ... on SceneMultiSelectAttributeTemplateDTO {
+        options {
+          id
+          name
+        }
+      }
     }
   }
 }
@@ -2812,6 +2895,39 @@ export function useUpdateShotAttributeTemplateNameMutation(baseOptions?: Apollo.
 export type UpdateShotAttributeTemplateNameMutationHookResult = ReturnType<typeof useUpdateShotAttributeTemplateNameMutation>;
 export type UpdateShotAttributeTemplateNameMutationResult = Apollo.MutationResult<UpdateShotAttributeTemplateNameMutation>;
 export type UpdateShotAttributeTemplateNameMutationOptions = Apollo.BaseMutationOptions<UpdateShotAttributeTemplateNameMutation, UpdateShotAttributeTemplateNameMutationVariables>;
+export const DeleteShotAttributeTemplateDocument = gql`
+    mutation deleteShotAttributeTemplate($definitionId: BigInteger!) {
+  deleteShotAttributeTemplate(id: $definitionId) {
+    id
+  }
+}
+    `;
+export type DeleteShotAttributeTemplateMutationFn = Apollo.MutationFunction<DeleteShotAttributeTemplateMutation, DeleteShotAttributeTemplateMutationVariables>;
+
+/**
+ * __useDeleteShotAttributeTemplateMutation__
+ *
+ * To run a mutation, you first call `useDeleteShotAttributeTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteShotAttributeTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteShotAttributeTemplateMutation, { data, loading, error }] = useDeleteShotAttributeTemplateMutation({
+ *   variables: {
+ *      definitionId: // value for 'definitionId'
+ *   },
+ * });
+ */
+export function useDeleteShotAttributeTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteShotAttributeTemplateMutation, DeleteShotAttributeTemplateMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteShotAttributeTemplateMutation, DeleteShotAttributeTemplateMutationVariables>(DeleteShotAttributeTemplateDocument, options);
+      }
+export type DeleteShotAttributeTemplateMutationHookResult = ReturnType<typeof useDeleteShotAttributeTemplateMutation>;
+export type DeleteShotAttributeTemplateMutationResult = Apollo.MutationResult<DeleteShotAttributeTemplateMutation>;
+export type DeleteShotAttributeTemplateMutationOptions = Apollo.BaseMutationOptions<DeleteShotAttributeTemplateMutation, DeleteShotAttributeTemplateMutationVariables>;
 export const ShotsDocument = gql`
     query shots($sceneId: String!) {
   shots(sceneId: $sceneId) {
