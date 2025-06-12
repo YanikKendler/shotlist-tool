@@ -42,8 +42,8 @@ public class Template extends PanacheEntityBase {
             id,
             owner,
             name,
-            sceneAttributes.stream().map(SceneAttributeTemplateBase::toDTO).toList(),
-            shotAttributes.stream().map(ShotAttributeTemplateBase::toDTO).toList(),
+            sceneAttributes.stream().sorted(Comparator.comparingInt(attr -> attr.position)).map(SceneAttributeTemplateBase::toDTO).toList(),
+            shotAttributes.stream().sorted(Comparator.comparingInt(attr -> attr.position)).map(ShotAttributeTemplateBase::toDTO).toList(),
             createdAt,
             sceneAttributes.size(),
             shotAttributes.size()

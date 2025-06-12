@@ -28,7 +28,7 @@ public class TemplateRepository implements PanacheRepositoryBase<Template, UUID>
         User user = userRepository.findOrCreateByJWT(jwt);
         Template template = new Template(userRepository.findOrCreateByJWT(jwt), createDTO.name());
         persist(template);
-        LOGGER.infof("Created new template: %s for user", template.name, user.email);
+        LOGGER.infof("Created new template: %s for user %s", template.name, user.email);
         return template;
     }
 

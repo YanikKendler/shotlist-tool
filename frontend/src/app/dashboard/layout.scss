@@ -51,11 +51,17 @@ main.home{
         rotate: 180deg;
       }
 
-      .empty{
+      button.create{
         margin-left: .4rem;
         width: calc(100% - .4rem);
         font-size: .9rem;
         justify-content: center;
+      }
+
+      .empty{
+        font-size: .9rem;
+        color: var(--text-50);
+        margin: .3rem .5rem;
       }
     }
   }

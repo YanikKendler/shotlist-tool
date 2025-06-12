@@ -150,6 +150,8 @@ export default function Template (){
             const oldIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === active.id);
             const newIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === over.id);
 
+            console.log(oldIndex, newIndex)
+
             //TODO does not work
             apolloClient.mutate({
                 mutation: gql`

@@ -118,7 +118,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                 >
                                     {
                                         !shotlists || shotlists.length === 0 ? (
-                                            <button onClick={openCreateShotlistDialog} className={"empty"}>
+                                            <button onClick={openCreateShotlistDialog} className={"create"}>
                                                 create new <Plus size={16}/>
                                             </button>) :
                                             shotlists.sort(Utils.orderShotlistsOrTemplatesByName).map((shotlist) => (
