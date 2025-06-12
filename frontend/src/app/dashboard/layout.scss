@@ -54,15 +54,8 @@ main.home{
       .empty{
         margin-left: .4rem;
         width: calc(100% - .4rem);
-        color: var(--text-30);
         font-size: .9rem;
-        display: block;
-        text-align: center;
-
-        span {
-          font-weight: bold;
-          text-decoration: underline;
-        }
+        justify-content: center;
       }
     }
   }
@@ -100,10 +93,10 @@ main.home{
           color: var(--accent);
           border: .15rem solid var(--accent);
 
-          /*&:hover{
-            color: var(--accent-60);
+          &:hover{
+            color: var(--accent-40);
             border-color: var(--accent-60);
-          }*/
+          }
         }
       }
     }

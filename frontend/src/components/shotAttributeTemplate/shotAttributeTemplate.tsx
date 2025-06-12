@@ -43,8 +43,8 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     async function updateDefinition(newName: string) {
         const {data, errors} = await client.mutate({
             mutation: gql`
-                mutation updateSceneAttributeDefinition($id: BigInteger!, $name: String!) {
-                    updateSceneAttributeDefinition(editDTO: {
+                mutation updateShotAttributeTemplateName($id: BigInteger!, $name: String!) {
+                    updateShotAttributeTemplate(editDTO: {
                         id: $id
                         name: $name
                     }){ id }
@@ -64,16 +64,16 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
 
     const debouncedUpdateDefinition = wuGeneral.debounce(updateDefinition)
 
-    const deleteDefinition = async () => {
+    const deleteAttributeTemplate = async () => {
         if(!await confirm({
-            message: `The attribute definition "${attribute.name || 'unnamed'}" will be deleted. All scenes in this shotlist will lose the column "${attribute.name || 'unnamed'}" and with that: all the values in that column.`,
+            message: `The attribute definition "${attribute.name || 'unnamed'}" will be deleted. This will not affect any existing shotlists or their shots.`,
             buttons: {confirm: {className: "bad"}}}
         )) return
 
         const { errors } = await client.mutate({
             mutation: gql`
-                mutation deleteSceneAttributeDefinition($definitionId: BigInteger!) {
-                    deleteSceneAttributeDefinition(id: $definitionId) {
+                mutation deleteShotAttributeTemplate($definitionId: BigInteger!) {
+                    deleteShotAttributeTemplate(id: $definitionId) {
                         id
                     }
                 }
@@ -191,7 +191,7 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
             </div>
             <Icon size={20} strokeWidth={3}/>
             <Input
-                value={attribute.name || ""}
+                defaultValue={attribute.name || ""}
                 valueChange={debouncedUpdateDefinition}
                 placeholder={"Attribute name"}
                 inputClass={"nameInput"}
@@ -220,7 +220,7 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
                     </Popover.Portal>
                 </Popover.Root>
             )}
-            <button className="delete" onClick={deleteDefinition}><Trash size={18}/></button>
+            <button className="delete" onClick={deleteAttributeTemplate}><Trash size={18}/></button>
             {ConfirmDialog}
         </div>
     );

@@ -6,7 +6,8 @@ import "./input.scss"
 export default function Input(
     {
         label,
-        value = "",
+        value,
+        defaultValue = "",
         valueChange = () => {},
         placeholder = "",
         info,
@@ -20,6 +21,7 @@ export default function Input(
     {
         label?: string;
         value?: string;
+        defaultValue?: string;
         valueChange?: (value: string) => void;
         placeholder?: string;
         info?: string;
@@ -30,14 +32,21 @@ export default function Input(
         showError?: boolean;
     }
 ) {
-    const [currentValue, setCurrentValue] = useState<string>(value || "");
+    const [currentValue, setCurrentValue] = useState<string>(value || defaultValue);
     const [error, setError] = useState<string>("");
     const [errorType, setErrorType] = useState<"warning" | "max">("warning");
 
     useEffect(() => {
+        if (!value) return
         validateInput(value)
         setCurrentValue(value)
     }, [value]);
+
+    useEffect(() => {
+        if(currentValue != "") return
+        validateInput(defaultValue)
+        setCurrentValue(defaultValue)
+    }, [defaultValue])
 
     function validateInput(value: string) {
         setError("")

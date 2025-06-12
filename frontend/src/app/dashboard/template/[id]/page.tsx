@@ -23,6 +23,7 @@ import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAt
 import {Popover} from "radix-ui"
 import {apolloClient} from "@/ApolloWrapper"
 import ShotAttributeTemplate from "@/components/shotAttributeTemplate/shotAttributeTemplate"
+import {AnySceneAttributeDefinition, AnyShotAttributeTemplate} from "@/util/Types"
 
 export default function Template (){
     const params = useParams<{ id: string }>()
@@ -149,10 +150,11 @@ export default function Template (){
             const oldIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === active.id);
             const newIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === over.id);
 
+            //TODO does not work
             apolloClient.mutate({
                 mutation: gql`
-                    mutation updateShotDefinition($id: BigInteger!, $position: Int!) {
-                        updateShotAttributeDefinition(editDTO:{
+                    mutation updateShotAttributeTemplatePosition($id: BigInteger!, $position: Int!) {
+                        updateShotAttributeTemplate(editDTO:{
                             id: $id,
                             position: $position
                         }){
@@ -170,8 +172,22 @@ export default function Template (){
                     ...template.data,
                     shotAttributes: arrayMove(template.data.shotAttributes, oldIndex, newIndex)
                 }
-            });
+            })
         }
+    }
+
+    function removeShotAttributeTemplate(id: number) {
+        if(!template.data.shotAttributes || template.data.shotAttributes.length == 0) return
+
+        let newShotTemplates: AnyShotAttributeTemplate[] = (template.data.shotAttributes as AnyShotAttributeTemplate[]).filter((shotTemplate) => shotTemplate.id != id)
+
+        setTemplate({
+            ...template,
+            data: {
+                ...template.data,
+                shotAttributes: newShotTemplates
+            }
+        })
     }
 
     if(template.error) return <main className={"dashboardContent"}><ErrorPage settings={{
@@ -212,7 +228,9 @@ export default function Template (){
                 </div>
             </h2>
             <p className="info">
-                None of the changes made to this templated will be reflected in the shotlists that were based on it.
+                <span className="dark">Templates can be selected when creating a shotlist so that you don't have to create the same attributes over and over again.</span>
+                <br/>
+                None of the changes made to this templated will be reflected in existing shotlists.
                 Every shotlist manages its own attributes, only those that are created based on this template <i>after</i> it has been edited will use the updated attributes.</p>
             <h3>Shot Attributes</h3>
             <DndContext
@@ -224,15 +242,14 @@ export default function Template (){
                     items={template.data.shotAttributes?.map(def => def!.id) || []}
                     strategy={verticalListSortingStrategy}
                 >
-                    <div className="attributeTemplates">
-                        {
-                            !template.data.shotAttributes || template.data.shotAttributes?.length <= 0 ?
-                            <p className={"empty"}>Nothing here yet</p> :
-                            (template.data.shotAttributes as ShotAttributeTemplateBase[]).map(attr => (
-                                <ShotAttributeTemplate attributeTemplate={attr} onDelete={() => {}} key={attr.id}/>
-                            ))
-                        }
-                    </div>
+                    {
+                        template.data.shotAttributes && template.data.shotAttributes.length > 0 &&
+                        (<div className="attributeTemplates">
+                            {(template.data.shotAttributes as ShotAttributeTemplateBase[]).map(attr =>
+                                <ShotAttributeTemplate attributeTemplate={attr} onDelete={removeShotAttributeTemplate} key={attr.id}/>
+                            )}
+                        </div>)
+                    }
                 </SortableContext>
             </DndContext>
             <Popover.Root>

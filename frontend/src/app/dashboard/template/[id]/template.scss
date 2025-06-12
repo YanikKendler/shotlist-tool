@@ -56,6 +56,11 @@ main.template{
     font-size: .9rem;
     color: var(--text-40);
     max-width: 80ch;
+
+    .dark{
+      color: var(--text-20);
+      font-weight: 500;
+    }
   }
 
   h3{
@@ -65,30 +70,29 @@ main.template{
     margin-bottom: .5rem;
   }
 
-  .add{
-    color: var(--text-50);
-    font-size: .95rem;
-    margin-top: .8rem;
-    translate: -.2rem 0;
-    min-width: 20ch;
-
-    &:hover{
-      color: var(--text);
-      background-color: var(--hover-bg-10);
-    }
-  }
-
-
   .attributeTemplates{
     display: flex;
     flex-direction: column;
     gap: .5rem;
+    margin-bottom: .8rem;
 
     .empty{
       margin-left: 1rem;
       font-size: .9rem;
       color: var(--text-50);
       margin-block: 1rem;
+    }
+  }
+
+  .add{
+    color: var(--text-50);
+    font-size: .95rem;
+    translate: -.2rem 0;
+    min-width: 20ch;
+
+    &:hover{
+      color: var(--text);
+      background-color: var(--hover-bg-10);
     }
   }
 }

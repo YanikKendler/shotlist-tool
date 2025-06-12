@@ -118,7 +118,6 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     }
 
     public void checkTemplateAccessRights(Template template, JsonWebToken jwt) {
-        LOGGER.info("In CheckUserAccessRights");
         if (!userCanAccessTemplate(template, jwt)) {
             throw new UnauthorizedAccessException("You are not allowed to access this template");
         }

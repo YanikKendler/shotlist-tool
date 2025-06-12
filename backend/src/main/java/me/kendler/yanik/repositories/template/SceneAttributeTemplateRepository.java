@@ -5,6 +5,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateEditDTO;
+import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
 import me.kendler.yanik.model.Shotlist;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSingleSelectAttributeDefinition;
@@ -60,5 +62,40 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
         persist(attributeTemplate);
 
         return attributeTemplate;
+    }
+
+    public SceneAttributeTemplateBase update(SceneAttributeTemplateEditDTO editDTO) {
+        SceneAttributeTemplateBase attribute = findById(editDTO.id());
+        if (attribute == null) {
+            throw new IllegalArgumentException("Attribute not found");
+        }
+        if(editDTO.name() != null && !editDTO.name().isEmpty()) {
+            attribute.name = editDTO.name();
+        }
+        if(editDTO.position() != null && attribute.position != editDTO.position()){
+            //attr was moved back
+            //0 1 2 3 New 5 6 Old
+            attribute.template.shotAttributes.stream()
+                    .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
+                    .forEach(a -> a.position++);
+            //attr was moved forward
+            //0 1 2 3 Old 5 6 New
+            attribute.template.sceneAttributes.stream()
+                    .filter(a -> a.position > attribute.position && a.position <= editDTO.position())
+                    .forEach(a -> a.position--);
+
+            attribute.position = editDTO.position();
+        }
+        return attribute;
+    }
+
+    public SceneAttributeTemplateBase delete(Long id){
+        SceneAttributeTemplateBase attribute = findById(id);
+        if(attribute != null) {
+            attribute.template.sceneAttributes.remove(attribute);
+            delete(attribute);
+            return attribute;
+        }
+        return null;
     }
 }

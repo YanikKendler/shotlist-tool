@@ -6,6 +6,7 @@ import me.kendler.yanik.dto.template.TemplateDTO;
 import me.kendler.yanik.dto.template.TemplateEditDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateBaseDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateEditDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateBaseDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateCreateDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
@@ -78,6 +79,18 @@ public class TemplateResource {
         return shotAttributeTemplateRepository.create(createDTO).toDTO();
     }
 
+    @Mutation
+    public ShotAttributeTemplateBaseDTO updateShotAttributeTemplate(ShotAttributeTemplateEditDTO editDTO) {
+        userRepository.checkTemplateAccessRights(shotAttributeTemplateRepository.findById(editDTO.id()).template, jwt);
+        return shotAttributeTemplateRepository.update(editDTO).toDTO();
+    }
+
+    @Mutation
+    public ShotAttributeTemplateBaseDTO deleteShotAttributeTemplate(Long id) {
+        userRepository.checkTemplateAccessRights(shotAttributeTemplateRepository.findById(id).template, jwt);
+        return shotAttributeTemplateRepository.delete(id).toDTO();
+    }
+
     /*
      * SCENE ATTRIBUTE DEFINITIONS
      */
@@ -89,5 +102,17 @@ public class TemplateResource {
     public SceneAttributeTemplateBaseDTO createSceneAttributeTemplate(SceneAttributeTemplateCreateDTO createDTO) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(createDTO.templateId()), jwt);
         return sceneAttributeTemplateRepository.create(createDTO).toDTO();
+    }
+
+    @Mutation
+    public SceneAttributeTemplateBaseDTO updateSceneAttributeTemplate(SceneAttributeTemplateEditDTO editDTO) {
+        userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(editDTO.id()).template, jwt);
+        return sceneAttributeTemplateRepository.update(editDTO).toDTO();
+    }
+
+    @Mutation
+    public SceneAttributeTemplateBaseDTO deleteSceneAttributeTemplate(Long id) {
+        userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(id).template, jwt);
+        return sceneAttributeTemplateRepository.delete(id).toDTO();
     }
 }
