@@ -81,7 +81,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         return attributeDefinitionDTOs.stream().sorted(Comparator.comparingInt(ShotAttributeDefinitionBaseDTO::getPosition)).toList();
     }
 
-    public ShotAttributeDefinitionBase create(ShotAttributeDefinitionCreateDTO createDTO) {
+    public ShotAttributeDefinitionBaseDTO create(ShotAttributeDefinitionCreateDTO createDTO) {
         if(createDTO == null) {
             throw new IllegalArgumentException("ShotAttributeDefinitionCreateDTO cannot be null");
         }
@@ -124,10 +124,10 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
             });
         });
 
-        return attributeDefinition;
+        return attributeDefinition.toDTO();
     }
 
-    public ShotAttributeDefinitionBase update(ShotAttributeDefinitionEditDTO editDTO) {
+    public ShotAttributeDefinitionBaseDTO update(ShotAttributeDefinitionEditDTO editDTO) {
         ShotAttributeDefinitionBase attribute = findById(editDTO.id());
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
@@ -154,10 +154,10 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
             attribute.position = editDTO.position();
         }
-        return attribute;
+        return attribute.toDTO();
     }
 
-    public ShotAttributeDefinitionBase delete(Long id){
+    public ShotAttributeDefinitionBaseDTO delete(Long id){
         ShotAttributeDefinitionBase attributeDefinition = findById(id);
 
         if(attributeDefinition != null) {
@@ -183,7 +183,7 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
 
             relevantShotlist.registerEdit();
 
-            return attributeDefinition;
+            return attributeDefinition.toDTO();
         }
         return null;
     }

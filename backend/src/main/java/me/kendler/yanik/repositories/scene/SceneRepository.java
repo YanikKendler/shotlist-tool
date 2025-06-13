@@ -14,8 +14,10 @@ import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.repositories.ShotlistRepository;
 import me.kendler.yanik.repositories.shot.ShotRepository;
 
+import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @ApplicationScoped
 public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
@@ -24,18 +26,20 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     @Inject
     ShotRepository shotRepository;
 
-    @Transactional
-    public Scene create(UUID shotlistId) {
+    public List<SceneDTO> listAllForShotlist(UUID shotlistId) {
+        return list("shotlist.id", shotlistId).stream().map(Scene::toDTO).toList();
+    }
+
+    public SceneDTO create(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
         shotlist.registerEdit();
         Scene scene = new Scene(shotlist);
         persist(scene);
 
-        return scene;
+        return scene.toDTO();
     }
 
-    @Transactional
-    public Scene update(SceneEditDTO editDTO) {
+    public SceneDTO update(SceneEditDTO editDTO) {
         Scene scene = findById(editDTO.id());
 
         if(scene.position != editDTO.position()){
@@ -55,11 +59,10 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
         scene.shotlist.registerEdit();
 
-        return scene;
+        return scene.toDTO();
     }
 
-    @Transactional
-    public Scene delete(UUID id) {
+    public SceneDTO delete(UUID id) {
         Scene scene = findById(id);
         if (scene != null) {
             scene.shotlist.scenes.stream().filter(s -> s.position > scene.position).forEach(s -> s.position--);
@@ -72,7 +75,7 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
 
             delete(scene);
 
-            return scene;
+            return scene.toDTO();
         }
         return null;
     }

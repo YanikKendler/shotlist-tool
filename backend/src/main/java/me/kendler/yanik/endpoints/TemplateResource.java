@@ -45,19 +45,19 @@ public class TemplateResource {
 
     @Mutation
     public TemplateDTO createTemplate(TemplateCreateDTO createDTO) {
-        return templateRepository.create(createDTO, jwt).toDTO();
+        return templateRepository.create(createDTO, jwt);
     }
 
     @Mutation
     public TemplateDTO updateTemplate(TemplateEditDTO editDTO) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(editDTO.id()), jwt);
-        return templateRepository.update(editDTO).toDTO();
+        return templateRepository.update(editDTO);
     }
 
     @Mutation
     public TemplateDTO deleteTemplate(UUID id) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(id), jwt);
-        return templateRepository.delete(id).toDTO();
+        return templateRepository.delete(id);
     }
 
     /*
@@ -70,19 +70,19 @@ public class TemplateResource {
     @Mutation
     public ShotAttributeTemplateBaseDTO createShotAttributeTemplate(ShotAttributeTemplateCreateDTO createDTO) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(createDTO.templateId()), jwt);
-        return shotAttributeTemplateRepository.create(createDTO).toDTO();
+        return shotAttributeTemplateRepository.create(createDTO);
     }
 
     @Mutation
     public ShotAttributeTemplateBaseDTO updateShotAttributeTemplate(ShotAttributeTemplateEditDTO editDTO) {
         userRepository.checkTemplateAccessRights(shotAttributeTemplateRepository.findById(editDTO.id()).template, jwt);
-        return shotAttributeTemplateRepository.update(editDTO).toDTO();
+        return shotAttributeTemplateRepository.update(editDTO);
     }
 
     @Mutation
     public ShotAttributeTemplateBaseDTO deleteShotAttributeTemplate(Long id) {
         userRepository.checkTemplateAccessRights(shotAttributeTemplateRepository.findById(id).template, jwt);
-        return shotAttributeTemplateRepository.delete(id).toDTO();
+        return shotAttributeTemplateRepository.delete(id);
     }
 
     /*
@@ -95,19 +95,19 @@ public class TemplateResource {
     @Mutation
     public SceneAttributeTemplateBaseDTO createSceneAttributeTemplate(SceneAttributeTemplateCreateDTO createDTO) {
         userRepository.checkTemplateAccessRights(templateRepository.findById(createDTO.templateId()), jwt);
-        return sceneAttributeTemplateRepository.create(createDTO).toDTO();
+        return sceneAttributeTemplateRepository.create(createDTO);
     }
 
     @Mutation
     public SceneAttributeTemplateBaseDTO updateSceneAttributeTemplate(SceneAttributeTemplateEditDTO editDTO) {
         userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(editDTO.id()).template, jwt);
-        return sceneAttributeTemplateRepository.update(editDTO).toDTO();
+        return sceneAttributeTemplateRepository.update(editDTO);
     }
 
     @Mutation
     public SceneAttributeTemplateBaseDTO deleteSceneAttributeTemplate(Long id) {
         userRepository.checkTemplateAccessRights(sceneAttributeTemplateRepository.findById(id).template, jwt);
-        return sceneAttributeTemplateRepository.delete(id).toDTO();
+        return sceneAttributeTemplateRepository.delete(id);
     }
 
     /*

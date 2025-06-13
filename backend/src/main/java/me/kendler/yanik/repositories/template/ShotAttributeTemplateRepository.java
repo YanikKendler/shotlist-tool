@@ -5,6 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
+import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateBaseDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateCreateDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
 import me.kendler.yanik.model.Shotlist;
@@ -28,7 +29,7 @@ public class ShotAttributeTemplateRepository implements PanacheRepository<ShotAt
 
     private Logger LOGGER = Logger.getLogger(ShotAttributeTemplateRepository.class);
 
-    public ShotAttributeTemplateBase create(ShotAttributeTemplateCreateDTO createDTO) {
+    public ShotAttributeTemplateBaseDTO create(ShotAttributeTemplateCreateDTO createDTO) {
         if(createDTO == null) {
             throw new IllegalArgumentException("ShotAttributeDefinitionCreateDTO cannot be null");
         }
@@ -61,10 +62,10 @@ public class ShotAttributeTemplateRepository implements PanacheRepository<ShotAt
 
         persist(attributeTemplate);
 
-        return attributeTemplate;
+        return attributeTemplate.toDTO();
     }
 
-    public ShotAttributeTemplateBase update(ShotAttributeTemplateEditDTO editDTO) {
+    public ShotAttributeTemplateBaseDTO update(ShotAttributeTemplateEditDTO editDTO) {
         ShotAttributeTemplateBase attribute = findById(editDTO.id());
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
@@ -86,15 +87,15 @@ public class ShotAttributeTemplateRepository implements PanacheRepository<ShotAt
 
             attribute.position = editDTO.position();
         }
-        return attribute;
+        return attribute.toDTO();
     }
 
-    public ShotAttributeTemplateBase delete(Long id){
+    public ShotAttributeTemplateBaseDTO delete(Long id){
         ShotAttributeTemplateBase attribute = findById(id);
         if(attribute != null) {
             attribute.template.shotAttributes.remove(attribute);
             delete(attribute);
-            return attribute;
+            return attribute.toDTO();
         }
         return null;
     }

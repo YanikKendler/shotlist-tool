@@ -3,7 +3,7 @@ package me.kendler.yanik.endpoints;
 import jakarta.inject.Inject;
 import me.kendler.yanik.dto.scene.*;
 import me.kendler.yanik.dto.scene.attributeDefinitions.SceneAttributeDefinitionBaseDTO;
-import me.kendler.yanik.model.scene.Scene;
+import me.kendler.yanik.dto.scene.attributes.SceneAttributeBaseDTO;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneAttributeDefinitionBase;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributes.SceneAttributeBase;
@@ -35,28 +35,28 @@ public class SceneResource {
     public List<SceneDTO> getScenes(UUID shotlistId) {
         userRepository.checkShotlistAccessRights(shotlistId, jwt);
 
-        return sceneRepository.list("shotlist.id", shotlistId).stream().map(Scene::toDTO).toList();
+        return sceneRepository.listAllForShotlist(shotlistId);
     }
 
     @Mutation
     public SceneDTO createScene(UUID shotlistId) {
         userRepository.checkShotlistAccessRights(shotlistId, jwt);
 
-        return sceneRepository.create(shotlistId).toDTO();
+        return sceneRepository.create(shotlistId);
     }
 
     @Mutation
     public SceneDTO deleteScene(UUID id) {
         userRepository.checkShotlistAccessRights(sceneRepository.findById(id).shotlist, jwt);
 
-        return sceneRepository.delete(id).toDTO();
+        return sceneRepository.delete(id);
     }
 
     @Mutation
     public SceneDTO updateScene(SceneEditDTO editDTO) {
         userRepository.checkShotlistAccessRights(sceneRepository.findById(editDTO.id()).shotlist, jwt);
 
-        return sceneRepository.update(editDTO).toDTO();
+        return sceneRepository.update(editDTO);
     }
 
     /*
@@ -70,25 +70,25 @@ public class SceneResource {
     public List<SceneAttributeDefinitionBaseDTO> getSceneAttributeDefinitions(UUID shotlistId){
         userRepository.checkShotlistAccessRights(shotlistId, jwt);
 
-        return sceneAttributeDefinitionRepository.getAll(shotlistId);
+        return sceneAttributeDefinitionRepository.listAllForShotlist(shotlistId);
     }
 
     @Mutation
     public SceneAttributeDefinitionBaseDTO createSceneAttributeDefinition(SceneAttributeDefinitionCreateDTO createDTO){
         userRepository.checkShotlistAccessRights(createDTO.shotlistId(), jwt);
 
-        return sceneAttributeDefinitionRepository.create(createDTO).toDTO();
+        return sceneAttributeDefinitionRepository.create(createDTO);
     }
 
     @Mutation
-    public SceneAttributeDefinitionBase deleteSceneAttributeDefinition(Long id){
+    public SceneAttributeDefinitionBaseDTO deleteSceneAttributeDefinition(Long id){
         userRepository.checkShotlistAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(id), jwt);
 
         return sceneAttributeDefinitionRepository.delete(id);
     }
 
     @Mutation
-    public SceneAttributeDefinitionBase updateSceneAttributeDefinition(SceneAttributeDefinitionEditDTO editDTO) {
+    public SceneAttributeDefinitionBaseDTO updateSceneAttributeDefinition(SceneAttributeDefinitionEditDTO editDTO) {
         userRepository.checkShotlistAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(editDTO.id()), jwt);
 
         return sceneAttributeDefinitionRepository.update(editDTO);
@@ -102,7 +102,7 @@ public class SceneResource {
     SceneAttributeRepository sceneAttributeRepository;
 
     @Mutation
-    public SceneAttributeBase updateSceneAttribute(SceneAttributeEditDTO editDTO) {
+    public SceneAttributeBaseDTO updateSceneAttribute(SceneAttributeEditDTO editDTO) {
         SceneAttributeDefinitionBase sceneAttributeDefinition = sceneAttributeRepository.findById(editDTO.id()).definition;
         userRepository.checkShotlistAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(sceneAttributeDefinition.id), jwt);
 

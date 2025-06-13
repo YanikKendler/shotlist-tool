@@ -15,15 +15,17 @@ import {
 } from "../../../../../lib/graphql/generated"
 import gql from "graphql-tag"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
-import {ChevronDown, List, Pen, Pencil, Plus, Type} from "lucide-react"
+import {ChevronDown, Info, List, NotepadText, Pen, Pencil, Plus, Type} from "lucide-react"
 import Input from "@/components/input/input"
 import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
-import {Popover} from "radix-ui"
+import {Collapsible, Popover} from "radix-ui"
 import {apolloClient} from "@/ApolloWrapper"
 import ShotAttributeTemplate from "@/components/shotAttributeTemplate/shotAttributeTemplate"
 import {AnySceneAttributeDefinition, AnyShotAttributeTemplate} from "@/util/Types"
+import Utils from "@/util/Utils"
+import Link from "next/link"
 
 export default function Template (){
     const params = useParams<{ id: string }>()
@@ -242,26 +244,39 @@ export default function Template (){
 
     return (
         <main className={"template dashboardContent"}>
-            <h2>
-                <Input
-                    value={template.data.name || ""}
-                    placeholder={"template name"}
-                    valueChange={handleTemplateNameChange}
-                    inputClass={"templateName"}
-                    maxLength={80}
-                    maxWidth={"90ch"}
-                    showError={false}
-                />
-                <div className="spacerContainer">
-                    <p className="spacer">{template.data.name}</p>
-                    <Pencil size={18} style={{display: template.data.name == "" ? "none" : "block"}}/>
-                </div>
-            </h2>
-            <p className="info">
-                <span className="dark">Templates can be selected when creating a shotlist so that you don't have to create the same attributes over and over again.</span>
-                <br/>
-                None of the changes made to this templated will be reflected in existing shotlists.
-                Every shotlist manages its own attributes, only those that are created based on this template <i>after</i> it has been edited will use the updated attributes.</p>
+            <div className="top">
+                <h2>
+                    <Input
+                        value={template.data.name || ""}
+                        placeholder={"template name"}
+                        valueChange={handleTemplateNameChange}
+                        inputClass={"templateName"}
+                        maxLength={80}
+                        maxWidth={"90ch"}
+                        showError={false}
+                    />
+                    <div className="spacerContainer">
+                        <p className="spacer">{template.data.name}</p>
+                        <Pencil size={18} style={{display: template.data.name == "" ? "none" : "block"}}/>
+                    </div>
+                </h2>
+
+                <Popover.Root defaultOpen={true}>
+                    <Popover.Trigger className={"noClickFx default infoTrigger"}>More on Templates <Info
+                        size={18}/></Popover.Trigger>
+                    <Popover.Portal>
+                        <Popover.Content className="PopoverContent templateInfo" sideOffset={5} align={"end"}>
+                            <p>
+                                <span className="dark">Templates can be selected when creating a shotlist so that you don't have to create the same attributes over and over again.</span>
+                                <br/>
+                                None of the changes made to this templated will be reflected in existing shotlists.
+                                Every shotlist manages its own attributes, only those that are created based on this
+                                template <i>after</i> it has been edited will use the updated attributes.
+                            </p>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
+            </div>
             <h3>Shot Attributes</h3>
             <DndContext
                 sensors={sensors}

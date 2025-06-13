@@ -40,18 +40,18 @@ public class ShotlistResource {
 
     @Mutation
     public ShotlistDTO createShotlist(ShotlistCreateDTO createDTO) {
-        return shotlistRepository.create(createDTO, jwt).toDTO();
+        return shotlistRepository.create(createDTO, jwt);
     }
 
     @Mutation
     public ShotlistDTO updateShotlist(ShotlistEditDTO editDTO) {
         userRepository.checkShotlistAccessRights(shotlistRepository.findById(editDTO.id()), jwt);
-        return shotlistRepository.update(editDTO).toDTO();
+        return shotlistRepository.update(editDTO);
     }
 
     @Mutation
     public ShotlistDTO deleteShotlist(UUID id) {
         userRepository.checkShotlistAccessRights(shotlistRepository.findById(id), jwt);
-        return shotlistRepository.delete(id).toDTO();
+        return shotlistRepository.delete(id);
     }
 }

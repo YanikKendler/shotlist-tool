@@ -177,11 +177,13 @@ button, a{
   background-color: transparent;
   box-sizing: border-box;
 
-  &:not([disabled]):not(.noClickFx){
-    &:active{
+  &:not([disabled]):not(.noClickFx) {
+    &:active {
       transform: translate(0, 1px) scale(0.995);
     }
+  }
 
+  &:not([disabled]){
     &.default, &.bad, &.good, &.accent{
       svg{
         color: inherit;

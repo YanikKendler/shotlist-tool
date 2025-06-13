@@ -2,10 +2,16 @@ main.template{
   --interactable-border: hsl(0, 0%, 60%);
   --attribute-hover-border: hsl(0, 0%, 70%);
 
+  .top{
+    display: flex;
+    justify-content: space-between;
+  }
+
   h2{
     position: relative;
     display: grid;
     translate: -.5rem 0;
+    width: 100%;
 
     *{
       grid-area: 1/1/2/2;
@@ -53,15 +59,10 @@ main.template{
     }
   }
 
-  .info{
+  .infoTrigger{
     font-size: .9rem;
+    translate: -.3rem 0;
     color: var(--text-40);
-    max-width: 80ch;
-
-    .dark{
-      color: var(--text-20);
-      font-weight: 500;
-    }
   }
 
   h3{
@@ -127,6 +128,7 @@ main.template{
       border-radius: 0;
       border-bottom: .1rem solid var(--default-interactable-border);
       padding: .2rem;
+      width: 100%;
 
       &:hover{
         border-color: var(--default-interactable-hover-border);
@@ -135,6 +137,10 @@ main.template{
       &:focus{
         border-color: var(--accent);
       }
+    }
+
+    button{
+      color: var(--text-40);
     }
   }
 
@@ -153,5 +159,15 @@ main.template{
         color: var(--text);
       }
     }
+  }
+}
+
+.PopoverContent.templateInfo{
+  font-size: .9rem;
+  color: var(--text-30);
+
+  .dark{
+    color: var(--text-20);
+    font-weight: 500;
   }
 }

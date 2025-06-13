@@ -53,7 +53,7 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
                 .toList();
     }
 
-    public Shotlist create(ShotlistCreateDTO createDTO, JsonWebToken jwt){
+    public ShotlistDTO create(ShotlistCreateDTO createDTO, JsonWebToken jwt){
         User user = userRepository.findOrCreateByJWT(jwt);
 
         Shotlist shotlist;
@@ -73,24 +73,24 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
 
         persist(shotlist);
 
-        return shotlist;
+        return shotlist.toDTO();
     }
 
-    public Shotlist update(ShotlistEditDTO editDTO){
+    public ShotlistDTO update(ShotlistEditDTO editDTO){
         Shotlist shotlist = findById(editDTO.id());
         shotlist.name = editDTO.name();
         shotlist.registerEdit();
-        return shotlist;
+        return shotlist.toDTO();
     }
 
-    public Shotlist delete(UUID id) {
+    public ShotlistDTO delete(UUID id) {
         Shotlist shotlist = findById(id);
         if (shotlist != null) {
             for (Scene scene : shotlist.scenes) {
                 sceneRepository.delete(scene.id);
             }
             delete(shotlist);
-            return shotlist;
+            return shotlist.toDTO();
         }
         return null;
     }

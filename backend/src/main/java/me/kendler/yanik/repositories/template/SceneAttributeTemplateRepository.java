@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateBaseDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateCreateDTO;
 import me.kendler.yanik.dto.template.sceneAttributes.SceneAttributeTemplateEditDTO;
 import me.kendler.yanik.dto.template.shotAttributes.ShotAttributeTemplateEditDTO;
@@ -28,7 +29,7 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
     @Inject
     TemplateRepository templateRepository;
 
-    public SceneAttributeTemplateBase create(SceneAttributeTemplateCreateDTO createDTO) {
+    public SceneAttributeTemplateBaseDTO create(SceneAttributeTemplateCreateDTO createDTO) {
         if(createDTO == null) {
             throw new IllegalArgumentException("SceneAttributeDefinitionCreateDTO cannot be null");
         }
@@ -61,10 +62,10 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
 
         persist(attributeTemplate);
 
-        return attributeTemplate;
+        return attributeTemplate.toDTO();
     }
 
-    public SceneAttributeTemplateBase update(SceneAttributeTemplateEditDTO editDTO) {
+    public SceneAttributeTemplateBaseDTO update(SceneAttributeTemplateEditDTO editDTO) {
         SceneAttributeTemplateBase attribute = findById(editDTO.id());
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
@@ -86,15 +87,15 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
 
             attribute.position = editDTO.position();
         }
-        return attribute;
+        return attribute.toDTO();
     }
 
-    public SceneAttributeTemplateBase delete(Long id){
+    public SceneAttributeTemplateBaseDTO delete(Long id){
         SceneAttributeTemplateBase attribute = findById(id);
         if(attribute != null) {
             attribute.template.sceneAttributes.remove(attribute);
             delete(attribute);
-            return attribute;
+            return attribute.toDTO();
         }
         return null;
     }

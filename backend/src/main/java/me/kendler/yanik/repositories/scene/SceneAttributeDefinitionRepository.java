@@ -28,7 +28,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
     @Inject
     SceneAttributeRepository sceneAttributeRepository;
 
-    public List<SceneAttributeDefinitionBaseDTO> getAll(UUID shotlistId) {
+    public List<SceneAttributeDefinitionBaseDTO> listAllForShotlist(UUID shotlistId) {
         Shotlist shotlist = shotlistRepository.findById(shotlistId);
 
         if (shotlist == null) {
@@ -69,7 +69,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
         return attributeDefinitionDTOs.stream().sorted(Comparator.comparingInt(SceneAttributeDefinitionBaseDTO::getPosition)).collect(Collectors.toList());
     }
 
-    public SceneAttributeDefinitionBase create(SceneAttributeDefinitionCreateDTO createDTO){
+    public SceneAttributeDefinitionBaseDTO create(SceneAttributeDefinitionCreateDTO createDTO){
         if(createDTO == null) {
             throw new IllegalArgumentException("SceneAttributeDefinitionCreateDTO cannot be null");
         }
@@ -110,10 +110,10 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             sceneAttributeRepository.persist(finalAttributeDefinition.createAttribute(scene));
         });
 
-        return attributeDefinition;
+        return attributeDefinition.toDTO();
     }
 
-    public SceneAttributeDefinitionBase update(SceneAttributeDefinitionEditDTO editDTO) {
+    public SceneAttributeDefinitionBaseDTO update(SceneAttributeDefinitionEditDTO editDTO) {
         SceneAttributeDefinitionBase attribute = findById(editDTO.id());
         if (attribute == null) {
             throw new IllegalArgumentException("Attribute not found");
@@ -143,10 +143,10 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
         getEntityManager().merge(attribute);
 
-        return attribute;
+        return attribute.toDTO();
     }
 
-    public SceneAttributeDefinitionBase delete(Long id){
+    public SceneAttributeDefinitionBaseDTO delete(Long id){
         SceneAttributeDefinitionBase attributeDefinition = findById(id);
 
         if(attributeDefinition != null) {
@@ -172,7 +172,7 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
             relevantShotlist.registerEdit();
 
-            return attributeDefinition;
+            return attributeDefinition.toDTO();
         }
         return null;
     }

@@ -120,8 +120,8 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     const deleteSelectOption = async (optionId: number) => {
         const { errors } = await client.mutate({
             mutation: gql`
-                mutation deleteSceneSelectAttributeOptionTemplate($optionId: BigInteger!) {
-                    deleteSceneSelectAttributeOptionTemplate(id: $optionId) {
+                mutation deleteShotSelectAttributeOptionTemplate($optionId: BigInteger!) {
+                    deleteShotSelectAttributeOptionTemplate(id: $optionId) {
                         id
                     }
                 }
@@ -148,8 +148,8 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     const updateOptionName = async (optionId: number, newName: string) => {
         const {data, errors} = await client.mutate({
             mutation : gql`
-                mutation updateSceneSelectAttributeOptionTemplate($id: BigInteger!, $name: String!) {
-                    updateSceneSelectAttributeOptionTemplate(editDTO: {
+                mutation updateShotSelectAttributeOptionTemplate($id: BigInteger!, $name: String!) {
+                    updateShotSelectAttributeOptionTemplate(editDTO: {
                         id: $id
                         name: $name
                     }){ id }
