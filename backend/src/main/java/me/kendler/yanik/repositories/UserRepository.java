@@ -40,10 +40,21 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
             LOGGER.errorf("Tried to find user by JWT %s, but JWT does not contain 'sub' claim", jwt.toString());
             throw new IllegalArgumentException("JWT does not contain 'sub' claim");
         }
-        Optional<User> user = find("auth0Sub", auth0Sub).singleResultOptional();
 
-        if (user.isPresent()) {
-            return user.get();
+        //required because lazy loading :3
+        User user = getEntityManager().createQuery("""
+                        SELECT DISTINCT u FROM User u
+                        LEFT JOIN FETCH u.shotlists
+                        LEFT JOIN FETCH u.templates
+                        WHERE u.auth0Sub = :auth0Sub
+                        """, User.class)
+                .setParameter("auth0Sub", auth0Sub)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
+        if (user != null) {
+            return user;
         } else {
             User newUser = new User(auth0Sub, jwt.getClaim("name"), jwt.getClaim("email"));
             persist(newUser);
