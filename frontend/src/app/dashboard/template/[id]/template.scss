@@ -165,6 +165,7 @@ main.template{
 .PopoverContent.templateInfo{
   font-size: .9rem;
   color: var(--text-30);
+  max-width: min(50ch, 95vw);
 
   .dark{
     color: var(--text-20);

@@ -21,8 +21,8 @@ public class ShotSingleSelectAttributeDefinition extends ShotAttributeDefinition
         super(shotlist);
     }
 
-    public ShotSingleSelectAttributeDefinition(Shotlist shotlist, String name) {
-        super(shotlist, name);
+    public ShotSingleSelectAttributeDefinition(Shotlist shotlist, String name, int position) {
+        super(shotlist, name, position);
     }
 
     @Override

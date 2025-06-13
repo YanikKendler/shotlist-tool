@@ -1,6 +1,59 @@
 div.sceneAttributeTemplate{
   display: flex;
-  padding: 1rem;
+  gap: .3rem;
+  padding: .3rem;
   border-radius: .5rem;
   border: .1rem solid var(--default-interactable-border);
+  align-items: center;
+  background-color: var(--contrast);
+
+  &:hover{
+    border-color: var(--attribute-hover-border);
+  }
+
+  .grip{
+    color: var(--text-50);
+    display: flex;
+    align-items: center;
+    padding: .3rem .1rem;
+    border-radius: .3rem;
+    transition: color .2s ease-in-out, background-color .2s ease-in-out;
+    cursor: pointer;
+    margin-right: .3rem;
+
+    &:hover{
+      color: var(--text-20);
+      background-color: var(--hover-bg-10);
+    }
+  }
+
+  .nameInput{
+    padding-block: .5rem;
+    border-width: .1rem;
+    outline: 1px solid transparent;
+    font-weight: 500;
+    border-color: var(--interactable-border);
+
+    &:focus-visible{
+      outline: 1px solid var(--accent);
+    }
+  }
+
+  .editOptions{
+    font-size: .9rem;
+    border: .1rem solid var(--interactable-border);
+    align-self: stretch;
+    gap: 1rem;
+    color: var(--text-40);
+
+    &:hover{
+      color: var(--text);
+      border-color: var(--default-interactable-hover-border);
+    }
+  }
+
+  .delete{
+    margin-left: auto;
+    color: var(--text-40);
+  }
 }

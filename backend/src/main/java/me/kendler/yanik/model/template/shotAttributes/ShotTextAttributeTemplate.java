@@ -24,7 +24,7 @@ public class ShotTextAttributeTemplate extends ShotAttributeTemplateBase {
 
     @Override
     public ShotAttributeDefinitionBase createDefinition(Shotlist shotlist) {
-        return new ShotTextAttributeDefinition(shotlist, name);
+        return new ShotTextAttributeDefinition(shotlist, name, this.position);
     }
 
     @Override

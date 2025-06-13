@@ -52,9 +52,9 @@ public class StartupListener {
         entityManager.persist(shotlist);
 
         // Define Scene attribute definitions and options
-        SceneTextAttributeDefinition sceneDef1 = new SceneTextAttributeDefinition(shotlist, "Props");
-        SceneSingleSelectAttributeDefinition sceneDef2 = new SceneSingleSelectAttributeDefinition(shotlist, "Time");
-        SceneMultiSelectAttributeDefinition sceneDef3 = new SceneMultiSelectAttributeDefinition(shotlist, "Actors");
+        SceneTextAttributeDefinition sceneDef1 = new SceneTextAttributeDefinition(shotlist, "Props", 0);
+        SceneSingleSelectAttributeDefinition sceneDef2 = new SceneSingleSelectAttributeDefinition(shotlist, "Time", 1);
+        SceneMultiSelectAttributeDefinition sceneDef3 = new SceneMultiSelectAttributeDefinition(shotlist, "Actors", 2);
         entityManager.persist(sceneDef1);
         entityManager.persist(sceneDef2);
         entityManager.persist(sceneDef3);
@@ -71,9 +71,9 @@ public class StartupListener {
         entityManager.persist(sceneOption5);
 
         // Define Shot attribute definitions and options
-        ShotTextAttributeDefinition shotDef1 = new ShotTextAttributeDefinition(shotlist, "Motive");
-        ShotSingleSelectAttributeDefinition shotDef2 = new ShotSingleSelectAttributeDefinition(shotlist, "Size");
-        ShotMultiSelectAttributeDefinition shotDef3 = new ShotMultiSelectAttributeDefinition(shotlist, "Equipment");
+        ShotTextAttributeDefinition shotDef1 = new ShotTextAttributeDefinition(shotlist, "Motive", 0);
+        ShotSingleSelectAttributeDefinition shotDef2 = new ShotSingleSelectAttributeDefinition(shotlist, "Size", 1);
+        ShotMultiSelectAttributeDefinition shotDef3 = new ShotMultiSelectAttributeDefinition(shotlist, "Equipment", 2);
         entityManager.persist(shotDef1);
         entityManager.persist(shotDef2);
         entityManager.persist(shotDef3);

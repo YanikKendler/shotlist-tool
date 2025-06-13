@@ -73,6 +73,8 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
 
         persist(shotlist);
 
+        sceneRepository.create(shotlist.id);
+
         return shotlist.toDTO();
     }
 

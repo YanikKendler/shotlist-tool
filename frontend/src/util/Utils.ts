@@ -1,6 +1,7 @@
 import {wuText} from "@yanikkendler/web-utils/dist"
 import {ThemeConfig} from "react-select"
 import {ShotlistOrTemplate} from "@/util/Types"
+import {ShotlistDto} from "../../lib/graphql/generated"
 
 export interface fontSizeBreakpoint {
     length: number
@@ -21,7 +22,7 @@ export default class Utils {
         return 0;
     }
 
-    static oderShotlistsOrTemplatesByChangeDate(a: ShotlistOrTemplate, b: ShotlistOrTemplate) {
+    static oderShotlistsByChangeDate(a: ShotlistDto, b: ShotlistDto) {
         if(!a.editedAt) return -1
         if(!b.editedAt) return 1
 

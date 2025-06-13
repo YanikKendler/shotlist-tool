@@ -23,7 +23,7 @@ public class SceneTextAttributeTemplate extends SceneAttributeTemplateBase {
 
     @Override
     public SceneAttributeDefinitionBase createDefinition(Shotlist shotlist) {
-        return new SceneTextAttributeDefinition(shotlist, name);
+        return new SceneTextAttributeDefinition(shotlist, name, this.position);
     }
 
     @Override

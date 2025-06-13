@@ -7,6 +7,7 @@ import ErrorPage from "@/pages/errorPage/errorPage"
 import LoadingPage from "@/pages/loadingPage/loadingPage"
 import React, {useEffect, useState} from "react"
 import {
+    SceneAttributeTemplateBase, SceneAttributeType,
     ShotAttributeBase,
     ShotAttributeTemplateBase,
     ShotAttributeType,
@@ -26,6 +27,7 @@ import ShotAttributeTemplate from "@/components/shotAttributeTemplate/shotAttrib
 import {AnySceneAttributeDefinition, AnyShotAttributeTemplate} from "@/util/Types"
 import Utils from "@/util/Utils"
 import Link from "next/link"
+import SceneAttributeTemplate from "@/components/sceneAttributeTemplate/sceneAttributeTemplate"
 
 export default function Template (){
     const params = useParams<{ id: string }>()
@@ -222,6 +224,81 @@ export default function Template (){
         })
     }
 
+    async function createSceneAttributeDefinition(type: SceneAttributeType) {
+        const {data, errors} = await client.mutate({
+            mutation: gql`
+                mutation createSceneAttributeTemplate($templateId: String!, $attributeType: SceneAttributeType!) {
+                    createSceneAttributeTemplate(createDTO: {templateId: $templateId, type: $attributeType}) {
+                        id
+                        name
+                        position
+                    }
+                }
+            `,
+            variables: {templateId: id, attributeType: type},
+        });
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        setTemplate({
+            ...template,
+            data: {
+                ...template.data,
+                sceneAttributes: [...(template.data.sceneAttributes || []), data.createSceneAttributeTemplate]
+            }
+        });
+    }
+
+    function handleSceneDragEnd(event: any) {
+        const {active, over} = event;
+
+        if (active.id !== over.id && template.data.sceneAttributes) {
+            const oldIndex = template.data.sceneAttributes.findIndex((definition) => definition!.id === active.id);
+            const newIndex = template.data.sceneAttributes.findIndex((definition) => definition!.id === over.id);
+
+            console.log(oldIndex, newIndex)
+
+            apolloClient.mutate({
+                mutation: gql`
+                    mutation updateSceneAttributeTemplatePosition($id: BigInteger!, $position: Int!) {
+                        updateSceneAttributeTemplate(editDTO:{
+                            id: $id,
+                            position: $position
+                        }){
+                            id
+                            position
+                        }
+                    }
+                `,
+                variables: {id: active.id, position: newIndex},
+            })
+
+            setTemplate({
+                ...template,
+                data: {
+                    ...template.data,
+                    sceneAttributes: arrayMove(template.data.sceneAttributes, oldIndex, newIndex)
+                }
+            })
+        }
+    }
+
+    function removeSceneAttributeTemplate(id: number) {
+        if(!template.data.sceneAttributes || template.data.sceneAttributes.length == 0) return
+
+        let newSceneTemplates: AnyShotAttributeTemplate[] = (template.data.sceneAttributes as AnyShotAttributeTemplate[]).filter((sceneTemplate) => sceneTemplate.id != id)
+
+        setTemplate({
+            ...template,
+            data: {
+                ...template.data,
+                sceneAttributes: newSceneTemplates
+            }
+        })
+    }
+
     if(template.error) return <main className={"dashboardContent"}><ErrorPage settings={{
         title: 'Data could not be loaded',
         description: template.error.message,
@@ -261,7 +338,7 @@ export default function Template (){
                     </div>
                 </h2>
 
-                <Popover.Root defaultOpen={true}>
+                <Popover.Root defaultOpen={false}>
                     <Popover.Trigger className={"noClickFx default infoTrigger"}>More on Templates <Info
                         size={18}/></Popover.Trigger>
                     <Popover.Portal>
@@ -308,7 +385,35 @@ export default function Template (){
                 </Popover.Portal>
             </Popover.Root>
             <h3>Scene Attributes</h3>
-            <button className="add">Add Scene Attribute <Plus size={20}/></button>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleSceneDragEnd}
+            >
+                <SortableContext
+                    items={template.data.sceneAttributes?.map(def => def!.id) || []}
+                    strategy={verticalListSortingStrategy}
+                >
+                    {
+                        template.data.sceneAttributes && template.data.sceneAttributes.length > 0 &&
+                        (<div className="attributeTemplates">
+                            {(template.data.sceneAttributes as SceneAttributeTemplateBase[]).map(attr =>
+                                <SceneAttributeTemplate attributeTemplate={attr} onDelete={removeSceneAttributeTemplate} key={attr.id}/>
+                            )}
+                        </div>)
+                    }
+                </SortableContext>
+            </DndContext>
+            <Popover.Root>
+                <Popover.Trigger className={"add"}>Add Scene Attribute <Plus size={20}/></Popover.Trigger>
+                <Popover.Portal>
+                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5} align={"start"}>
+                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneTextAttribute)}><Type size={16} strokeWidth={3}/>Text</button>
+                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneSingleSelectAttribute)}><ChevronDown size={16} strokeWidth={3}/>Single select</button>
+                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneMultiSelectAttribute)}><List size={16} strokeWidth={3}/>Multi select</button>
+                    </Popover.Content>
+                </Popover.Portal>
+            </Popover.Root>
         </main>
     )
 }

@@ -80,7 +80,7 @@ export default function Overview() {
         <main className="overview dashboardContent">
             <h2>Shotlists</h2>
             <div className="grid">
-                {shotlists.sort(Utils.oderShotlistsOrTemplatesByChangeDate).map((shotlist: ShotlistDto) => (
+                {shotlists.sort(Utils.oderShotlistsByChangeDate).map((shotlist: ShotlistDto) => (
                     <Link href={`/shotlist/${shotlist.id}`} key={shotlist.id} className="gridItem shotlist">
                         <label><NotepadText size={15}/>Shotlist</label>
                         <h3>{shotlist.name || <span className='italic'>Unnamed</span>}</h3>
@@ -96,7 +96,7 @@ export default function Overview() {
             </div>
             <h2>Templates</h2>
             <div className="grid">
-                {templates.sort(Utils.oderShotlistsOrTemplatesByChangeDate).map((template: TemplateDto) => (
+                {templates.sort(Utils.orderShotlistsOrTemplatesByName).map((template: TemplateDto) => (
                     <Link href={`dashboard/template/${template.id}`} key={template.id} className="gridItem template">
                         <label><NotepadTextDashed size={15}/>Template</label>
                         <h3>{template.name || <span className='italic'>Unnamed</span>}</h3>

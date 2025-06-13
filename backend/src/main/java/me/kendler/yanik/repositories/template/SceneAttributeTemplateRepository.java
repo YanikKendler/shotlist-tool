@@ -76,7 +76,7 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
         if(editDTO.position() != null && attribute.position != editDTO.position()){
             //attr was moved back
             //0 1 2 3 New 5 6 Old
-            attribute.template.shotAttributes.stream()
+            attribute.template.sceneAttributes.stream()
                     .filter(a -> a.position < attribute.position && a.position >= editDTO.position())
                     .forEach(a -> a.position++);
             //attr was moved forward

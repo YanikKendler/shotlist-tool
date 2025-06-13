@@ -18,8 +18,8 @@ public class SceneMultiSelectAttributeDefinition extends SceneAttributeDefinitio
         super(shotlist);
     }
 
-    public SceneMultiSelectAttributeDefinition(Shotlist shotlist, String name) {
-        super(shotlist, name);
+    public SceneMultiSelectAttributeDefinition(Shotlist shotlist, String name, int position) {
+        super(shotlist, name, position);
     }
 
     @Override

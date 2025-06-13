@@ -32,7 +32,7 @@ public class SceneSingleSelectAttributeTemplate extends SceneAttributeTemplateBa
 
     @Override
     public SceneAttributeDefinitionBase createDefinition(Shotlist shotlist) {
-        SceneSingleSelectAttributeDefinition attributeDefinition = new SceneSingleSelectAttributeDefinition(shotlist, this.name);
+        SceneSingleSelectAttributeDefinition attributeDefinition = new SceneSingleSelectAttributeDefinition(shotlist, this.name, this.position);
 
         for (SceneSelectAttributeOptionTemplate option : options) {
             SceneSelectAttributeOptionDefinition optionDefinition = option.createDefinition(attributeDefinition);

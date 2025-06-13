@@ -21,8 +21,8 @@ public class ShotMultiSelectAttributeDefinition extends ShotAttributeDefinitionB
         super(shotlist);
     }
 
-    public ShotMultiSelectAttributeDefinition(Shotlist shotlist, String name) {
-        super(shotlist, name);
+    public ShotMultiSelectAttributeDefinition(Shotlist shotlist, String name, int position) {
+        super(shotlist, name, position);
     }
 
     @Override

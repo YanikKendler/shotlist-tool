@@ -21,8 +21,8 @@ public class SceneSingleSelectAttributeDefinition extends SceneAttributeDefiniti
         super(shotlist);
     }
 
-    public SceneSingleSelectAttributeDefinition(Shotlist shotlist, String name) {
-        super(shotlist, name);
+    public SceneSingleSelectAttributeDefinition(Shotlist shotlist, String name, int position) {
+        super(shotlist, name, position);
     }
 
     @Override

@@ -1,29 +1,53 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import "./createShotlistDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
-import auth from "@/Auth"
-import {useRouter} from "next/navigation"
-import {is} from "@babel/types"
-import Image from "next/image"
 import Input from "@/components/input/input"
 import Loader from "@/components/loader/loader"
+import {TemplateDto} from "../../../../lib/graphql/generated"
+import SimpleSelect from "@/components/simpleSelect/simpleSelect"
+import {SelectOption} from "@/util/Types"
+import {useRouter} from "next/navigation"
 
 export function useCreateShotlistDialog() {
     const [isOpen, setIsOpen] = useState(false);
     const [promiseResolver, setPromiseResolver] = useState<(value: boolean) => void>();
     const [name, setName] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
+    const [templates, setTemplates] = useState<SelectOption[]>([])
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
 
     const router = useRouter()
     const client = useApolloClient()
 
+    async function loadTemplates() {
+        let {data} = await client.query({
+            query: gql`
+                query getTemplates {
+                    templates {
+                        id
+                        name
+                    }
+                }
+            `,
+            fetchPolicy: "no-cache"
+        })
+
+        const options: SelectOption[] = data.templates.map((template: TemplateDto) => ({
+            label: template.name,
+            value: template.id
+        }))
+
+        setTemplates(options)
+    }
+
     function openCreateShotlistDialog(): Promise<boolean> {
         setIsOpen(true)
         setIsLoading(false)
+        loadTemplates()
         return new Promise((resolve) => {
             setPromiseResolver(() => resolve);
         })
@@ -36,12 +60,13 @@ export function useCreateShotlistDialog() {
         setIsLoading(true)
         const {data, errors} = await client.mutate({
                 mutation: gql`
-                    mutation createShotlist($name: String!){
+                    mutation createShotlist($name: String!, $templateId: String) {
                         createShotlist(createDTO: {
                             name: $name
+                            templateId: $templateId
                         }){ id }
                     }`,
-                variables: {name: name}
+                variables: {name: name, templateId: selectedTemplateId}
             },
         )
         router.push(`/shotlist/${data.createShotlist.id}`)
@@ -82,6 +107,12 @@ export function useCreateShotlistDialog() {
                                 label={"Name"}
                                 valueChange={setName}
                                 placeholder={"Interstellar"}
+                            />
+                            <SimpleSelect
+                                label={"Template"}
+                                name={"Template"}
+                                onChange={setSelectedTemplateId}
+                                options={templates}
                             />
                             <div className={"buttons"}>
                                 <button onClick={e => {

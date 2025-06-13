@@ -1,9 +1,7 @@
-.createTemplateDialogOverlay{
-  z-index: 2000;
-}
-
-.createTemplateDialogContent{
-  z-index: 2001;
+.createShotlistDialogContent{
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
 
   .title{
     font-size: 1.5rem;
@@ -16,7 +14,7 @@
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 
     :where(button){
       font-weight: bold;

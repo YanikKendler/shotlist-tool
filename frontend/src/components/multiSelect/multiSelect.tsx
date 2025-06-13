@@ -61,19 +61,25 @@ export default function MultiSelect({name, placeholder = "Select...", options, o
                 }),
                 control: (base, state) => ({
                     ...base,
-                    border: '.1rem solid var(--default-interactable-border)',
                     borderRadius: '0.4rem',
                     minWidth: minWidth,
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s ease',
+                    borderWidth: '.15rem',
+                    borderStyle: 'solid',
+                    borderColor: state.isFocused ? 'var(--accent)' : 'var(--default-interactable-border)',
                     '&:hover': {
                         borderColor: state.isFocused ? 'var(--accent)' : 'var(--default-interactable-border-hover)',
-                    }
+                    },
+                    outline: "none",
+                    boxShadow: "none"
                 }),
                 menu: (base) => ({
                     ...base,
                     padding: '0.3rem',
                     borderRadius: '0.4rem',
+                    border: '.1rem solid var(--default-interactable-border)',
+                    marginBlock: '.1rem'
                 }),
                 menuList: (base) => ({
                     ...base,

@@ -81,7 +81,7 @@ public class ShotAttributeTemplateRepository implements PanacheRepository<ShotAt
                     .forEach(a -> a.position++);
             //attr was moved forward
             //0 1 2 3 Old 5 6 New
-            attribute.template.sceneAttributes.stream()
+            attribute.template.shotAttributes.stream()
                     .filter(a -> a.position > attribute.position && a.position <= editDTO.position())
                     .forEach(a -> a.position--);
 
