@@ -9,10 +9,12 @@ import me.kendler.yanik.dto.scene.attributes.SceneMultiSelectAttributeDTO;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttributeDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 public class SceneMultiSelectAttribute extends SceneAttributeBase{
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @BatchSize(size = 10)
     public Set<SceneSelectAttributeOptionDefinition> value = new HashSet<>();
 
     public SceneMultiSelectAttribute() { super(); }

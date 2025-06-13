@@ -114,3 +114,44 @@ main.template{
     }
   }
 }
+
+.editAttributeOptionTemplatesPopup{
+  .option{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    input{
+      outline: none;
+      border: none;
+      border-radius: 0;
+      border-bottom: .1rem solid var(--default-interactable-border);
+      padding: .2rem;
+
+      &:hover{
+        border-color: var(--default-interactable-hover-border);
+      }
+
+      &:focus{
+        border-color: var(--accent);
+      }
+    }
+  }
+
+  > button{
+    color: var(--text-40);
+    justify-content: flex-start;
+
+    svg{
+      color: var(--text-40);
+    }
+
+    &:hover{
+      background-color: var(--hover-bg-10);
+      color: var(--text);
+      svg{
+        color: var(--text);
+      }
+    }
+  }
+}

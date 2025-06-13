@@ -11,10 +11,12 @@ import me.kendler.yanik.model.scene.attributeDefinitions.SceneMultiSelectAttribu
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSelectAttributeOptionDefinition;
 import me.kendler.yanik.model.scene.attributeDefinitions.SceneSingleSelectAttributeDefinition;
 import me.kendler.yanik.model.template.Template;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 public class SceneSingleSelectAttributeTemplate extends SceneAttributeTemplateBase {
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     public Set<SceneSelectAttributeOptionTemplate> options = new HashSet<>();
 
     public SceneSingleSelectAttributeTemplate() {}

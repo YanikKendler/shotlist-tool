@@ -3,6 +3,7 @@ package me.kendler.yanik.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import me.kendler.yanik.model.template.Template;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -20,9 +21,11 @@ public class User extends PanacheEntityBase {
     public String auth0Sub;
     public String name;
     public String email;
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @BatchSize(size = 5)
     public Set<Shotlist> shotlists = new HashSet<>();
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @BatchSize(size = 5)
     public Set<Template> templates = new HashSet<>();
     public ZonedDateTime createdAt;
     public boolean isPro = false;

@@ -16,6 +16,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionB
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.model.template.sceneAttributes.SceneAttributeTemplateBase;
 import me.kendler.yanik.model.template.shotAttributes.ShotAttributeTemplateBase;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "shotlist")
@@ -29,13 +30,16 @@ public class Shotlist extends PanacheEntityBase {
     @ManyToOne
     public Template template;
 
-    @OneToMany(mappedBy = "shotlist", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shotlist", fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     public Set<Scene> scenes = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
+    @BatchSize(size = 5)
     public Set<SceneAttributeDefinitionBase> sceneAttributeDefinitions = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
+    @BatchSize(size = 5)
     public Set<ShotAttributeDefinitionBase> shotAttributeDefinitions = new HashSet<>();
 
     public String name;

@@ -17,8 +17,6 @@ import me.kendler.yanik.model.template.shotAttributes.ShotSelectAttributeOptionT
 import me.kendler.yanik.model.template.shotAttributes.ShotSingleSelectAttributeTemplate;
 import org.jboss.logging.Logger;
 
-import java.util.List;
-
 @ApplicationScoped
 @Transactional
 public class ShotSelectAttributeOptionTemplateRepository implements PanacheRepository<ShotSelectAttributeOptionTemplate> {
@@ -28,9 +26,11 @@ public class ShotSelectAttributeOptionTemplateRepository implements PanacheRepos
     private static final Logger LOGGER = Logger.getLogger(ShotSelectAttributeOptionTemplateRepository.class);
 
     public ShotSelectAttributeOptionTemplate create(Long attributeTemplateId) {
-        LOGGER.info("creatimg ShotSelectAttributeOptionTemplate for attribute template ID: " + attributeTemplateId);
+        LOGGER.info("creating ShotSelectAttributeOptionTemplate for attribute template ID: " + attributeTemplateId);
 
         ShotAttributeTemplateBase shotAttributeTemplate = shotAttributeTemplateRepository.findById(attributeTemplateId);
+
+        LOGGER.info("Found ShotAttributeTemplate: " + (shotAttributeTemplate != null ? shotAttributeTemplate.id : "null"));
 
         if (shotAttributeTemplate == null) {
             throw new IllegalArgumentException("ShotAttributeTemplate not found with ID: " + attributeTemplateId);
@@ -39,6 +39,8 @@ public class ShotSelectAttributeOptionTemplateRepository implements PanacheRepos
         ShotSelectAttributeOptionTemplate shotSelectAttributeOptionTemplate = new ShotSelectAttributeOptionTemplate(shotAttributeTemplate);
 
         persist(shotSelectAttributeOptionTemplate);
+
+        LOGGER.info("Created ShotSelectAttributeOptionTemplate with ID: " + shotSelectAttributeOptionTemplate.id);
 
         return shotSelectAttributeOptionTemplate;
     }

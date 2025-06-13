@@ -28,19 +28,14 @@ public class ShotlistResource {
 
     @Query
     public List<ShotlistDTO> getShotlists() {
-        //TODO add maximum number
-        //not ordering them here because the frontend will display them ordered by name or createdAt so it will do the ordering itself
-        return userRepository.findOrCreateByJWT(jwt).shotlists.stream().map(Shotlist::toDTO).toList();
+        return shotlistRepository.findAllForUser(jwt);
     }
 
     @Query
     public ShotlistDTO getShotlist(UUID id) {
-        Shotlist shotlist = shotlistRepository.findById(id);
-        if (shotlist == null) {
-            return null;
-        }
-        userRepository.checkShotlistAccessRights(shotlist, jwt);
-        return shotlist.toDTO();
+        userRepository.checkShotlistAccessRights(shotlistRepository.findById(id), jwt);
+
+        return shotlistRepository.findAsDTO(id);
     }
 
     @Mutation

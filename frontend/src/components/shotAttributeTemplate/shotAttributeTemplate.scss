@@ -55,10 +55,5 @@ div.shotAttributeTemplate{
   .delete{
     margin-left: auto;
     color: var(--text-40);
-
-    &:hover{
-      background-color: var(--hover-bg-10);
-        color: var(--text);
-    }
   }
 }

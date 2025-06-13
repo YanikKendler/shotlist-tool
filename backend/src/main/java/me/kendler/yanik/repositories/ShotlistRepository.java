@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import me.kendler.yanik.dto.shotlist.ShotlistCreateDTO;
+import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
@@ -16,6 +17,9 @@ import me.kendler.yanik.repositories.template.TemplateRepository;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -31,6 +35,23 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
     TemplateRepository templateRepository;
 
     private static final Logger LOGGER = Logger.getLogger(ShotlistRepository.class);
+
+    public ShotlistDTO findAsDTO(UUID id) {
+        Shotlist shotlist = findById(id);
+        if (shotlist == null) {
+            return null;
+        }
+        return shotlist.toDTO();
+    }
+
+    public List<ShotlistDTO> findAllForUser(JsonWebToken jwt) {
+        return userRepository
+                .findOrCreateByJWT(jwt)
+                .shotlists
+                .stream()
+                .map(Shotlist::toDTO)
+                .toList();
+    }
 
     public Shotlist create(ShotlistCreateDTO createDTO, JsonWebToken jwt){
         User user = userRepository.findOrCreateByJWT(jwt);
@@ -62,9 +83,9 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
         return shotlist;
     }
 
-    public Shotlist delete(UUID id){
+    public Shotlist delete(UUID id) {
         Shotlist shotlist = findById(id);
-        if(shotlist != null) {
+        if (shotlist != null) {
             for (Scene scene : shotlist.scenes) {
                 sceneRepository.delete(scene.id);
             }
