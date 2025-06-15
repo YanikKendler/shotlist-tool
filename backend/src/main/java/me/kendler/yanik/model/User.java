@@ -28,7 +28,7 @@ public class User extends PanacheEntityBase {
     @BatchSize(size = 5)
     public Set<Template> templates = new HashSet<>();
     public ZonedDateTime createdAt;
-    public boolean isPro = false;
+    public UserTier tier = UserTier.BASIC;
 
     public User() {
         this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
