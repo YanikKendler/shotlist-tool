@@ -15,7 +15,7 @@ import {useApolloClient} from "@apollo/client"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import Utils from "@/util/Utils"
 
-export default function Shot({shot, position, onDelete}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void}) {
+export default function Shot({shot, position, onDelete, readOnly}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void, readOnly: boolean}) {
     const [isBeingEdited, setIsBeingEdited] = useState(false)
     const [tooltipVisible, setTooltipVisible] = useState(false)
 
@@ -53,42 +53,50 @@ export default function Shot({shot, position, onDelete}: {shot: ShotDto, positio
 
     return (
         <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
-            <Popover.Root onOpenChange={setIsBeingEdited}>
-                <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}} delayDuration={500}>
-                    <Popover.Trigger
-                        className="grip"
-                        ref={setActivatorNodeRef}
-                        {...listeners}
-                        {...attributes}
-                    >
-                        <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
-                            <GripVertical/>
-                        </Tooltip.Trigger>
-                    </Popover.Trigger>
-                    <Tooltip.Portal>
-                        <Tooltip.Content className={"TooltipContent"}>
-                            <Tooltip.Arrow/>
-                            <p><span className="bold">Click</span> to edit</p>
-                            <p><span className="bold">Drag</span> to reorder</p>
-                        </Tooltip.Content>
-                    </Tooltip.Portal>
-                </Tooltip.Root>
-                <Popover.Portal>
-                    <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
-                        <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
-                        <button disabled={true}><NotepadText size={18}/> Notes</button>
-                        <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
-                        <Separator.Root className="Separator"/>
-                        <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
-                    </Popover.Content>
-                </Popover.Portal>
-            </Popover.Root>
+            {
+                !readOnly &&
+                <Popover.Root onOpenChange={setIsBeingEdited}>
+                    <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}} delayDuration={500}>
+                        <Popover.Trigger
+                            className="grip"
+                            ref={setActivatorNodeRef}
+                            {...listeners}
+                            {...attributes}
+                        >
+                            <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                                <GripVertical/>
+                            </Tooltip.Trigger>
+                        </Popover.Trigger>
+                        <Tooltip.Portal>
+                            <Tooltip.Content className={"TooltipContent"}>
+                                <Tooltip.Arrow/>
+                                <p><span className="bold">Click</span> to edit</p>
+                                <p><span className="bold">Drag</span> to reorder</p>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Popover.Portal>
+                        <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
+                            <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
+                            <button disabled={true}><NotepadText size={18}/> Notes</button>
+                            <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
+                            <Separator.Root className="Separator"/>
+                            <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
+            }
 
             <div className="shotAttribute first number">
                 <p>{Utils.numberToShotLetter(position)}</p>
             </div>
             {(shot.attributes as [AnyShotAttribute])?.map((attr, index) => (
-                <ShotAttribute className={index == shot.attributes!.length-1 ? "last" : ""} attribute={attr} key={attr.id}></ShotAttribute>
+                <ShotAttribute
+                    className={index == shot.attributes!.length-1 ? "last" : ""}
+                    attribute={attr}
+                    key={attr.id}
+                    readOnly={readOnly}
+                ></ShotAttribute>
             ))}
         </div>
     );

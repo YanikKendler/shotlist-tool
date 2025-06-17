@@ -303,7 +303,7 @@ export type MutationUpdateUserArgs = {
 /** Query root */
 export type Query = {
   __typename?: 'Query';
-  currentUser?: Maybe<User>;
+  currentUser?: Maybe<UserDto>;
   sceneAttributeDefinitions?: Maybe<Array<Maybe<SceneAttributeDefinitionBaseDto>>>;
   sceneSelectAttributeOptions?: Maybe<Array<Maybe<SceneSelectAttributeOptionDefinition>>>;
   scenes?: Maybe<Array<Maybe<SceneDto>>>;
@@ -807,7 +807,7 @@ export type ShotlistDto = {
   editedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  owner?: Maybe<User>;
+  owner?: Maybe<UserDto>;
   sceneAttributeDefinitions?: Maybe<Array<Maybe<SceneAttributeDefinitionBase>>>;
   sceneCount: Scalars['Int']['output'];
   scenes?: Maybe<Array<Maybe<SceneDto>>>;
@@ -841,7 +841,7 @@ export type TemplateDto = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  owner?: Maybe<User>;
+  owner?: Maybe<UserDto>;
   sceneAttributeCount: Scalars['Int']['output'];
   sceneAttributes?: Maybe<Array<Maybe<SceneAttributeTemplateBaseDto>>>;
   shotAttributeCount: Scalars['Int']['output'];
@@ -859,10 +859,28 @@ export type User = {
   /** ISO-8601 */
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  hasCancelled: Scalars['Boolean']['output'];
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   shotlists?: Maybe<Array<Maybe<Shotlist>>>;
   stripeCustomerId?: Maybe<Scalars['String']['output']>;
+  templates?: Maybe<Array<Maybe<Template>>>;
+  tier?: Maybe<UserTier>;
+};
+
+export type UserDto = {
+  __typename?: 'UserDTO';
+  auth0Sub?: Maybe<Scalars['String']['output']>;
+  /** ISO-8601 */
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  hasCancelled: Scalars['Boolean']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  shotlistCount: Scalars['Int']['output'];
+  shotlists?: Maybe<Array<Maybe<Shotlist>>>;
+  stripeCustomerId?: Maybe<Scalars['String']['output']>;
+  templateCount: Scalars['Int']['output'];
   templates?: Maybe<Array<Maybe<Template>>>;
   tier?: Maybe<UserTier>;
 };
@@ -884,7 +902,7 @@ export type HomeQuery = { __typename?: 'Query', shotlists?: Array<{ __typename?:
 export type DashboardQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DashboardQuery = { __typename?: 'Query', shotlists?: Array<{ __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, sceneCount: number, shotCount: number, editedAt?: any | null, owner?: { __typename?: 'User', name?: string | null } | null } | null> | null, templates?: Array<{ __typename?: 'TemplateDTO', id?: string | null, name?: string | null, shotAttributeCount: number, sceneAttributeCount: number, owner?: { __typename?: 'User', name?: string | null } | null } | null> | null };
+export type DashboardQuery = { __typename?: 'Query', shotlists?: Array<{ __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, sceneCount: number, shotCount: number, editedAt?: any | null, owner?: { __typename?: 'UserDTO', name?: string | null } | null } | null> | null, templates?: Array<{ __typename?: 'TemplateDTO', id?: string | null, name?: string | null, shotAttributeCount: number, sceneAttributeCount: number, owner?: { __typename?: 'UserDTO', name?: string | null } | null } | null> | null };
 
 export type TemplateQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -933,12 +951,17 @@ export type UpdateSceneAttributeTemplatePositionMutationVariables = Exact<{
 
 export type UpdateSceneAttributeTemplatePositionMutation = { __typename?: 'Mutation', updateSceneAttributeTemplate?: { __typename?: 'SceneMultiSelectAttributeTemplateDTO', id?: any | null, position: number } | { __typename?: 'SceneSingleSelectAttributeTemplateDTO', id?: any | null, position: number } | { __typename?: 'SceneTextAttributeTemplateDTO', id?: any | null, position: number } | null };
 
+export type CheckCurrentUserTierQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckCurrentUserTierQuery = { __typename?: 'Query', currentUser?: { __typename?: 'UserDTO', id?: string | null, tier?: UserTier | null, hasCancelled: boolean } | null };
+
 export type ShotlistQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type ShotlistQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, scenes?: Array<{ __typename?: 'SceneDTO', id?: string | null, position: number, attributes?: Array<{ __typename?: 'SceneMultiSelectAttributeDTO', id?: any | null, multiSelectValue?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneSingleSelectAttributeDTO', id?: any | null, singleSelectValue?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneTextAttributeDTO', textValue?: string | null, id?: any | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | null> | null } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneAttributeDefinitionBase', id?: any | null, name?: string | null, position: number } | null> | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null } | null };
+export type ShotlistQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, scenes?: Array<{ __typename?: 'SceneDTO', id?: string | null, position: number, attributes?: Array<{ __typename?: 'SceneMultiSelectAttributeDTO', id?: any | null, multiSelectValue?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneSingleSelectAttributeDTO', id?: any | null, singleSelectValue?: { __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | { __typename?: 'SceneTextAttributeDTO', textValue?: string | null, id?: any | null, definition?: { __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null } | null> | null } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneAttributeDefinitionBase', id?: any | null, name?: string | null, position: number } | null> | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null, owner?: { __typename?: 'UserDTO', id?: string | null, tier?: UserTier | null, shotlistCount: number } | null } | null };
 
 export type UpdateShotlistMutationVariables = Exact<{
   shotlistId: Scalars['String']['input'];
@@ -963,10 +986,25 @@ export type UpdateSceneMutationVariables = Exact<{
 
 export type UpdateSceneMutation = { __typename?: 'Mutation', updateScene?: { __typename?: 'SceneDTO', id?: string | null, position: number } | null };
 
-export type GetTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTemplatesQuery = { __typename?: 'Query', templates?: Array<{ __typename?: 'TemplateDTO', id?: string | null, name?: string | null } | null> | null };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typename?: 'UserDTO', id?: string | null, name?: string | null, email?: string | null, createdAt?: any | null, tier?: UserTier | null, hasCancelled: boolean, shotlists?: Array<{ __typename?: 'Shotlist', name?: string | null } | null> | null } | null };
+
+export type TriggerPasswordResetMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TriggerPasswordResetMutation = { __typename?: 'Mutation', triggerPasswordReset?: string | null };
+
+export type DeleteUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: { __typename?: 'User', id?: string | null } | null };
+
+export type CreateShotlistDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateShotlistDataQuery = { __typename?: 'Query', templates?: Array<{ __typename?: 'TemplateDTO', id?: string | null, name?: string | null } | null> | null, currentUser?: { __typename?: 'UserDTO', tier?: UserTier | null, shotlistCount: number } | null };
 
 export type CreateShotlistMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1042,7 +1080,7 @@ export type DataQueryVariables = Exact<{
 }>;
 
 
-export type DataQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, sceneCount: number, shotCount: number, editedAt?: any | null, createdAt?: any | null, owner?: { __typename?: 'User', name?: string | null } | null } | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null };
+export type DataQuery = { __typename?: 'Query', shotlist?: { __typename?: 'ShotlistDTO', id?: string | null, name?: string | null, sceneCount: number, shotCount: number, editedAt?: any | null, createdAt?: any | null, owner?: { __typename?: 'UserDTO', name?: string | null } | null } | null, shotAttributeDefinitions?: Array<{ __typename?: 'ShotMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'ShotSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'ShotTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null, sceneAttributeDefinitions?: Array<{ __typename?: 'SceneMultiSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneSingleSelectAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number, options?: Array<{ __typename?: 'SceneSelectAttributeOptionDefinition', id?: any | null, name?: string | null } | null> | null } | { __typename?: 'SceneTextAttributeDefinitionDTO', id?: any | null, name?: string | null, position: number } | null> | null };
 
 export type DeleteSceneMutationVariables = Exact<{
   sceneId: Scalars['String']['input'];
@@ -1623,6 +1661,47 @@ export function useUpdateSceneAttributeTemplatePositionMutation(baseOptions?: Ap
 export type UpdateSceneAttributeTemplatePositionMutationHookResult = ReturnType<typeof useUpdateSceneAttributeTemplatePositionMutation>;
 export type UpdateSceneAttributeTemplatePositionMutationResult = Apollo.MutationResult<UpdateSceneAttributeTemplatePositionMutation>;
 export type UpdateSceneAttributeTemplatePositionMutationOptions = Apollo.BaseMutationOptions<UpdateSceneAttributeTemplatePositionMutation, UpdateSceneAttributeTemplatePositionMutationVariables>;
+export const CheckCurrentUserTierDocument = gql`
+    query checkCurrentUserTier {
+  currentUser {
+    id
+    tier
+    hasCancelled
+  }
+}
+    `;
+
+/**
+ * __useCheckCurrentUserTierQuery__
+ *
+ * To run a query within a React component, call `useCheckCurrentUserTierQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckCurrentUserTierQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckCurrentUserTierQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckCurrentUserTierQuery(baseOptions?: Apollo.QueryHookOptions<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>(CheckCurrentUserTierDocument, options);
+      }
+export function useCheckCurrentUserTierLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>(CheckCurrentUserTierDocument, options);
+        }
+export function useCheckCurrentUserTierSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>(CheckCurrentUserTierDocument, options);
+        }
+export type CheckCurrentUserTierQueryHookResult = ReturnType<typeof useCheckCurrentUserTierQuery>;
+export type CheckCurrentUserTierLazyQueryHookResult = ReturnType<typeof useCheckCurrentUserTierLazyQuery>;
+export type CheckCurrentUserTierSuspenseQueryHookResult = ReturnType<typeof useCheckCurrentUserTierSuspenseQuery>;
+export type CheckCurrentUserTierQueryResult = Apollo.QueryResult<CheckCurrentUserTierQuery, CheckCurrentUserTierQueryVariables>;
 export const ShotlistDocument = gql`
     query shotlist($id: String!) {
   shotlist(id: $id) {
@@ -1664,6 +1743,11 @@ export const ShotlistDocument = gql`
       id
       name
       position
+    }
+    owner {
+      id
+      tier
+      shotlistCount
     }
   }
 }
@@ -1828,46 +1912,159 @@ export function useUpdateSceneMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateSceneMutationHookResult = ReturnType<typeof useUpdateSceneMutation>;
 export type UpdateSceneMutationResult = Apollo.MutationResult<UpdateSceneMutation>;
 export type UpdateSceneMutationOptions = Apollo.BaseMutationOptions<UpdateSceneMutation, UpdateSceneMutationVariables>;
-export const GetTemplatesDocument = gql`
-    query getTemplates {
-  templates {
+export const CurrentUserDocument = gql`
+    query currentUser {
+  currentUser {
     id
     name
+    email
+    createdAt
+    tier
+    hasCancelled
+    shotlists {
+      name
+    }
   }
 }
     `;
 
 /**
- * __useGetTemplatesQuery__
+ * __useCurrentUserQuery__
  *
- * To run a query within a React component, call `useGetTemplatesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetTemplatesQuery({
+ * const { data, loading, error } = useCurrentUserQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetTemplatesQuery(baseOptions?: Apollo.QueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+export function useCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<CurrentUserQuery, CurrentUserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, options);
+        return Apollo.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, options);
       }
-export function useGetTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+export function useCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentUserQuery, CurrentUserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, options);
+          return Apollo.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, options);
         }
-export function useGetTemplatesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTemplatesQuery, GetTemplatesQueryVariables>) {
+export function useCurrentUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CurrentUserQuery, CurrentUserQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTemplatesQuery, GetTemplatesQueryVariables>(GetTemplatesDocument, options);
+          return Apollo.useSuspenseQuery<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, options);
         }
-export type GetTemplatesQueryHookResult = ReturnType<typeof useGetTemplatesQuery>;
-export type GetTemplatesLazyQueryHookResult = ReturnType<typeof useGetTemplatesLazyQuery>;
-export type GetTemplatesSuspenseQueryHookResult = ReturnType<typeof useGetTemplatesSuspenseQuery>;
-export type GetTemplatesQueryResult = Apollo.QueryResult<GetTemplatesQuery, GetTemplatesQueryVariables>;
+export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
+export type CurrentUserLazyQueryHookResult = ReturnType<typeof useCurrentUserLazyQuery>;
+export type CurrentUserSuspenseQueryHookResult = ReturnType<typeof useCurrentUserSuspenseQuery>;
+export type CurrentUserQueryResult = Apollo.QueryResult<CurrentUserQuery, CurrentUserQueryVariables>;
+export const TriggerPasswordResetDocument = gql`
+    mutation triggerPasswordReset {
+  triggerPasswordReset
+}
+    `;
+export type TriggerPasswordResetMutationFn = Apollo.MutationFunction<TriggerPasswordResetMutation, TriggerPasswordResetMutationVariables>;
+
+/**
+ * __useTriggerPasswordResetMutation__
+ *
+ * To run a mutation, you first call `useTriggerPasswordResetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTriggerPasswordResetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [triggerPasswordResetMutation, { data, loading, error }] = useTriggerPasswordResetMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTriggerPasswordResetMutation(baseOptions?: Apollo.MutationHookOptions<TriggerPasswordResetMutation, TriggerPasswordResetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TriggerPasswordResetMutation, TriggerPasswordResetMutationVariables>(TriggerPasswordResetDocument, options);
+      }
+export type TriggerPasswordResetMutationHookResult = ReturnType<typeof useTriggerPasswordResetMutation>;
+export type TriggerPasswordResetMutationResult = Apollo.MutationResult<TriggerPasswordResetMutation>;
+export type TriggerPasswordResetMutationOptions = Apollo.BaseMutationOptions<TriggerPasswordResetMutation, TriggerPasswordResetMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation deleteUser {
+  deleteUser {
+    id
+  }
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const CreateShotlistDataDocument = gql`
+    query createShotlistData {
+  templates {
+    id
+    name
+  }
+  currentUser {
+    tier
+    shotlistCount
+  }
+}
+    `;
+
+/**
+ * __useCreateShotlistDataQuery__
+ *
+ * To run a query within a React component, call `useCreateShotlistDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCreateShotlistDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCreateShotlistDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateShotlistDataQuery(baseOptions?: Apollo.QueryHookOptions<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>(CreateShotlistDataDocument, options);
+      }
+export function useCreateShotlistDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>(CreateShotlistDataDocument, options);
+        }
+export function useCreateShotlistDataSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>(CreateShotlistDataDocument, options);
+        }
+export type CreateShotlistDataQueryHookResult = ReturnType<typeof useCreateShotlistDataQuery>;
+export type CreateShotlistDataLazyQueryHookResult = ReturnType<typeof useCreateShotlistDataLazyQuery>;
+export type CreateShotlistDataSuspenseQueryHookResult = ReturnType<typeof useCreateShotlistDataSuspenseQuery>;
+export type CreateShotlistDataQueryResult = Apollo.QueryResult<CreateShotlistDataQuery, CreateShotlistDataQueryVariables>;
 export const CreateShotlistDocument = gql`
     mutation createShotlist($name: String!, $templateId: String) {
   createShotlist(createDTO: {name: $name, templateId: $templateId}) {

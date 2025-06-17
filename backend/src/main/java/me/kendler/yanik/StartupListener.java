@@ -37,13 +37,13 @@ public class StartupListener {
     public void init() {
         if (!"dev".equals(profile)) return;
 
-        LOGGER.info("Initializing demo data...");
-
         /*createDemoData();*/
     }
 
     @Transactional
     public void createDemoData() {
+        LOGGER.info("Initializing demo data...");
+
         User user = new User(LocalDateTime.now().toString(), "yanik", "yanik@mail");
         entityManager.persist(user);
 

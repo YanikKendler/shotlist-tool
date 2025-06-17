@@ -8,6 +8,10 @@ export interface fontSizeBreakpoint {
     fontSize: number
 }
 
+export class Config {
+    static readonly backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-v2-566625943723.europe-west1.run.app";
+}
+
 export default class Utils {
     static orderShotlistsOrTemplatesByName(a: ShotlistOrTemplate, b: ShotlistOrTemplate) {
         if(!a.name) return 1

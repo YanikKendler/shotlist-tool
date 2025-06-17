@@ -1,4 +1,4 @@
-main.home{
+main.landing{
   --beta-chip-bg: #F4D9CD;
   --hero-blur-bg: rgba(242, 73, 0, 0.10);
   --second-section-bg: #FEF5F2;
@@ -32,8 +32,8 @@ main.home{
           padding-inline: .3rem;
 
           &:hover{
-            color: var(--text);
-            background-color: var(--hover-bg-10);
+            color: var(--accent-40);
+            background-color: var(--hover-bg-accent-10);
           }
         }
       }
@@ -50,8 +50,8 @@ main.home{
           color: var(--text-20);
 
           &:hover{
-            color: var(--text);
-            background-color: var(--hover-bg-10);
+            color: var(--accent-40);
+            background-color: var(--hover-bg-accent-10);
           }
         }
       }
@@ -438,7 +438,7 @@ main.home{
         }
       }
 
-      button.select{
+      .select{
         margin-top: auto;
         width: 100%;
         justify-content: center;
@@ -448,6 +448,7 @@ main.home{
         &.filled{
           background-color: var(--accent);
           color: var(--contrast);
+          border: .1rem solid var(--accent);
 
           &:hover{
             background-color: var(--accent-40);
@@ -457,10 +458,11 @@ main.home{
         &.outlined{
           color: var(--accent);
           border: .2rem solid var(--accent);
+          font-weight: 600;
 
           &:hover{
             background-color: var(--hover-bg-accent-10);
-            color: var(--accent-40);
+            color: var(--accent-55);
           }
         }
       }

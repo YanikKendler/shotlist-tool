@@ -45,9 +45,13 @@
       display: inline-block;
       font-weight: bold;
 
-      &:hover{
+      &:not([disabled]):hover{
         background-color: var(--hover-bg-accent-10);
         color: var(--accent-40);
+      }
+
+      &[disabled]{
+        opacity: 100%;
       }
     }
   }

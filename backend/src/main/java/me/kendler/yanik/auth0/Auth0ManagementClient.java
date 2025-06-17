@@ -10,7 +10,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface Auth0ManagementClient {
 
     @DELETE
-    @Path("/api/v2/users{id}")
+    @Path("/api/v2/users/{id}")
     void deleteUserById(
             @HeaderParam("Authorization") String authorization,
             @PathParam("id") String userId

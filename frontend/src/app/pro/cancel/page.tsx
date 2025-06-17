@@ -1,8 +1,13 @@
+import "../pro.scss"
+
 export default function ProPurchaseCancel(){
     return (
-        <div className="pro-purchase-cancel-page">
-            <h1>Unsure if Shotly pro is right for you?</h1>
-            <p>test for free with basic accozujt</p>
-        </div>
+        <main className={"pro"}>
+            <div className="content">
+                <h1>Unsure if Shotly is right for you?</h1>
+                <p>Test it with the basic tier - free forever</p>
+                <a href="/dashboard">To your dashboard</a>
+            </div>
+        </main>
     );
 }

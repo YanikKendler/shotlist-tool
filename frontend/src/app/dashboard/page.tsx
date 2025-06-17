@@ -17,9 +17,8 @@ import Utils from "@/util/Utils"
 import {useCreateTemplateDialog} from "@/components/dialog/createTemplateDialog/createTemplateDialog"
 import auth from "@/Auth"
 import * as Dialog from "@radix-ui/react-dialog"
-import Loader from "@/components/loader/loader"
-import Input from "@/components/input/input"
-import SimpleSelect from "@/components/simpleSelect/simpleSelect"
+import {driver} from "driver.js"
+import "driver.js/dist/driver.css";
 
 export default function Overview() {
     const [query, setQuery] = useState<{ error: any, loading: boolean }>({error: null, loading: true})
@@ -28,6 +27,7 @@ export default function Overview() {
     const [templates, setTemplates] = useState<TemplateDto[]>([])
 
     const client = useApolloClient()
+    const router = useRouter()
 
     const searchParams = useSearchParams()
     const justBoughtPro = searchParams?.get('jbp') === 'true'
@@ -36,10 +36,26 @@ export default function Overview() {
     const { openCreateShotlistDialog, CreateShotlistDialog } = useCreateShotlistDialog()
     const { openCreateTemplateDialog, CreateTemplateDialog } = useCreateTemplateDialog()
 
+    const driverObj = driver({
+        showProgress: true,
+        allowClose: true,
+        steps: [
+            { popover: { title: 'Welcome to Shotly', description: 'You will now get a quick tour of the Dashboard' } },
+            { element: '.sidebar', popover: { title: 'The Sidebar', description: 'Here you see all your shotlists and Templates. You currently dont have any shotlists, but a default Template was automatically created!', side: "right", align: 'center' }},
+            { element: '.sidebar .template', popover: { description: 'You can use it when creating your first shotlist to start with a default attribute for shots and scenes.', side: "right", align: 'center' }},
+            { element: '.gridItem.add.shotlist', popover: { description: 'Click here to create a new Shotlist.', side: "bottom", align: 'center' }},
+        ]
+    })
+
     useEffect(() => {
         loadData()
         if (justBoughtPro) {
             setJustBoughtProDialogOpen(true)
+        }
+
+        if(localStorage["shotly-dashboard-tour-completed"] != "true") {
+            localStorage["shotly-dashboard-tour-completed"] = "true"
+            driverObj.drive()
         }
     }, []);
 
@@ -77,6 +93,11 @@ export default function Overview() {
         setTemplates(data.templates)
     }
 
+    function handleJustBoughtProDialogOpenChange(newOpen: boolean) {
+        setJustBoughtProDialogOpen(newOpen)
+        router.replace("/dashboard")
+    }
+
     if(query.error) return <ErrorPage settings={{
         title: 'Data could not be loaded',
         description: query.error.message,
@@ -101,7 +122,10 @@ export default function Overview() {
                             className={"bold"}>{wuTime.toRelativeTimeString(shotlist.editedAt)}</span></p>
                     </Link>
                 ))}
-                <button className={"gridItem add"} onClick={openCreateShotlistDialog}>
+                <button className={"gridItem add shotlist"} onClick={() => {
+                    driverObj.destroy()
+                    openCreateShotlistDialog()
+                }}>
                     <span><Plus/>New Shotlist</span>
                 </button>
             </div>
@@ -120,17 +144,18 @@ export default function Overview() {
                     <span><Plus/>New Template</span>
                 </button>
             </div>
-            <Dialog.Root open={justBoughtProDialogOpen} onOpenChange={setJustBoughtProDialogOpen}>
+            <Dialog.Root open={justBoughtProDialogOpen} onOpenChange={handleJustBoughtProDialogOpenChange}>
                 <Dialog.Portal>
                     <Dialog.Overlay className={"dialogOverlay"}/>
                     <Dialog.Content
                         aria-describedby={"just bought pro dialog"}
                         className={"justBoughtProDialogContent dialogContent"}
+
                     >
                         <Dialog.Title className={"title"}>Thank you for subscribing to Shotly Pro!</Dialog.Title>
                         <p className={"financing"}>You are financing the development and server costs of Shotly, I am very grateful for that.</p>
                         <p className={"issues"}>I hope you are satisfied with your Purchase! If you do however encounter any problems, please open an issue via the account tab.</p>
-                        <button onClick={event => setJustBoughtProDialogOpen(false)}>Start creating</button>
+                        <button onClick={event => handleJustBoughtProDialogOpenChange(false)}>Start creating</button>
                     </Dialog.Content>
                 </Dialog.Portal>
             </Dialog.Root>

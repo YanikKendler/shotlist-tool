@@ -1,12 +1,12 @@
 "use client"
 
 import Auth from "@/Auth"
-import "./home.scss"
+import "./landing.scss"
 import Link from "next/link"
 import Wordmark from "@/components/wordmark"
 import React, {useEffect, useRef} from "react"
 import {
-    BookText,
+    BookText, CalendarCheck,
     Check,
     ClockAlert,
     Columns3Cog,
@@ -21,7 +21,7 @@ import Image from "next/image"
 import {Popover, Separator, Tooltip} from "radix-ui"
 import AuthSwitcher from "@/components/authSwitcher/authSwitcher"
 
-export default function Home() {
+export default function Landing() {
     const pageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
@@ -53,7 +53,7 @@ export default function Home() {
     }, []);
 
     return (
-        <main className="home" ref={pageRef}>
+        <main className="landing" ref={pageRef}>
             <nav>
                 <div className="left">
                     <Link href={"/"} className={"noPadding"}><BookText size={22} />Documentation</Link>
@@ -198,10 +198,10 @@ export default function Home() {
                                 <li className={"bold"}><Check size={20} strokeWidth={3}/>unlimited collaborators</li>
                                 <li className={"thin"}><Check size={20} strokeWidth={3}/>unlimited scenes</li>
                                 <li className={"thin"}><Check size={20} strokeWidth={3}/>unlimited shots</li>
+                                <li className={"gray"}><CalendarCheck size={20} strokeWidth={2.5}/>cancel any time</li>
                                 <li className={"gray"}><Heart size={20} strokeWidth={3}/>support this project</li>
                             </ul>
-                            {/*<button className="select filled" onClick={() => Auth.login()}>Choose Pro</button>*/}
-                            <a href="./pro" className="select filled">Choose Pro</a>
+                            <button className="select filled" onClick={() => Auth.loginForPro()}>Choose Pro</button>
                         </div>
                     </div>
                 </section>
@@ -226,12 +226,8 @@ export default function Home() {
                     <div>
                         <h3>Support</h3>
                         <Link className={"noPadding"} href={"/"}>Documentation</Link>
-                        <Link className={"noPadding"}
-                              href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Report a
-                            Bug</Link>
-                        <Link className={"noPadding"}
-                              href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Suggest a
-                            Feature</Link>
+                        <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Report a Bug</Link>
+                        <Link className={"noPadding"} href={"https://github.com/YanikKendler/shotly/issues/new/choose"}>Suggest a Feature</Link>
                     </div>
                 </footer>
             </div>

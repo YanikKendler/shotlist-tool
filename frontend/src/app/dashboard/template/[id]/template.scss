@@ -5,6 +5,12 @@ main.template{
   .top{
     display: flex;
     justify-content: space-between;
+
+    button{
+      font-size: .9rem;
+      translate: -.3rem 0;
+      color: var(--text-40);
+    }
   }
 
   h2{
@@ -57,12 +63,6 @@ main.template{
         }
       }
     }
-  }
-
-  .infoTrigger{
-    font-size: .9rem;
-    translate: -.3rem 0;
-    color: var(--text-40);
   }
 
   h3{

@@ -2,8 +2,6 @@
 
 import {
     AnySceneAttribute,
-    AnyShotAttribute,
-    ShotAttributeValueCollection,
     SelectOption,
     SceneAttributeValueCollection
 } from "@/util/Types"
@@ -22,8 +20,12 @@ import {wuConstants, wuGeneral, wuText} from "@yanikkendler/web-utils/dist"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import {ChevronDown, List, Type} from "lucide-react"
 import AttributeValueSelect, {selectSceneStyles} from "@/components/attributeValueSelect/attributeValueSelect"
+import {SceneAttributeParser} from "@/util/AttributeParser"
 
-const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void}) {
+const SceneAttribute = function SceneAttribute(
+    {attribute, attributeUpdated, readOnly}:
+    {attribute: AnySceneAttribute, attributeUpdated: (attribute: AnySceneAttribute) => void, readOnly?: boolean}
+) {
     const [singleSelectValue, setSingleSelectValue] = useState<SelectOption>();
     const [multiSelectValue, setMultiSelectValue] = useState<SelectOption[]>();
     const [textValue, setTextValue] = useState<string>("");
@@ -202,75 +204,89 @@ const SceneAttribute = function SceneAttribute({attribute, attributeUpdated}: {a
 
     let content: React.JSX.Element = <></>
 
-    switch (attribute.__typename) {
-        case "SceneSingleSelectAttributeDTO":
-            content = (
-                <>
-                    <AttributeValueSelect
-                        definitionId={attribute.definition?.id}
-                        isMulti={false}
-                        loadOptions={loadOptions}
-                        onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
-                        onCreate={createOption}
-                        placeholder={attribute.definition?.name || "Unnamed"}
-                        value={singleSelectValue}
-                        shotOrScene={"scene"}
-                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
-                        styles={selectSceneStyles}
-                    ></AttributeValueSelect>
-                    <div className="icon">
-                        <ChevronDown size={18} strokeWidth={2}/>
-                    </div>
-                </>
-            )
-            break
-        case "SceneMultiSelectAttributeDTO":
-            content = (
-                <>
-                    <AttributeValueSelect
-                        definitionId={attribute.definition?.id}
-                        isMulti={true}
-                        loadOptions={loadOptions}
-                        onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
-                        onCreate={createOption}
-                        placeholder={attribute.definition?.name || "Unnamed"}
-                        value={multiSelectValue}
-                        shotOrScene={"scene"}
-                        editAction={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "scene"})}
-                        styles={selectSceneStyles}
-                    ></AttributeValueSelect>
-                    <div className="icon">
-                        <List size={18} strokeWidth={2}/>
-                    </div>
-                </>
-            )
-            break
-        case "SceneTextAttributeDTO":
-            content = (
-                <>
-                <div className="input" onClick={(e) => {((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()}}>
-                        <p
-                            className={"text"}
-                            ref={textInputRef}
-                            contentEditable={true}
-                            onInput={updateTextValue}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                }
-                            }}
-                        />
-
-                        {wuConstants.Regex.empty.test(textValue) && <p className="placeholder">{attribute.definition?.name || "Unnamed"}</p>}
-                    </div>
-                    {wuConstants.Regex.empty.test(textValue) && (
+    if(readOnly)
+        content = <p className={"readOnlyValue"}>{SceneAttributeParser.toValueString(attribute, false)}</p>
+    else
+    {
+        switch (attribute.__typename) {
+            case "SceneSingleSelectAttributeDTO":
+                content = (
+                    <>
+                        <AttributeValueSelect
+                            definitionId={attribute.definition?.id}
+                            isMulti={false}
+                            loadOptions={loadOptions}
+                            onChange={(newValue) => updateSingleSelectValue(newValue as SelectOption)}
+                            onCreate={createOption}
+                            placeholder={attribute.definition?.name || "Unnamed"}
+                            value={singleSelectValue}
+                            shotOrScene={"scene"}
+                            editAction={() => shotlistContext.openShotlistOptionsDialog({
+                                main: "attributes",
+                                sub: "scene"
+                            })}
+                            styles={selectSceneStyles}
+                        ></AttributeValueSelect>
                         <div className="icon">
-                            <Type size={18} strokeWidth={2} />
+                            <ChevronDown size={18} strokeWidth={2}/>
                         </div>
-                    )}
-                </>
-            )
-            break
+                    </>
+                )
+                break
+            case "SceneMultiSelectAttributeDTO":
+                content = (
+                    <>
+                        <AttributeValueSelect
+                            definitionId={attribute.definition?.id}
+                            isMulti={true}
+                            loadOptions={loadOptions}
+                            onChange={(newValue) => updateMultiSelectValue(newValue as SelectOption[])}
+                            onCreate={createOption}
+                            placeholder={attribute.definition?.name || "Unnamed"}
+                            value={multiSelectValue}
+                            shotOrScene={"scene"}
+                            editAction={() => shotlistContext.openShotlistOptionsDialog({
+                                main: "attributes",
+                                sub: "scene"
+                            })}
+                            styles={selectSceneStyles}
+                        ></AttributeValueSelect>
+                        <div className="icon">
+                            <List size={18} strokeWidth={2}/>
+                        </div>
+                    </>
+                )
+                break
+            case "SceneTextAttributeDTO":
+                content = (
+                    <>
+                        <div className="input" onClick={(e) => {
+                            ((e.target as HTMLElement).querySelector(".text") as HTMLElement)?.focus()
+                        }}>
+                            <p
+                                className={"text"}
+                                ref={textInputRef}
+                                contentEditable={true}
+                                onInput={updateTextValue}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            />
+
+                            {wuConstants.Regex.empty.test(textValue) &&
+                                <p className="placeholder">{attribute.definition?.name || "Unnamed"}</p>}
+                        </div>
+                        {wuConstants.Regex.empty.test(textValue) && (
+                            <div className="icon">
+                                <Type size={18} strokeWidth={2}/>
+                            </div>
+                        )}
+                    </>
+                )
+                break
+        }
     }
 
     return <div className="sceneAttribute">{content}</div>

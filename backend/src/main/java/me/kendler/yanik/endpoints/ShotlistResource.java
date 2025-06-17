@@ -33,7 +33,7 @@ public class ShotlistResource {
 
     @Query
     public ShotlistDTO getShotlist(UUID id) {
-        userRepository.checkShotlistAccessRights(shotlistRepository.findById(id), jwt);
+        userRepository.checkShotlistReadAccessRights(shotlistRepository.findById(id), jwt);
 
         return shotlistRepository.findAsDTO(id);
     }

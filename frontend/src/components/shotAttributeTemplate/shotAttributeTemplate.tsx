@@ -212,8 +212,7 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
                                         placeholder="Option name"
                                         onInput={(event) => debouncedUpdateOptionName(option.id, event.currentTarget.value)}
                                     />
-                                    <button className="bad" onClick={() => deleteSelectOption(option.id)}><Trash
-                                        size={18}/></button>
+                                    <button className="bad" onClick={() => deleteSelectOption(option.id)}><Trash size={18}/></button>
                                 </div>
                             ))}
                             <button onClick={createSelectOption}><Plus size={18}/>Add option</button>

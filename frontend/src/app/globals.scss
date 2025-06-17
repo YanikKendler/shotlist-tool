@@ -308,7 +308,7 @@ span.wrap{
         display: none; /*Chrome, Safari and Opera */
       }
 
-      button.create{
+      button.create:not([disabled]){
         color: var(--text-40);
 
         &:hover{

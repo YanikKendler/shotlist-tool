@@ -31,15 +31,18 @@ export default function SimpleSelect ({
                 </Select.Trigger>
                 <Select.Portal>
                     <Select.Content className="SelectContent" position={"popper"} style={{fontSize: fontSize}}>
-                        {options?.map((option) => (
-                            <Select.Item
-                                value={option.value}
-                                key={option.value}
-                                className="SelectItem"
-                            >
-                                <Select.ItemText>{option.label}</Select.ItemText>
-                            </Select.Item>
-                        ))}
+                        {
+                            !options || options.length === 0 ? <p className="empty">Nothing here :(</p> :
+                            options?.map((option) => (
+                                <Select.Item
+                                    value={option.value}
+                                    key={option.value}
+                                    className="SelectItem"
+                                >
+                                    <Select.ItemText>{option.label}</Select.ItemText>
+                                </Select.Item>
+                            ))
+                        }
                     </Select.Content>
                 </Select.Portal>
             </Select.Root>

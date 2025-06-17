@@ -1,6 +1,7 @@
 package me.kendler.yanik.endpoints;
 
 import jakarta.inject.Inject;
+import me.kendler.yanik.dto.user.UserDTO;
 import me.kendler.yanik.dto.user.UserEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.repositories.UserRepository;
@@ -18,8 +19,8 @@ public class UserResource {
     UserRepository userRepository;
 
     @Query
-    public User getCurrentUser() {
-        return userRepository.findOrCreateByJWT(jwt);
+    public UserDTO getCurrentUser() {
+        return userRepository.getCurrentUserDTO(jwt);
     }
 
     @Mutation

@@ -10,16 +10,11 @@ import auth from "@/Auth"
 import {setContext} from "@apollo/client/link/context"
 import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
+import {Config} from "@/util/Utils"
 
 export function makeClient() {
-    const backendURL = process.env.NODE_ENV == "development" ? "http://localhost:8080" : "https://shotlist-tool-backend-v2-566625943723.europe-west1.run.app";
-    //const backendURL = "http://localhost:8080"
-
-    console.log("node env", process.env.NODE_ENV)
-    console.log("backendURL", backendURL)
-
     const httpLink = new HttpLink({
-        uri: backendURL + "/graphql",
+        uri: Config.backendURL + "/graphql",
         fetchOptions: {
             // you can pass additional options that should be passed to `fetch` here,
             // e.g. Next.js-related `fetch` options regarding caching and revalidation

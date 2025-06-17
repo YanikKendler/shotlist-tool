@@ -33,7 +33,7 @@ public class SceneResource {
 
     @Query
     public List<SceneDTO> getScenes(UUID shotlistId) {
-        userRepository.checkShotlistAccessRights(shotlistId, jwt);
+        userRepository.checkShotlistReadAccessRights(shotlistId, jwt);
 
         return sceneRepository.listAllForShotlist(shotlistId);
     }
@@ -68,7 +68,7 @@ public class SceneResource {
 
     @Query
     public List<SceneAttributeDefinitionBaseDTO> getSceneAttributeDefinitions(UUID shotlistId){
-        userRepository.checkShotlistAccessRights(shotlistId, jwt);
+        userRepository.checkShotlistReadAccessRights(shotlistId, jwt);
 
         return sceneAttributeDefinitionRepository.listAllForShotlist(shotlistId);
     }
@@ -118,14 +118,14 @@ public class SceneResource {
 
     @Query
     public List<SceneSelectAttributeOptionDefinition> getSceneSelectAttributeOptions(Long attributeDefinitionId) {
-        userRepository.checkShotlistAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(attributeDefinitionId), jwt);
+        userRepository.checkShotlistReadAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(attributeDefinitionId), jwt);
 
         return sceneSelectAttributeOptionDefinitionRepository.list("sceneSelectAttributeDefinition.id order by name", attributeDefinitionId);
     }
 
     @Query
     public List<SceneSelectAttributeOptionDefinition> searchSceneSelectAttributeOptions(SceneSelectAttributeOptionSearchDTO searchDTO){
-        userRepository.checkShotlistAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(searchDTO.sceneAttributeDefinitionId()), jwt);
+        userRepository.checkShotlistReadAccessRights(sceneAttributeDefinitionRepository.getShotlistByDefinitionId(searchDTO.sceneAttributeDefinitionId()), jwt);
 
         return sceneSelectAttributeOptionDefinitionRepository.search(searchDTO);
     }

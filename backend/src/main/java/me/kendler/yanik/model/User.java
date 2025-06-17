@@ -2,6 +2,7 @@ package me.kendler.yanik.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
+import me.kendler.yanik.dto.user.UserDTO;
 import me.kendler.yanik.model.template.Template;
 import org.hibernate.annotations.BatchSize;
 
@@ -31,6 +32,7 @@ public class User extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     public UserTier tier = UserTier.BASIC;
     public String stripeCustomerId;
+    public boolean hasCancelled = false;
 
     public User() {
         this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
@@ -56,5 +58,22 @@ public class User extends PanacheEntityBase {
                 ", email='" + email + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public UserDTO toDto() {
+        return new UserDTO(
+                id,
+                auth0Sub,
+                name,
+                email,
+                shotlists,
+                templates,
+                shotlists.size(),
+                templates.size(),
+                createdAt,
+                tier,
+                stripeCustomerId,
+                hasCancelled
+        );
     }
 }

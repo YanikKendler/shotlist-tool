@@ -53,7 +53,7 @@ export default function GeneralTab({shotlist, setShotlist, dataChanged}: { shotl
 
         let decision = await confirm({
             title: 'Are you absolutely sure?',
-            message: `Do you want to delete the shotlist "${shotlist.name}" and its ${shotlist.sceneCount} scenes and ${shotlist.shotCount} shots? This action cannot be undone.`,
+            message: `Do you want to delete the shotlist "${shotlist.name}" and its ${shotlist.sceneCount} scenes and ${shotlist.shotCount} shots? I recommend exporting to csv before deleting. This action cannot be undone.`,
             buttons: {
                 confirm: {
                     text: 'Delete shotlist',

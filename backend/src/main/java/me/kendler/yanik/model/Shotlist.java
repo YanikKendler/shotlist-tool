@@ -85,7 +85,7 @@ public class Shotlist extends PanacheEntityBase {
     public ShotlistDTO toDTO() {
         return new ShotlistDTO(
             this.id,
-            this.owner,
+            this.owner.toDto(),
             this.template,
             this.scenes.stream()
                     .sorted(Comparator.comparingInt(scene -> scene.position))

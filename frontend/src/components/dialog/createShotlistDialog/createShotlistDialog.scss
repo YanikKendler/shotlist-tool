@@ -8,6 +8,11 @@
     font-weight: 600;
     color: var(--text);
     margin-bottom: .8rem;
+
+    &.center{
+      text-align: center;
+      color: var(--accent-40);
+    }
   }
 
   .buttons{
@@ -16,7 +21,7 @@
     justify-content: center;
     margin-top: 1rem;
 
-    :where(button){
+    :where(button), :where(a){
       font-weight: bold;
       color: var(--text-20);
       padding-inline: 2rem;

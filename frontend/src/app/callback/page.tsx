@@ -11,9 +11,9 @@ export default function CallbackPage() {
 
     useEffect(() => {
         auth.handleAuthentication()
-            .then(() => {
+            .then((targetUrl) => {
                 console.log("redirecting to dashboard")
-                router.push('/dashboard')
+                router.push(targetUrl)
             })
             .catch((error) => {
                 console.error("Error during authentication:", error);

@@ -1,8 +1,6 @@
 import {ShotAttributeValueCollection} from "@/util/Types"
 import gql from "graphql-tag"
 import {apolloClient, makeClient} from "@/ApolloWrapper"
-import {ApolloClient, InMemoryCache} from "@apollo/client-integration-nextjs"
-import {HttpLink} from "@apollo/client"
 
 export default class ShotService {
     static async updateShot(shotId: number, position: number) {
@@ -29,7 +27,7 @@ export default class ShotService {
 
     static async updateAttribute(attributeId: number, value: ShotAttributeValueCollection) {
         const {data, errors} = await apolloClient.mutate({
-            mutation : gql`
+            mutation: gql`
                 mutation updateShotAttribute($id: BigInteger!, $textValue: String, $singleSelectValue: BigInteger, $multiSelectValue: [BigInteger]) {
                     updateShotAttribute(editDTO:{
                         id: $id
@@ -43,30 +41,8 @@ export default class ShotService {
             `,
             variables: {id: attributeId, ...value},
         });
-        if(errors) {
+        if (errors) {
             console.error(errors)
         }
-    }
-
-    static async updateAttributeDefinition(attributeDefinitionId: number, name: string, position: number) {
-        const {data, errors} = await apolloClient.mutate({
-            mutation : gql`
-                mutation updateShotAttributeDefinition($id: BigInteger!, $name: String, $position: Int!) {
-                    updateShotAttributeDefinition(editDTO:{
-                        id: $id,
-                        name: $name,
-                        position: $position,
-                    }){
-                        id
-                    }
-                }
-            `,
-            variables: {id: attributeDefinitionId, name: name, position: position},
-        });
-        if(errors) {
-            console.error(errors)
-        }
-
-        return {data, errors}
     }
 }

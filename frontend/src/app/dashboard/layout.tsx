@@ -109,7 +109,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                             <h1>Dashboard</h1>
                         </div>
                         <div className="list">
-                            <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} defaultOpen={true}>
+                            <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} id={"yourShotlists"} defaultOpen={true}>
                                 <Collapsible.Trigger className={"noClickFx"}>
                                     My Shotlists <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
@@ -156,7 +156,7 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                             <p className="empty">Nothing here yet</p>)
                                             :
                                             templates.sort(Utils.orderShotlistsOrTemplatesByName).map((template) => (
-                                                <Link key={template.id} href={`/dashboard/template/${template.id}`}>
+                                                <Link key={template.id} href={`/dashboard/template/${template.id}`} className={"template"}>
                                                     <NotepadTextDashed size={18}/>
                                                     {template.name ? <span className={"wrap"}>{template.name}</span> : (<span className={"italic"}>Unnamed</span>)}
                                                 </Link>

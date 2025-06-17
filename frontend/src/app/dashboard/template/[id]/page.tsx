@@ -1,7 +1,7 @@
 "use client"
 
 import "./template.scss"
-import {useParams, useSearchParams} from "next/navigation"
+import {useParams, useRouter, useSearchParams} from "next/navigation"
 import {useApolloClient} from "@apollo/client"
 import ErrorPage from "@/pages/errorPage/errorPage"
 import LoadingPage from "@/pages/loadingPage/loadingPage"
@@ -16,7 +16,7 @@ import {
 } from "../../../../../lib/graphql/generated"
 import gql from "graphql-tag"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
-import {ChevronDown, Info, List, NotepadText, Pen, Pencil, Plus, Type} from "lucide-react"
+import {ChevronDown, Info, List, NotepadText, Pen, Pencil, Plus, Trash, Type} from "lucide-react"
 import Input from "@/components/input/input"
 import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
@@ -28,6 +28,9 @@ import {AnySceneAttributeDefinition, AnyShotAttributeTemplate} from "@/util/Type
 import Utils from "@/util/Utils"
 import Link from "next/link"
 import SceneAttributeTemplate from "@/components/sceneAttributeTemplate/sceneAttributeTemplate"
+import {router} from "next/client"
+import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
+import {driver} from "driver.js"
 
 export default function Template (){
     const params = useParams<{ id: string }>()
@@ -36,6 +39,8 @@ export default function Template (){
     const [template, setTemplate] = useState<{data: TemplateDto, loading: boolean, error: any}>({data: {} as TemplateDto, loading: true, error: null})
 
     const client = useApolloClient()
+    const router = useRouter()
+    const { confirm, ConfirmDialog } = useConfirmDialog();
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -148,6 +153,39 @@ export default function Template (){
     }
 
     const debounceUpdateTemplateName = wuGeneral.debounce(updateTemplateName)
+
+    const deleteTemplate = async () => {
+        let decision = await confirm({
+            title: 'Are you sure?',
+            message: `Do you want to delete the template "${template.data.name}". No Shotlists will be affected by this action. This action cannot be undone.`,
+            buttons: {
+                confirm: {
+                    text: 'Delete Template',
+                    className: 'bad'
+                }
+            }
+        })
+
+        if(!decision) return
+
+        const { data, errors } = await client.mutate({
+            mutation: gql`
+                mutation deleteTemplate($templateId: String!) {
+                    deleteTemplate(id: $templateId){
+                        id
+                    }
+                }
+            `,
+            variables: { templateId: id },
+        });
+
+        if (errors) {
+            console.error(errors);
+            return;
+        }
+
+        router.push("/dashboard");
+    }
 
     async function createShotAttributeDefinition(type: ShotAttributeType) {
         const {data, errors} = await client.mutate({
@@ -342,7 +380,7 @@ export default function Template (){
                     <Popover.Trigger className={"noClickFx default infoTrigger"}>More on Templates <Info
                         size={18}/></Popover.Trigger>
                     <Popover.Portal>
-                        <Popover.Content className="PopoverContent templateInfo" sideOffset={5} align={"end"}>
+                        <Popover.Content className="PopoverContent templateInfo" sideOffset={5}>
                             <p>
                                 <span className="dark">Templates can be selected when creating a shotlist so that you don't have to create the same attributes over and over again.</span>
                                 <br/>
@@ -353,6 +391,11 @@ export default function Template (){
                         </Popover.Content>
                     </Popover.Portal>
                 </Popover.Root>
+
+                <button className="delete bad" onClick={deleteTemplate}>
+                    Delete Template
+                    <Trash size={18}/>
+                </button>
             </div>
             <h3>Shot Attributes</h3>
             <DndContext
@@ -414,6 +457,7 @@ export default function Template (){
                     </Popover.Content>
                 </Popover.Portal>
             </Popover.Root>
+            {ConfirmDialog}
         </main>
     )
 }

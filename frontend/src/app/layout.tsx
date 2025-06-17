@@ -5,7 +5,7 @@ import {ApolloWrapper} from "@/ApolloWrapper"
 import SelectRefreshProvider from "@/context/SelectRefreshContext"
 
 export const metadata: Metadata = {
-    title: "Shotly | Free and Open Source Shotlist creation",
+    title: "Shotly | Shotlist creation made easy",
     description: "A free and open source, no-ai, clean and simple shotlist creation tool for filmmakers"
 }
 

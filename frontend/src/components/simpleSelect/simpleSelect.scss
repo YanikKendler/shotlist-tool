@@ -47,6 +47,11 @@ label{
   padding: .3rem .2rem;
   width: var(--radix-select-trigger-width);
   min-width: 20ch;
+
+  .empty{
+    text-align: center;
+    color: var(--text-50);
+  }
 }
 
 .SelectItem {

@@ -9,6 +9,8 @@ import me.kendler.yanik.dto.template.TemplateDTO;
 import me.kendler.yanik.dto.template.TemplateEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.template.Template;
+import me.kendler.yanik.model.template.sceneAttributes.SceneAttributeTemplateBase;
+import me.kendler.yanik.model.template.shotAttributes.ShotAttributeTemplateBase;
 import me.kendler.yanik.repositories.UserRepository;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.logging.Logger;
@@ -22,7 +24,7 @@ public class TemplateRepository implements PanacheRepositoryBase<Template, UUID>
     @Inject
     UserRepository userRepository;
 
-    public Logger LOGGER = Logger.getLogger(TemplateRepository.class);
+    private final Logger LOGGER = Logger.getLogger(TemplateRepository.class);
 
     public TemplateDTO findAsDTO(UUID id) {
         Template template = findById(id);

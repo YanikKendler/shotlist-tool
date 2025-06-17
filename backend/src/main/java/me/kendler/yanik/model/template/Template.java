@@ -21,10 +21,10 @@ public class Template extends PanacheEntityBase {
     @ManyToOne
     @JsonIgnore
     public User owner;
-    @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "template", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @BatchSize(size = 5)
     public Set<SceneAttributeTemplateBase> sceneAttributes = new HashSet<>();
-    @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "template", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @BatchSize(size = 5)
     public Set<ShotAttributeTemplateBase> shotAttributes = new HashSet<>();
     public String name;
@@ -43,7 +43,7 @@ public class Template extends PanacheEntityBase {
     public TemplateDTO toDTO(){
         return new TemplateDTO(
             id,
-            owner,
+            owner.toDto(),
             name,
             sceneAttributes.stream().sorted(Comparator.comparingInt(attr -> attr.position)).map(SceneAttributeTemplateBase::toDTO).toList(),
             shotAttributes.stream().sorted(Comparator.comparingInt(attr -> attr.position)).map(ShotAttributeTemplateBase::toDTO).toList(),

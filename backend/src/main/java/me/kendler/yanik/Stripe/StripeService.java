@@ -5,6 +5,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.PriceListParams;
+import com.stripe.param.SubscriptionListParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -41,15 +42,41 @@ public class StripeService {
 
     public Session createCheckoutSession(String lookupKey, JsonWebToken jwt) throws StripeException {
         PriceCollection prices = Price.list(PriceListParams.builder().addLookupKey(lookupKey).build());
+        if (prices.getData().isEmpty()) {
+            throw new IllegalArgumentException("No price found for lookup key: " + lookupKey);
+        }
+        String priceId = prices.getData().get(0).getId();
 
         User user = userRepository.findOrCreateByJWT(jwt);
 
+        // Check if the user already has an active subscription for this product
+        if (user.stripeCustomerId != null && !user.stripeCustomerId.isEmpty()) {
+            SubscriptionListParams listParams = SubscriptionListParams.builder()
+                    .setCustomer(user.stripeCustomerId)
+                    .setPrice(priceId)
+                    .build();
+
+            SubscriptionCollection subscriptions = Subscription.list(listParams);
+
+            for (Subscription sub : subscriptions.getData()) {
+                // Check for active-like statuses
+                if (sub.getStatus().equals("active") ||
+                        sub.getStatus().equals("trialing") ||
+                        sub.getStatus().equals("past_due")) {
+                    LOGGER.warn("User " + user.name + " (Stripe Customer ID: " + user.stripeCustomerId +
+                            ") is already actively subscribed to price " + priceId);
+                    throw new IllegalArgumentException("User is already subscribed to this product.");
+                }
+            }
+        }
+
+        //global metadata that's also available in the checkout (to link a new customer to a user)
         Map<String, String> sessionMetadata = new HashMap<>();
         sessionMetadata.put("userId", user.id.toString());
 
         SessionCreateParams.Builder sessionBuilder = SessionCreateParams.builder()
                 .addLineItem(SessionCreateParams.LineItem.builder()
-                        .setPrice(prices.getData().get(0).getId())
+                        .setPrice(priceId)
                         .setQuantity(1L)
                         .build())
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
@@ -58,11 +85,12 @@ public class StripeService {
                                 .putMetadata("userId", user.id.toString())
                                 .build()
                 )
+                .setAllowPromotionCodes(true)
                 .putAllMetadata(sessionMetadata)
                 .setSuccessUrl(frontendUrl + "/dashboard?jbp=true")
                 .setCancelUrl(frontendUrl + "/pro/cancel");
 
-        // Use existing customer if available
+        // use existing customer if present, otherwise stripe will create a new one
         if (user.stripeCustomerId != null && !user.stripeCustomerId.isEmpty()) {
             sessionBuilder.setCustomer(user.stripeCustomerId);
         }
@@ -148,10 +176,14 @@ public class StripeService {
                         break;
                     case "customer.subscription.updated":
                         LOGGER.info("Subscription updated for user: " + user.name + ", status: " + sub.getStatus());
-                        if ("canceled".equals(sub.getStatus())) {
-                            LOGGER.info("Subscription for user: " + user.name + " was canceled. Setting tier to BASIC.");
-                            user.tier = UserTier.BASIC;
+                        if (sub.getCancelAtPeriodEnd()) {
+                            user.hasCancelled = true;
                             userRepository.persist(user);
+                        }
+                        if(sub.getStatus().equals("active") || sub.getStatus().equals("trialing")) {
+                            user.tier = UserTier.PRO;
+                        } else if (sub.getStatus().equals("canceled") || sub.getStatus().equals("unpaid")) {
+                            user.tier = UserTier.BASIC;
                         }
                         break;
                     case "customer.subscription.deleted":

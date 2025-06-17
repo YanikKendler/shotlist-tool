@@ -13,6 +13,10 @@ div.sceneAttribute{
     outline-color: var(--accent);
   }
 
+  .readOnlyValue{
+    padding: .3rem;
+  }
+
   .input{
     border: none;
     display: grid;

@@ -37,6 +37,8 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
     const [stringifiedAttributeData, setStringifiedAttributeData] = useState<string>("");
     const [dataChanged, setDataChanged] = useState(false);
 
+    const [isReadOnly, setIsReadOnly] = useState(false);
+
     const client = useApolloClient()
     const router = useRouter()
 
@@ -80,6 +82,8 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                         createdAt
                         owner {
                             name
+                            tier
+                            shotlistCount
                         }
                     }
                     shotAttributeDefinitions(shotlistId: $shotlistId){
@@ -125,6 +129,10 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
             fetchPolicy: "no-cache",
             },
         )
+
+        if(data.shotlist?.owner?.tier == "BASIC" && data.shotlist.owner.shotlistCount > 1) {
+            setIsReadOnly(true)
+        }
 
         setSceneAttributeDefinitions(data.sceneAttributeDefinitions)
         setShotAttributeDefinitions(data.shotAttributeDefinitions)
@@ -193,18 +201,26 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                 />
                             </Tabs.Content>
                             <Tabs.Content value={"attributes"} className={"content"}>
-                                <AttributeTab
-                                    shotlistId={shotlistId}
-                                    shotAttributeDefinitions={shotAttributeDefinitions}
-                                    setShotAttributeDefinitions={setShotAttributeDefinitions}
-                                    sceneAttributeDefinitions={sceneAttributeDefinitions}
-                                    setSceneAttributeDefinitions={setSceneAttributeDefinitions}
-                                    selectedPage={selectedPage.sub}
-                                    dataChanged={() => setDataChanged(true)}
-                                />
+                                {
+                                    isReadOnly ?
+                                    <p className={"empty"}>Sorry, this shotlist is in read-only Mode.</p> :
+                                    <AttributeTab
+                                        shotlistId={shotlistId}
+                                        shotAttributeDefinitions={shotAttributeDefinitions}
+                                        setShotAttributeDefinitions={setShotAttributeDefinitions}
+                                        sceneAttributeDefinitions={sceneAttributeDefinitions}
+                                        setSceneAttributeDefinitions={setSceneAttributeDefinitions}
+                                        selectedPage={selectedPage.sub}
+                                        dataChanged={() => setDataChanged(true)}
+                                    />
+                                }
                             </Tabs.Content>
                             <Tabs.Content value={"collaborators"} className={"content"}>
-                                <CollaboratorsTab/>
+                                {
+                                    isReadOnly ?
+                                        <p className={"empty"}>Sorry, this shotlist is in read-only Mode.</p> :
+                                        <CollaboratorsTab/>
+                                }
                             </Tabs.Content>
                             <Tabs.Content value={"export"} className={"content"}>
                                 <ExportTab shotlist={shotlist}/>

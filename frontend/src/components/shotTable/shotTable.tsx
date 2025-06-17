@@ -27,7 +27,7 @@ export type ShotTableRef = {
     refresh: () => void;
 };
 
-const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[]}, ref) => {
+const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[], readOnly: boolean}, ref) => {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
     const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
@@ -184,7 +184,7 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                 shotAttributeDefinitions.length == 0 ?
                 <div className={"empty"}>
                     No shots to display. Start by:
-                    <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
+                    <button disabled={readOnly} onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
                 </div> :
                 <>
                     <DndContext
@@ -201,29 +201,32 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions}: {sceneId: str
                             strategy={verticalListSortingStrategy}
                         >
                             {shots.data.map((shot: any, index) => (
-                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot}/>
+                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
                             ))}
                         </SortableContext>
                     </DndContext>
-                    <div className="shot new">
-                        <div className="shotAttribute number first">
-                            <span>#</span>
-                        </div>
-                        {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
-                            let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
-                            return (
-                                <div
-                                    className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
-                                    key={shotAttributeDefinition.id}
-                                    onClick={() => createShot(index)}>
-                                    <p>{shotAttributeDefinition.name || "Unnamed"}</p>
-                                    <div className="icon">
-                                        <Icon size={18}/>
+                    {
+                        !readOnly &&
+                        <div className="shot new">
+                            <div className="shotAttribute number first">
+                                <span>#</span>
+                            </div>
+                            {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                                let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                                return (
+                                    <div
+                                        className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
+                                        key={shotAttributeDefinition.id}
+                                        onClick={() => createShot(index)}>
+                                        <p>{shotAttributeDefinition.name || "Unnamed"}</p>
+                                        <div className="icon">
+                                            <Icon size={18}/>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })}
-                    </div>
+                                )
+                            })}
+                        </div>
+                    }
                 </>
             }
         </div>

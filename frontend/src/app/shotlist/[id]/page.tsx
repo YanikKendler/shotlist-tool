@@ -7,7 +7,7 @@ import Scene from "@/components/scene/scene"
 import {
     SceneDto,
     ShotAttributeDefinitionBase,
-    ShotlistDto
+    ShotlistDto, UserDto
 } from "../../../../lib/graphql/generated"
 import { useParams, useRouter, useSearchParams} from "next/navigation"
 import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
@@ -40,6 +40,7 @@ import {wuGeneral} from "@yanikkendler/web-utils/dist"
 import Iconmark from "@/components/iconmark"
 import {Metadata} from "next"
 import {driver} from "driver.js"
+import "driver.js/dist/driver.css";
 
 export default function Shotlist() {
     const params = useParams<{ id: string }>()
@@ -53,6 +54,7 @@ export default function Shotlist() {
     const [selectedOptionsDialogPage, setSelectedOptionsDialogPage] = useState<{main: ShotlistOptionsDialogPage, sub: ShotlistOptionsDialogSubPage}>({main: "general", sub: "shot"})
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
     const [reloadKey, setReloadKey] = useState(0)
+    const [isReadOnly, setIsReadOnly] = useState(false)
 
     const shotTableRef = useRef<ShotTableRef>(null);
 
@@ -74,13 +76,9 @@ export default function Shotlist() {
     const driverObj = driver({
         showProgress: true,
         steps: [
-            { element: '#tour-example', popover: { title: 'Animated Tour Example', description: 'Here is the code example showing animated tour. Let\'s walk you through it.', side: "left", align: 'start' }},
-            { element: 'code .line:nth-child(1)', popover: { title: 'Import the Library', description: 'It works the same in vanilla JavaScript as well as frameworks.', side: "bottom", align: 'start' }},
-            { element: 'code .line:nth-child(2)', popover: { title: 'Importing CSS', description: 'Import the CSS which gives you the default styling for popover and overlay.', side: "bottom", align: 'start' }},
-            { element: 'code .line:nth-child(4) span:nth-child(7)', popover: { title: 'Create Driver', description: 'Simply call the driver function to create a driver.js instance', side: "left", align: 'start' }},
-            { element: 'code .line:nth-child(18)', popover: { title: 'Start Tour', description: 'Call the drive method to start the tour and your tour will be started.', side: "top", align: 'start' }},
-            { element: 'a[href="/docs/configuration"]', popover: { title: 'More Configuration', description: 'Look at this page for all the configuration options you can pass.', side: "right", align: 'start' }},
-            { popover: { title: 'Happy Coding', description: 'And that is all, go ahead and start adding tours to your applications.' } }
+            { element: '#sceneList', popover: { title: 'Scenes', description: 'Each scene has a number and a displayname, the latter is simply a combination of all its attributes. Every scene has the same attributes which are defined via the shotlist options.', side: "right", align: 'center' }},
+            { element: '#shotTable', popover: { title: 'Shots', description: 'Here you see all the shots of the currently selected scene. Each shot has a few attributes which are defined via the shotlist options.', side: "over", align: 'center' }},
+            { element: '#shotlistOptions', popover: { title: 'Shotlist Options', description: 'Click here to open the shotlist options menu.', side: "top", align: 'center' }},
         ]
     })
 
@@ -109,10 +107,21 @@ export default function Shotlist() {
 
         if(!auth.getUser()) return
 
-        loadShotlist(true)
+        loadData(true)
     }, [id])
 
-    const loadShotlist = async (noCache: boolean = false) => {
+    useEffect(() => {
+        if(!shotlist.loading && !shotlist.error && shotlist.data) {
+            if(localStorage["shotly-shotlist-tour-completed"] != "true") {
+                localStorage["shotly-shotlist-tour-completed"] = "true"
+                setTimeout(() => {
+                    driverObj.drive()
+                }, 150)
+            }
+        }
+    }, [shotlist]);
+
+    const loadData = async (noCache: boolean = false) => {
         try {
             const {data, errors, loading} = await client.query({
                 query: gql`
@@ -149,6 +158,11 @@ export default function Shotlist() {
                                 name
                                 position
                             }
+                            owner {
+                                id
+                                tier
+                                shotlistCount
+                            }
                         }
                     }`,
                 variables: {id: id},
@@ -156,6 +170,10 @@ export default function Shotlist() {
             })
 
             console.log(data.shotlist)
+
+            if(data.shotlist.owner.tier == "BASIC" && data.shotlist.owner.shotlistCount > 1) {
+                setIsReadOnly(true)
+            }
 
             setShotlist({data: data.shotlist, loading: loading, error: errors})
         }
@@ -340,6 +358,10 @@ export default function Shotlist() {
             setElementIsBeingDragged: setElementIsBeingDragged
         }}>
             <p className="noMobile">Sorry, mobile mode is not supported yet since this is a beta test. An acceptable mobile version will be available in the full release.</p>
+            {
+                isReadOnly &&
+                <p className="readonly">This Shotlist is in <span className={"bold"}>read-only</span> mode because the shotlists owner has exceeded the maximum number of Shotlist available with the basic tier.</p>
+            }
             <main className="shotlist" key={reloadKey}>
                 <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal"
                             className={"PanelGroup"}>
@@ -347,7 +369,7 @@ export default function Shotlist() {
                         <div className="content">
                             <div className="top">
                                 <Tooltip.Root>
-                                    <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                                    <Tooltip.Trigger className={"noPadding"} asChild>
                                         <Link href={`../dashboard`}>
                                             <House strokeWidth={2.5} size={20}/>
                                         </Link>
@@ -368,7 +390,7 @@ export default function Shotlist() {
                                     role={"heading"}
                                 />
                             </div>
-                            <div className="list">
+                            <div className="list" id="sceneList">
                                 {!shotlist.data.scenes || shotlist.data.scenes.length == 0 ?
                                     <p className={"empty"}>No scenes yet :(</p> :
                                     <DndContext
@@ -392,15 +414,18 @@ export default function Shotlist() {
                                                     expanded={selectedSceneId == scene.id}
                                                     onSelect={selectScene}
                                                     onDelete={removeScene}
+                                                    readOnly={ isReadOnly }
                                                 />
                                             ))}
                                         </SortableContext>
                                     </DndContext>
                                 }
-                                <button className={"create"} onClick={createScene}>Add scene <Plus/></button>
+                                <button className={"create"} disabled={isReadOnly} onClick={createScene}>Add scene <Plus/></button>
                                 <div className="bottom">
-                                    <button onClick={() => setOptionsDialogOpen(true)}>Shotlist Options <FileSliders
-                                        size={18}/></button>
+                                    <button onClick={() => {
+                                        setOptionsDialogOpen(true)
+                                        driverObj.destroy()
+                                    }} id={"shotlistOptions"}>Shotlist Options <FileSliders size={18}/></button>
                                     <button onClick={openAccountDialog}>Account <User size={18}/></button>
                                 </div>
                             </div>
@@ -410,7 +435,7 @@ export default function Shotlist() {
                         </div>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>
-                    <Panel className="content">
+                    <Panel className="content" id={"shotTable"}>
                         <div className="header">
                             <div className="number"><p>#</p></div>
                             {!shotlist.data.shotAttributeDefinitions || shotlist.data.shotAttributeDefinitions.length == 0 ?
@@ -424,6 +449,7 @@ export default function Shotlist() {
                             ref={shotTableRef}
                             sceneId={selectedSceneId}
                             shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}
+                            readOnly={ isReadOnly }
                         />
                     </Panel>
                 </PanelGroup>
@@ -434,7 +460,7 @@ export default function Shotlist() {
                 selectedPage={selectedOptionsDialogPage}
                 shotlistId={shotlist.data.id || ""}
                 refreshShotlist={() => {
-                    loadShotlist(true).then(() => {
+                    loadData(true).then(() => {
                         setReloadKey(reloadKey + 1)
                     })
                 }}

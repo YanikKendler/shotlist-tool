@@ -10,6 +10,7 @@ import me.kendler.yanik.dto.shotlist.ShotlistDTO;
 import me.kendler.yanik.dto.shotlist.ShotlistEditDTO;
 import me.kendler.yanik.model.User;
 import me.kendler.yanik.model.Shotlist;
+import me.kendler.yanik.model.UserTier;
 import me.kendler.yanik.model.scene.Scene;
 import me.kendler.yanik.model.template.Template;
 import me.kendler.yanik.repositories.scene.SceneRepository;
@@ -55,6 +56,10 @@ public class ShotlistRepository implements PanacheRepositoryBase<Shotlist, UUID>
 
     public ShotlistDTO create(ShotlistCreateDTO createDTO, JsonWebToken jwt){
         User user = userRepository.findOrCreateByJWT(jwt);
+
+        if(user.tier == UserTier.BASIC && user.shotlists.size() >= 1){
+            throw new IllegalArgumentException("Basic users can only have one shotlist");
+        }
 
         Shotlist shotlist;
 

@@ -14,6 +14,8 @@ import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge
 import Loader from "@/components/loader/loader"
 import {NotificationContext} from "@/context/NotificationContext"
 import Link from "next/link"
+import {Config} from "@/util/Utils"
+import PaymentService from "@/service/PaymentService"
 
 export function useAccountDialog() {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,19 +41,22 @@ export function useAccountDialog() {
                         name
                         email
                         createdAt
+                        tier
+                        hasCancelled
                         shotlists {
                             name
                         }
                     }
                 }`,
             fetchPolicy: "no-cache"
-        }
-        )
+        })
 
         if(error) {
             console.error("Error fetching current user:", error);
             return;
         }
+
+        console.log(user)
 
         setUser(data.currentUser)
     }
@@ -81,21 +86,6 @@ export function useAccountDialog() {
         setTimeout(() => {
             setPasswordResetDisabled(false)
         },10000)
-    }
-
-    function manageSubscription() {
-        fetch("http://localhost:8080/stripe/create-portal-session", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${Auth.getIdToken()}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                window.location.href = data.url;
-            })
-            .catch(err => console.error("Error:", err));
     }
 
     async function deleteAccount() {
@@ -160,9 +150,11 @@ export function useAccountDialog() {
                 <div className="row">
                     <p>Subscription</p>
                     {
-                        user?.tier == "BASIC" ?
-                        <a className={"accent"} href={"/pro"}>Upgrade to Pro</a> :
-                        <button onClick={manageSubscription}>Manage subscription</button>
+                        user?.tier == "PRO" ?
+                        <button onClick={PaymentService.manageSubscription}>Manage subscription</button> :
+                        user?.hasCancelled === true ?
+                        <button onClick={PaymentService.manageSubscription}>Renew subscription</button> :
+                        <a className={"accent"} href={"/pro"}>Upgrade to Pro</a>
                     }
                 </div>
 

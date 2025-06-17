@@ -6,6 +6,12 @@ export interface AuthUser {
     isSocial?: boolean;
 }
 
+interface CustomAuthResult extends Auth0DecodedHash {
+    appState?: {
+        targetUrl?: string;
+    };
+}
+
 class Auth {
     private auth0: WebAuth
     private readonly authFlag: string
@@ -15,8 +21,6 @@ class Auth {
     //private FRONTEND_URL: string = "http://localhost:3000"
 
     constructor() {
-        console.log("Auth constructor", this.FRONTEND_URL)
-
         this.auth0 = new auth0.WebAuth({
             domain: 'login.shotly.at',
             clientID: '4FPKDtlCQjAToOwAEiG6ZrL0eW2UXlx4',
@@ -42,6 +46,12 @@ class Auth {
 
     login() {
         this.auth0.authorize()
+    }
+
+    loginForPro(){
+        this.auth0.authorize({
+            appState: { targetUrl: '/pro' }
+        });
     }
 
     logout() {
@@ -74,8 +84,8 @@ class Auth {
     }
 
     handleAuthentication() {
-        return new Promise((resolve, reject) => {
-            this.auth0.parseHash({ hash: window.location.hash }, (error: Auth0ParseHashError | null, authResult: Auth0DecodedHash | null) => {
+        return new Promise<string>((resolve, reject) => {
+            this.auth0.parseHash({ hash: window.location.hash }, (error: Auth0ParseHashError | null, authResult: CustomAuthResult | null) => {
                 if (error) {
                     reject(error)
                     console.log(error)
@@ -93,7 +103,7 @@ class Auth {
 
                 this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
                     console.log(user)
-                    resolve(user)
+                    resolve(authResult.appState?.targetUrl || '/dashboard');
                 })
             })
         })
