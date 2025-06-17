@@ -39,7 +39,7 @@ public class StartupListener {
 
         LOGGER.info("Initializing demo data...");
 
-        createDemoData();
+        /*createDemoData();*/
     }
 
     @Transactional

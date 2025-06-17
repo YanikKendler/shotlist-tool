@@ -83,6 +83,20 @@ export function useAccountDialog() {
         },10000)
     }
 
+    function manageSubscription() {
+        fetch("http://localhost:8080/stripe/create-portal-session", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${Auth.getIdToken()}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                window.location.href = data.url;
+            })
+            .catch(err => console.error("Error:", err));
+    }
 
     async function deleteAccount() {
         let decision = await confirm({
@@ -142,6 +156,15 @@ export function useAccountDialog() {
                         </button>
                     </div>
                 }
+
+                <div className="row">
+                    <p>Subscription</p>
+                    {
+                        user?.tier == "BASIC" ?
+                        <a className={"accent"} href={"/pro"}>Upgrade to Pro</a> :
+                        <button onClick={manageSubscription}>Manage subscription</button>
+                    }
+                </div>
 
                 <Separator.Root className={"Separator"}/>
 

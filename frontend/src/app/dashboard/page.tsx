@@ -10,12 +10,16 @@ import ErrorPage from "@/pages/errorPage/errorPage"
 import {ChevronDown, House, NotepadText, NotepadTextDashed, Plus, User} from "lucide-react"
 import {ShotlistDto, TemplateDto} from "../../../lib/graphql/generated"
 import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
-import {useRouter} from "next/navigation"
+import {useRouter, useSearchParams} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import Utils from "@/util/Utils"
 import {useCreateTemplateDialog} from "@/components/dialog/createTemplateDialog/createTemplateDialog"
 import auth from "@/Auth"
+import * as Dialog from "@radix-ui/react-dialog"
+import Loader from "@/components/loader/loader"
+import Input from "@/components/input/input"
+import SimpleSelect from "@/components/simpleSelect/simpleSelect"
 
 export default function Overview() {
     const [query, setQuery] = useState<{ error: any, loading: boolean }>({error: null, loading: true})
@@ -25,11 +29,18 @@ export default function Overview() {
 
     const client = useApolloClient()
 
+    const searchParams = useSearchParams()
+    const justBoughtPro = searchParams?.get('jbp') === 'true'
+    const [justBoughtProDialogOpen, setJustBoughtProDialogOpen] = useState<boolean>(justBoughtPro)
+
     const { openCreateShotlistDialog, CreateShotlistDialog } = useCreateShotlistDialog()
     const { openCreateTemplateDialog, CreateTemplateDialog } = useCreateTemplateDialog()
 
     useEffect(() => {
         loadData()
+        if (justBoughtPro) {
+            setJustBoughtProDialogOpen(true)
+        }
     }, []);
 
     const loadData = async () => {
@@ -109,6 +120,20 @@ export default function Overview() {
                     <span><Plus/>New Template</span>
                 </button>
             </div>
+            <Dialog.Root open={justBoughtProDialogOpen} onOpenChange={setJustBoughtProDialogOpen}>
+                <Dialog.Portal>
+                    <Dialog.Overlay className={"dialogOverlay"}/>
+                    <Dialog.Content
+                        aria-describedby={"just bought pro dialog"}
+                        className={"justBoughtProDialogContent dialogContent"}
+                    >
+                        <Dialog.Title className={"title"}>Thank you for subscribing to Shotly Pro!</Dialog.Title>
+                        <p className={"financing"}>You are financing the development and server costs of Shotly, I am very grateful for that.</p>
+                        <p className={"issues"}>I hope you are satisfied with your Purchase! If you do however encounter any problems, please open an issue via the account tab.</p>
+                        <button onClick={event => setJustBoughtProDialogOpen(false)}>Start creating</button>
+                    </Dialog.Content>
+                </Dialog.Portal>
+            </Dialog.Root>
             {CreateShotlistDialog}
             {CreateTemplateDialog}
         </main>

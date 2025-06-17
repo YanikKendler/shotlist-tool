@@ -200,7 +200,8 @@ export default function Home() {
                                 <li className={"thin"}><Check size={20} strokeWidth={3}/>unlimited shots</li>
                                 <li className={"gray"}><Heart size={20} strokeWidth={3}/>support this project</li>
                             </ul>
-                            <button className="select filled" onClick={() => Auth.login()}>Choose Pro</button>
+                            {/*<button className="select filled" onClick={() => Auth.login()}>Choose Pro</button>*/}
+                            <a href="./pro" className="select filled">Choose Pro</a>
                         </div>
                     </div>
                 </section>

@@ -28,7 +28,9 @@ public class User extends PanacheEntityBase {
     @BatchSize(size = 5)
     public Set<Template> templates = new HashSet<>();
     public ZonedDateTime createdAt;
+    @Enumerated(EnumType.STRING)
     public UserTier tier = UserTier.BASIC;
+    public String stripeCustomerId;
 
     public User() {
         this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
