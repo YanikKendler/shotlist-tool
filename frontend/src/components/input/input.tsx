@@ -1,7 +1,8 @@
 import {Tooltip} from "radix-ui"
 import {Info} from "lucide-react"
-import React, {useEffect, useRef, useState} from "react"
+import React, {useCallback, useEffect, useRef, useState} from "react"
 import "./input.scss"
+import {wuGeneral} from "@yanikkendler/web-utils/dist"
 
 export default function Input(
     {
@@ -15,7 +16,8 @@ export default function Input(
         maxLength = 255,
         maxWidth = "40ch",
         inputClass = "",
-        showError = true
+        showError = true,
+        debounceValueChange = false
     }
     :
     {
@@ -30,6 +32,7 @@ export default function Input(
         maxWidth?: string;
         inputClass?: string;
         showError?: boolean;
+        debounceValueChange?: boolean;
     }
 ) {
     const [currentValue, setCurrentValue] = useState<string>(value || defaultValue);
@@ -47,6 +50,11 @@ export default function Input(
         validateInput(defaultValue)
         setCurrentValue(defaultValue)
     }, [defaultValue])
+
+    const debouncedValueChange = useCallback(
+        wuGeneral.debounce(valueChange),
+        [valueChange]
+    )
 
     function validateInput(value: string) {
         setError("")
@@ -70,7 +78,11 @@ export default function Input(
     function handleInput(value: string){
         validateInput(value)
         setCurrentValue(value)
-        valueChange(value)
+
+        if(debounceValueChange && debouncedValueChange)
+            debouncedValueChange(value)
+        else
+            valueChange(value)
     }
 
     return (

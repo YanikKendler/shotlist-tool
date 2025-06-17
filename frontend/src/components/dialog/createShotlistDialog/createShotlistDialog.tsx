@@ -100,7 +100,7 @@ export function useCreateShotlistDialog() {
             <Dialog.Title className={"title center"}>Create Shotlist</Dialog.Title>
             <Loader/>
         </>
-    else if(currentUser.tier == "BASIC" && currentUser?.shotlistCount >= 1)
+    else if(currentUser.tier == "BASIC" && currentUser?.shotlistCount != 0)
         content = <>
             <Dialog.Title className={"title center"}>Sorry, you have reached the maximum number of Shotlists.</Dialog.Title>
             <p>Your account is on the basic tier, that means you are limited to a single shotlist. Please consider going Pro for 2.99€ / month.</p>

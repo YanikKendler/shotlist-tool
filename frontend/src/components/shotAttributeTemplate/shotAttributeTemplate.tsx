@@ -146,6 +146,7 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     }
 
     const updateOptionName = async (optionId: number, newName: string) => {
+        console.log(`Updating option ${optionId} to name "${newName}"`)
         const {data, errors} = await client.mutate({
             mutation : gql`
                 mutation updateShotSelectAttributeOptionTemplate($id: BigInteger!, $name: String!) {
@@ -206,11 +207,11 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
                             {(attribute.options as ShotSelectAttributeOptionTemplate[])?.map((option, index) => (
                                 <div className="option" key={option?.id}>
                                     <p>{index + 1}</p>
-                                    <input
-                                        type="text"
+                                    <Input
                                         defaultValue={option?.name || ""}
                                         placeholder="Option name"
-                                        onInput={(event) => debouncedUpdateOptionName(option.id, event.currentTarget.value)}
+                                        valueChange={(value) => updateOptionName(option.id, value)}
+                                        debounceValueChange={true}
                                     />
                                     <button className="bad" onClick={() => deleteSelectOption(option.id)}><Trash size={18}/></button>
                                 </div>
