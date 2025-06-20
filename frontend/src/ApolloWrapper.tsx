@@ -13,6 +13,8 @@ import {onError} from "@apollo/client/link/error"
 import {Config} from "@/util/Utils"
 
 export function makeClient() {
+    console.log("backend url", Config.backendURL)
+
     const httpLink = new HttpLink({
         uri: Config.backendURL + "/graphql",
         fetchOptions: {

@@ -1,4 +1,5 @@
 import auth0, {Auth0DecodedHash, Auth0ParseHashError, WebAuth} from 'auth0-js';
+import {Config} from "@/util/Utils"
 
 export interface AuthUser {
     email: string;
@@ -17,15 +18,13 @@ class Auth {
     private readonly authFlag: string
     private idToken: string = "no-token"
     private authUser: AuthUser | null = null
-    private FRONTEND_URL: string = process.env.NODE_ENV == "development" ? "http://localhost:3000" : "https://shotly.at"
-    //private FRONTEND_URL: string = "http://localhost:3000"
 
     constructor() {
         this.auth0 = new auth0.WebAuth({
             domain: 'login.shotly.at',
             clientID: '4FPKDtlCQjAToOwAEiG6ZrL0eW2UXlx4',
             responseType: 'id_token token',
-            redirectUri: this.FRONTEND_URL + '/callback',
+            redirectUri: Config.frontendURL + '/callback',
             audience: 'https://dev-pvlm4i5qpteni14h.us.auth0.com/api/v2/',
             scope: 'openid profile email',
             overrides: {
@@ -57,7 +56,7 @@ class Auth {
     logout() {
         localStorage.setItem(this.authFlag, JSON.stringify(false));
         this.auth0.logout({
-            returnTo: this.FRONTEND_URL,
+            returnTo: Config.frontendURL,
         });
     }
 

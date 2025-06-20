@@ -14,6 +14,7 @@ import {Toast, Tooltip} from "radix-ui"
 import AuthWrapper from "@/AuthWrapper"
 import {useNotification} from "@/components/notification/notification"
 import NotificationWrapper from "@/NotificationWrapper"
+import {Config} from "@/util/Utils"
 
 const inter = Inter({
     subsets: ['latin']
@@ -29,6 +30,7 @@ export default function RootLayout({
         <body>
         <Toast.Provider>
             <div className="root">
+                {Config.mode === "dev-deployment" && <div className="infoBanner">You are currently viewing a dev deployment</div>}
                 <AuthWrapper data-test={"AuthWrapper"}>
                     <ApolloWrapper data-test={"ApolloWrapper"}>
                         <NotificationWrapper data-test={"NotificationWrapper"}>

@@ -101,7 +101,7 @@
     </dependencies>
 
     <build>
-        <finalName>shotlist-tool-backend</finalName>
+        <finalName>shotly-backend</finalName>
 
         <plugins>
             <plugin>
