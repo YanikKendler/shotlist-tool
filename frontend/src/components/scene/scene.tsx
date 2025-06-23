@@ -155,8 +155,6 @@ export default function Scene({scene, position, expanded, onSelect, onDelete, re
                             ></SceneAttribute>
                         ))}
                     </div>
-
-                    {/*<button className={"delete"} onClick={deleteScene}>delete scene <Trash size={16} strokeWidth={3}/></button>*/}
                 </Collapsible.Content>
             </Collapsible.Root>
 

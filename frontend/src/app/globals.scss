@@ -39,6 +39,7 @@
   --text-90: hsl(0, 0%, 90%);
 
   --contrast: hsl(0, 0%, 100%);
+
   --hover-bg-10: hsla(0, 0%, 50%, 10%);
   --hover-bg-20: hsla(0, 0%, 50%, 20%);
   --hover-bg-30: hsla(0, 0%, 50%, 30%);
@@ -68,16 +69,64 @@
   --sidebar-width: 400px;
 }
 
-/*@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="dark"] {
+  --accent-10: hsl(18, 85%, 95%);
+  --accent-20: hsl(18, 85%, 85%);
+  --accent-30: hsl(18, 85%, 75%);
+  --accent-40: hsl(18, 90%, 65%);
+  --accent-44: hsl(18, 90%, 61%);
+  --accent:    hsl(18, 90%, 58%);
+  --accent-55: hsl(18, 90%, 50%);
+  --accent-60: hsl(18, 90%, 45%);
+  --accent-70: hsl(18, 90%, 35%);
+  --accent-80: hsl(18, 90%, 30%);
+  --accent-90: hsl(19, 70%, 19%);
+  --accent-92: hsl(19, 70%, 13%);
+  --accent-95: hsl(19, 70%, 7%);
+  --accent-98: hsl(19, 70%, 5%);
+
+  --text: hsl(0, 0%, 90%);
+  --text-10: hsl(0, 0%, 85%);
+  --text-20: hsl(0, 0%, 80%);
+  --text-30: hsl(0, 0%, 70%);
+  --text-35: hsl(0, 0%, 65%);
+  --text-40: hsl(0, 0%, 60%);
+  --text-50: hsl(0, 0%, 50%);
+  --text-60: hsl(0, 0%, 40%);
+  --text-70: hsl(0, 0%, 30%);
+  --text-80: hsl(0, 0%, 20%);
+  --text-90: hsl(0, 0%, 17%);
+
+  --contrast: hsl(0, 0%, 10%);
+
+  --hover-bg-10: hsla(0, 0%, 50%, 15%);
+  --hover-bg-20: hsla(0, 0%, 50%, 25%);
+  --hover-bg-30: hsla(0, 0%, 50%, 35%);
+
+  --sidebar-bg: hsl(20, 20%, 5%);
+  --home-button-bg: hsl(14, 21%, 8%);
+  --home-button-border: hsl(0, 0%, 40%);
+  --home-button-hover-border: hsl(0, 0%, 80%);
+  --sidebar-bottom-button-bg: hsl(12, 9%, 8%);
+  --sidebar-bottom-button-border: hsl(0, 0%, 26%);
+
+  --popup-border: hsl(0, 0%, 18%);
+  --select-menu-border: hsl(0, 0%, 25%);
+  --select-menu-multivalue-bg: hsl(0, 0%, 15%);
+
+  --dialog-close-button-bg: hsl(0, 0%, 10%);
+  --dialog-close-button-hover-bg: hsl(0, 0%, 15%);
+
+  --drag-handle-hover: hsl(0, 0%, 20%);
+
+  --default-interactable-border: hsl(0, 0%, 18%);
+  --default-interactable-hover-border: hsl(0, 0%, 70%);
 
   html {
     color-scheme: dark;
+    background-color: red !important;
   }
-}*/
+}
 
 .noMobile{
   display: none;
@@ -98,6 +147,7 @@ body {
 
 body {
   color: var(--text);
+  background-color: var(--contrast);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -108,6 +158,7 @@ body {
   margin: 0;
   font: inherit;
   scroll-behavior: smooth;
+  color: inherit;
 
   &:where(:focus-visible) {
     &:focus-visible {
@@ -184,6 +235,7 @@ button, a{
   white-space: nowrap;
   background-color: transparent;
   box-sizing: border-box;
+  color: inherit;
 
   &:not([disabled]):not(.noClickFx) {
     &:active {
@@ -224,7 +276,7 @@ button, a{
   }
 
   &[disabled]{
-    opacity: 70%;
+    opacity: 60%;
     cursor: initial;
   }
 
@@ -414,6 +466,7 @@ span.wrap{
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
   /*z-index: 1000;*/
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }

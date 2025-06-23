@@ -1,8 +1,11 @@
+[data-theme="dark"] .shotlistOptionsDialogContent {
+  --attribute-type-bg: hsl(0, 0%, 18%);
+  --interactible-border: hsl(0, 0%, 35%);
+}
+
 .shotlistOptionsDialogContent{
   --attribute-type-bg: hsl(0, 0%, 90%);
-
-  --button-border: hsl(0, 0%, 82%);
-  --button-hover-border: hsl(0, 0%, 50%);
+  --interactible-border: hsl(0, 0%, 82%);
 
   max-width: 800px;
   height: 50%;
@@ -71,7 +74,7 @@
       }
     }
 
-    .empty{
+    > .empty{
       text-align: center;
       color: var(--text-50);
       margin-top: 2rem;

@@ -16,13 +16,18 @@ import {
 import {Pen} from "lucide-react"
 import {reactSelectTheme} from "@/util/Utils"
 
-export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
-    option: (baseStyles) => ({
+export const reactSelectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
+    option: (baseStyles, state) => ({
         ...baseStyles,
         cursor: 'pointer',
         borderRadius: ".3rem",
         paddingInline: ".5rem",
-        fontSize: ".9rem"
+        fontSize: ".9rem",
+        backgroundColor: state.isFocused ? 'var(--hover-bg-accent-10)' : 'transparent',
+    }),
+    input: (baseStyles) => ({
+        ...baseStyles,
+        color: "var(--text)",
     }),
     menu: (baseStyles) => ({
         ...baseStyles,
@@ -39,6 +44,11 @@ export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
     multiValue: (baseStyles) => ({
         ...baseStyles,
         borderRadius: "0.3rem",
+        backgroundColor: "var(--select-menu-multivalue-bg)",
+    }),
+    multiValueLabel: (baseStyles) => ({
+        ...baseStyles,
+        color: "var(--text)",
     }),
     multiValueRemove: (baseStyles) => ({
         ...baseStyles,
@@ -51,7 +61,7 @@ export const selectBaseStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
 }
 
 export const selectShotStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
-    ...selectBaseStyles,
+    ...reactSelectBaseStyles,
     control: (baseStyles, state) => ({
         ...baseStyles,
         borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
@@ -62,17 +72,12 @@ export const selectShotStyles: StylesConfig<SelectOption, boolean, GroupBase<Sel
         '&:hover': {
             borderColor: state.isFocused ? 'var(--accent)' : 'transparent',
         },
-        height: "inherit"
-    }),
-    multiValue: (baseStyles) => ({
-        ...baseStyles,
-        borderRadius: "0.3rem",
-        backgroundColor: "var(--select-menu-multivalue-bg)"
-    }),
+        height: "inherit",
+    })
 }
 
 export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
-    ...selectBaseStyles,
+    ...reactSelectBaseStyles,
     control: (baseStyles, state) => ({
         ...baseStyles,
         border: "none",
@@ -93,22 +98,24 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
         ...baseStyles,
         marginBottom: "0px",
         borderRadius: "0.3rem",
+        backgroundColor: "var(--select-menu-multivalue-bg)",
     }),
     menu: (baseStyles) => ({
         ...baseStyles,
         marginTop: "3px",
     }),
-    option: (baseStyles) => ({
+    option: (baseStyles, state) => ({
         ...baseStyles,
         cursor: 'pointer',
         borderRadius: ".3rem",
         paddingInline: ".5rem",
-        fontSize: ".85rem"
+        fontSize: ".85rem",
+        backgroundColor: state.isFocused ? 'var(--hover-bg-accent-10)' : 'transparent',
     }),
 }
 
 export default function AttributeValueSelect(
-    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, editAction, styles = selectBaseStyles}:
+    {definitionId, value, onChange, onCreate, loadOptions, placeholder, isMulti, shotOrScene, editAction, styles = reactSelectBaseStyles}:
     {
         definitionId: number,
         value: SelectOption | SelectOption[] | undefined,

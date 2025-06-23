@@ -138,7 +138,7 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
         setShotAttributeDefinitions(data.shotAttributeDefinitions)
         setShotlist(data.shotlist)
 
-        setStringifiedAttributeData(JSON.stringify(data.shotAttributeDefinitions) + JSON.stringify(data.sceneAttributeDefinitions))
+        setStringifiedAttributeData(JSON.stringify(data.shotAttributeDefinitions) + JSON.stringify(data.sceneAttributeDefinitions) + JSON.stringify(data.shotlist));
     }
 
     function runRefreshShotlistCheck(){

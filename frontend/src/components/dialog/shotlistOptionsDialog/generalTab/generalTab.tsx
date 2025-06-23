@@ -56,7 +56,7 @@ export default function GeneralTab({shotlist, setShotlist, dataChanged}: { shotl
             message: `Do you want to delete the shotlist "${shotlist.name}" and its ${shotlist.sceneCount} scenes and ${shotlist.shotCount} shots? I recommend exporting to csv before deleting. This action cannot be undone.`,
             buttons: {
                 confirm: {
-                    text: 'Delete shotlist',
+                    text: 'Delete Shotlist',
                     className: 'bad'
                 }
             },
@@ -108,7 +108,7 @@ export default function GeneralTab({shotlist, setShotlist, dataChanged}: { shotl
 
             <div className="row">
                 <p>Permanently delete the shotlist "{shotlist.name}"</p>
-                <button className="deleteShotlist bad" onClick={deleteShotlist}>delete shotlist</button>
+                <button className="deleteShotlist bad" onClick={deleteShotlist}>Delete Shotlist</button>
             </div>
             {ConfirmDialog}
         </div>

@@ -5,9 +5,13 @@ div.loader{
   justify-content: center;
   margin: auto;
 
-  img{
-    color: var(--accent);
+  svg{
     width: 60px;
+    height: auto;
+
+    *{
+      fill: var(--text-30);
+    }
   }
 
   p{

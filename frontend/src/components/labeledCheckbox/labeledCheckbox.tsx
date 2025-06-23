@@ -3,28 +3,30 @@ import {Check} from "lucide-react"
 import {useEffect, useState} from "react"
 import "./labeledCheckbox.scss"
 
-export default function LabeledCheckbox({text, checked, onCheckedChange}:{text: string, checked: boolean, onCheckedChange: (checked: boolean) => void}) {
+export default function LabeledCheckbox({text, defaultChecked, onCheckedChange}:{text: string, defaultChecked: boolean, onCheckedChange: (checked: boolean) => void}) {
     const [isChecked, setIsChecked] = useState(false)
 
     useEffect(() => {
-        setIsChecked(checked)
-    }, [checked]);
+        setIsChecked(defaultChecked)
+    }, [defaultChecked]);
+
+    function handleCheckedChange(newChecked: boolean) {
+        setIsChecked(newChecked)
+        onCheckedChange(newChecked)
+    }
 
     return (
-        <div className={"labeledCheckbox"}>
+        <div className={"labeledCheckbox"} onClick={() => handleCheckedChange(!isChecked)}>
             <Checkbox.Root
                 className="CheckboxRoot"
                 checked={isChecked}
-                onCheckedChange={(checked) => {
-                    setIsChecked(checked === true)
-                    onCheckedChange(checked === true)
-                }}
+                onCheckedChange={handleCheckedChange}
             >
                 <Checkbox.Indicator className="CheckboxIndicator">
                     <Check size={20} strokeWidth={3}/>
                 </Checkbox.Indicator>
             </Checkbox.Root>
-            <label>I know what i am doing</label>
+            <label>{text}</label>
         </div>
     );
 }

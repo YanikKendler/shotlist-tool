@@ -1,3 +1,10 @@
+[data-theme="dark"] div.sceneAttributeDefinition {
+  --grip-color: hsl(0, 0%, 35%);
+  --grip-hover-color: hsl(0, 0%, 70%);
+  --input-border: hsl(0, 0%, 30%);
+  --input-hover-border: hsl(0, 0%, 70%);
+}
+
 div.sceneAttributeDefinition{
   --grip-color: hsl(0, 0%, 65%);
   --grip-hover-color: hsl(0, 0%, 30%);
@@ -44,7 +51,7 @@ div.sceneAttributeDefinition{
     border: 1px solid var(--input-border);
     border-radius: .3rem;
 
-    &:hover{
+    &:not(.bad):hover{
       /*background-color: var(--hover-bg-10);*/
       color: var(--text);
       border-color: var(--input-hover-border);

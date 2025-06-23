@@ -1,9 +1,17 @@
+[data-theme="dark"] .shotTable {
+  --cell-border: hsl(0, 0%, 40%);
+  --second-cell-bg: hsl(0, 0%, 14%);
+  --cell-placeholder: hsl(0, 0%, 50%);
+  --preview-cell-border: hsl(0, 0%, 20%);
+  --preview-cell-hover-border: hsl(0, 0%, 30%);
+}
+
 .shotTable{
   --cell-border: hsl(0, 0%, 50%);
   --second-cell-bg: hsl(0, 0%, 96%);
   --cell-placeholder: hsl(0, 0%, 50%);
   --preview-cell-border: hsl(0, 0%, 87%);
-  --preview-cell-hover-bg: hsl(0, 0%, 98%);
+  --preview-cell-hover-border: hsl(0, 0%, 70%);
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -17,11 +25,15 @@
   div.shot.new{
     background-color: transparent;
 
+    &:hover{
+      --preview-cell-border: var(--preview-cell-hover-border);
+    }
+
     .shotAttribute{
       border-color: var(--preview-cell-border);
       padding-inline: .3rem;
       color: var(--text-60);
-      transition: color .1s;
+      transition: color .1s, border-color .1s;
 
       &:not(:first-of-type):hover{
         cursor: text;

@@ -26,7 +26,19 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en" className={inter.className}>
+        <html lang="en" className={inter.className} suppressHydrationWarning>
+        <head>
+            {/*set the theme attribute (dark or light) based on the user preference (dark light or system)*/}
+            <script dangerouslySetInnerHTML={{__html: `(() => {
+                let userPreference = localStorage.getItem('shotly-theme') || 'system';
+                if (userPreference === 'system') {
+                    const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', systemPref);
+                } else {
+                    document.documentElement.setAttribute('data-theme', userPreference);
+                }
+            })()`}}/>
+        </head>
         <body>
         <Toast.Provider>
             <div className="root">

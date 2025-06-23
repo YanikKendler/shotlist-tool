@@ -76,6 +76,7 @@ export default function Shotlist() {
     const driverObj = driver({
         showProgress: true,
         steps: [
+            { popover: { title: 'Your first Shotlist', description: 'This is where the fun beginns!' } },
             { element: '#sceneList', popover: { title: 'Scenes', description: 'Each scene has a number and a displayname, the latter is simply a combination of all its attributes. Every scene has the same attributes which are defined via the shotlist options.', side: "right", align: 'center' }},
             { element: '#shotTable', popover: { title: 'Shots', description: 'Here you see all the shots of the currently selected scene. Each shot has a few attributes which are defined via the shotlist options.', side: "over", align: 'center' }},
             { element: '#shotlistOptions', popover: { title: 'Shotlist Options', description: 'Click here to open the shotlist options menu.', side: "top", align: 'center' }},
@@ -111,12 +112,10 @@ export default function Shotlist() {
     }, [id])
 
     useEffect(() => {
-        if(!shotlist.loading && !shotlist.error && shotlist.data) {
+        if(!shotlist.loading && !shotlist.error && shotlist.data && shotlist.data.id) {
             if(localStorage["shotly-shotlist-tour-completed"] != "true") {
                 localStorage["shotly-shotlist-tour-completed"] = "true"
-                setTimeout(() => {
-                    driverObj.drive()
-                }, 150)
+                driverObj.drive()
             }
         }
     }, [shotlist]);

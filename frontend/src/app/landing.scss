@@ -1,10 +1,21 @@
+[data-theme="dark"] main.landing{
+  --beta-chip-bg: hsl(18, 64%, 12%);
+  --hero-blur-bg: rgba(242, 73, 100, 0.10);
+  --second-section-bg: hsl(15, 15%, 7%);
+  --light-gray: hsl(0, 0%, 5%);
+  --pricing-tier-bg: hsl(24, 20%, 8%);
+  --footer-bg: hsl(0, 0%, 5%);
+  --feature-unavailable-bg: hsla(0, 0%, 10%, 0.6);
+}
+
 main.landing{
-  --beta-chip-bg: #F4D9CD;
+  --beta-chip-bg: hsl(18, 64%, 88%);
   --hero-blur-bg: rgba(242, 73, 0, 0.10);
-  --second-section-bg: #FEF5F2;
-  --light-gray: #F2F2F2;
-  --pricing-tier-bg: #FCF9F7;
-  --footer-bg: #F2F2F2;
+  --second-section-bg: hsl(15, 86%, 97%);
+  --light-gray: hsl(0, 0%, 95%);
+  --pricing-tier-bg: hsl(24, 45%, 98%);
+  --footer-bg: hsl(0, 0%, 95%);
+  --feature-unavailable-bg: hsla(0, 0%, 100%, 0.6);
 
   overflow-y: auto;
   height: 100%;
@@ -237,7 +248,7 @@ main.landing{
     place-items: center;
     padding-bottom: 4rem;
     padding-top: 2rem;
-    background: linear-gradient(0deg, hsla(0,0%,100%, 100%) 50%, hsla(0,0%,100%, 0%) 100%);
+    background: linear-gradient(0deg, var(--contrast) 50%, hsla(0,0%,0%, 0%) 100%);
 
     @media screen and (max-width: 900px) {
       display: none;
@@ -304,7 +315,7 @@ main.landing{
       }
 
       &.unavailable{
-        background-color: hsla(0, 0%, 100%, 0.6);
+        background-color: var(--feature-unavailable-bg);
 
         h2, p{
           color: var(--text-50);

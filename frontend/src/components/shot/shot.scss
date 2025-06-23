@@ -1,3 +1,9 @@
+[data-theme="dark"] div.shot {
+  --shot-background: var(--contrast);
+  --grip-color: hsl(0, 0%, 60%);
+  --grip-hover-color: hsl(0, 0%, 90%);
+}
+
 div.shot{
   --shot-background: var(--contrast);
   --grip-color: hsl(0, 0%, 70%);

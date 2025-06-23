@@ -1,3 +1,7 @@
+[data-theme="dark"] main.pro{
+  --content-bg: hsl(0, 0%, 15%);
+}
+
 main.pro{
   --content-bg: hsl(0, 0%, 95%);
 
@@ -15,22 +19,42 @@ main.pro{
     h1{
       font-weight: 500;
       font-size: 1.4rem;
-      margin-bottom: .4rem;
+      margin-bottom: .5rem;
     }
 
     p{
       color: var(--text-20);
     }
 
-    button, a{
-      background-color: var(--accent);
-      width: 100%;
-      justify-content: center;
-      color: var(--contrast);
-      margin-top: 1rem;
+    .buttons{
+      display: flex;
+      gap: .5rem;
 
-      &:hover{
-        background-color: var(--accent-60);
+      button, a{
+        width: 100%;
+        justify-content: center;
+        margin-top: 2rem;
+        font-weight: 600;
+
+        &.filled{
+          background-color: var(--accent);
+          color: var(--contrast);
+
+          &:hover{
+            background-color: var(--accent-60);
+          }
+        }
+
+        &.outlined{
+          background-color: transparent;
+          color: var(--accent);
+          border: 1px solid var(--accent);
+
+          &:hover{
+            background-color: var(--hover-bg-accent-10);
+            color: var(--accent-60);
+          }
+        }
       }
     }
   }

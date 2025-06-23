@@ -54,7 +54,10 @@ export default function Pro(){
             <div className="content">
                 <h1>Thank you for choosing Shotly Pro!</h1>
                 <p>You will get access to unlimited Shotlists and Collaborators.</p>
-                <button onClick={PaymentService.subscribeToPro}>Continue to checkout</button>
+                <div className="buttons">
+                    <a className={"outlined"} href={"/dashboard"}>To your dashboard</a>
+                    <button className={"filled"} onClick={PaymentService.subscribeToPro}>Continue to checkout</button>
+                </div>
             </div>
         </main>
     );

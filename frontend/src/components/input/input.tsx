@@ -1,4 +1,4 @@
-import {Tooltip} from "radix-ui"
+import {Popover, Tooltip} from "radix-ui"
 import {Info} from "lucide-react"
 import React, {useCallback, useEffect, useRef, useState} from "react"
 import "./input.scss"
@@ -108,17 +108,17 @@ export default function Input(
                 </div>
                 {
                     info &&
-                    <Tooltip.Root delayDuration={100}>
-                        <Tooltip.Trigger className={"noPadding"}>
+                    <Popover.Root>
+                        <Popover.Trigger className={"noPadding"}>
                             <Info/>
-                        </Tooltip.Trigger>
-                        <Tooltip.Portal>
-                            <Tooltip.Content className={"TooltipContent"}>
-                                <Tooltip.Arrow/>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                            <Popover.Content className={"PopoverContent"}>
+                                <Popover.Arrow/>
                                 <p>{info}</p>
-                            </Tooltip.Content>
-                        </Tooltip.Portal>
-                    </Tooltip.Root>
+                            </Popover.Content>
+                        </Popover.Portal>
+                    </Popover.Root>
                 }
             </div>
         </div>

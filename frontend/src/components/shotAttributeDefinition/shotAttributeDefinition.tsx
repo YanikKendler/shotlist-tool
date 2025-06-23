@@ -228,7 +228,7 @@ export default function ShotAttributeDefinition({attributeDefinition, onDelete, 
                     </Popover.Portal>
                 </Popover.Root>
             )}
-            <button className="delete" onClick={deleteDefinition}><Trash size={18}/></button>
+            <button className="delete bad" onClick={deleteDefinition}><Trash size={18}/></button>
             {ConfirmDialog}
         </div>
     );

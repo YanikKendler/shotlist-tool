@@ -1,6 +1,13 @@
+[data-theme="dark"] .sidebarScene {
+  --scene-hover-border: hsla(0, 0%, 30%);
+  --expanded-border: var(--accent-70);
+  --expanded-color: var(--accent-55);
+}
+
 .sidebarScene{
   --scene-hover-border: hsla(0, 0%, 80%);
-  --delete-scene-color: hsl(0,0%,60%);
+  --expanded-border: var(--accent);
+  --expanded-color: var(--accent);
 
   display: flex;
   flex-direction: column;
@@ -26,10 +33,10 @@
   }
 
   &.expanded{
-    border-color: var(--accent);
+    border-color: var(--expanded-border);
 
     .name{
-      color: var(--accent) !important;
+      color: var(--expanded-color) !important;
 
       .text{
         font-weight: 700;
@@ -101,25 +108,10 @@
       color: var(--text-50);
     }
   }
+}
 
-  button.delete{
-    width: 100%;
-    justify-content: center;
-    font-size: .85rem;
-    font-weight: 600;
-    color: var(--delete-scene-color);
-    padding: 0.4rem 0.5rem;
-    margin-top: .5rem;
-
-    svg{
-      translate: 0 -1px;
-    }
-
-    &:hover{
-      background-color: var(--hover-bg-10);
-      color: var(--text-40);
-    }
-  }
+[data-theme="dark"] .sceneContextOptionsPopup {
+  --scene-context-popup-bg: hsl(22, 20%, 7%);
 }
 
 .sceneContextOptionsPopup{

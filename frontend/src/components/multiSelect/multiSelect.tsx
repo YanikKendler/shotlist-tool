@@ -72,14 +72,16 @@ export default function MultiSelect({name, placeholder = "Select...", options, o
                         borderColor: state.isFocused ? 'var(--accent)' : 'var(--default-interactable-border-hover)',
                     },
                     outline: "none",
-                    boxShadow: "none"
+                    boxShadow: "none",
+                    backgroundColor: "transparent",
                 }),
                 menu: (base) => ({
                     ...base,
                     padding: '0.3rem',
                     borderRadius: '0.4rem',
-                    border: '.1rem solid var(--default-interactable-border)',
-                    marginBlock: '.1rem'
+                    border: '.15rem solid var(--default-interactable-border)',
+                    marginBlock: '.1rem',
+                    backgroundColor: "var(--contrast)"
                 }),
                 menuList: (base) => ({
                     ...base,
@@ -88,7 +90,17 @@ export default function MultiSelect({name, placeholder = "Select...", options, o
                 option: (base, state) => ({
                     ...base,
                     borderRadius: '0.3rem',
-                })
+                    backgroundColor: state.isFocused ? 'var(--hover-bg-accent-10)' : 'transparent',
+                }),
+                multiValue: (baseStyles) => ({
+                    ...baseStyles,
+                    borderRadius: "0.3rem",
+                    backgroundColor: "var(--select-menu-multivalue-bg)",
+                }),
+                multiValueLabel: (baseStyles) => ({
+                    ...baseStyles,
+                    color: "var(--text)",
+                }),
             }}
         />
     );

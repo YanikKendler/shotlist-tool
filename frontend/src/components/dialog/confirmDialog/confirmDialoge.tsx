@@ -57,20 +57,20 @@ export function useConfirmDialog() {
 
                     <Dialog.Title className={"title"}>{settings?.title || "Are you sure?"}</Dialog.Title>
                     <p className={"description"}>{settings.message}</p>
-                    {settings.checkbox === true && (<LabeledCheckbox text="I know what i am doing" checked={isChecked} onCheckedChange={setIsChecked}/>)}
+                    {settings.checkbox === true && (<LabeledCheckbox text="I know what I am doing" defaultChecked={isChecked} onCheckedChange={setIsChecked}/>)}
                     <div className={"buttons"}>
                         <button
                             className={settings?.buttons?.cancel?.className || ""}
                             onClick={e => {e.stopPropagation();handleCancel()}}
                         >
-                            {settings?.buttons?.cancel?.text || "cancel"}
+                            {settings?.buttons?.cancel?.text || "Cancel"}
                         </button>
                         <button
                             className={settings?.buttons?.confirm?.className || ""}
                             onClick={e => {e.stopPropagation();handleConfirm()}}
                             disabled={settings.checkbox === true && !isChecked}
                         >
-                            {settings?.buttons?.confirm?.text || "confirm"}
+                            {settings?.buttons?.confirm?.text || "Confirm"}
                         </button>
                     </div>
                 </Dialog.Content>

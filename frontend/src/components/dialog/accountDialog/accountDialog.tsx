@@ -1,14 +1,14 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import "./accountDialog.scss"
 import {useApolloClient} from "@apollo/client"
 import gql from "graphql-tag"
-import {X} from "lucide-react"
+import {Monitor, Moon, Sun, X} from "lucide-react"
 import Auth from "@/Auth"
 import {User} from "../../../../lib/graphql/generated"
-import {Separator, VisuallyHidden} from "radix-ui"
+import {RadioGroup, Separator, VisuallyHidden} from "radix-ui"
 import Input from "@/components/input/input"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
 import Loader from "@/components/loader/loader"
@@ -22,10 +22,15 @@ export function useAccountDialog() {
     const [user, setUser] = useState<User | null>(null);
     const [deleting, setDeleting] = useState(false);
     const [passwordResetDisabled, setPasswordResetDisabled] = useState(false);
+    const [selectedAppearance, setSelectedAppearance] = useState<string>("system");
 
     const client = useApolloClient()
     const {confirm, ConfirmDialog} = useConfirmDialog()
     const notificationContext = useContext(NotificationContext)
+
+    useEffect(() => {
+        setSelectedAppearance(localStorage.getItem("shotly-theme") || "system");
+    }, []);
 
     function openAccountDialog() {
         setIsOpen(true);
@@ -122,6 +127,22 @@ export function useAccountDialog() {
         Auth.logout();
     }
 
+    function handleAppearanceChange(value: string) {
+        localStorage.setItem("shotly-theme", value)
+        setSelectedAppearance(value)
+
+        switch (value) {
+            case "light":
+            case "dark":
+                document.documentElement.setAttribute("data-theme", value)
+                break
+            case "system":
+                const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                document.documentElement.setAttribute('data-theme', systemPref)
+                break
+        }
+    }
+
     let dialogContent
 
     if(deleting)
@@ -158,7 +179,28 @@ export function useAccountDialog() {
                     }
                 </div>
 
+
                 <Separator.Root className={"Separator"}/>
+
+                <div className="row">
+                    <p>Appearance</p>
+                    <RadioGroup.Root
+                        className="RadioGroupRoot"
+                        defaultValue={selectedAppearance}
+                        aria-label="Appearance"
+                        onValueChange={handleAppearanceChange}
+                    >
+                        <RadioGroup.Item className="RadioGroupItem" value="light">
+                            <Sun size={20}/>
+                        </RadioGroup.Item>
+                        <RadioGroup.Item className="RadioGroupItem" value="dark">
+                            <Moon size={20}/>
+                        </RadioGroup.Item>
+                        <RadioGroup.Item className="RadioGroupItem" value="system">
+                            <Monitor size={20}/>
+                        </RadioGroup.Item>
+                    </RadioGroup.Root>
+                </div>
 
                 <div className="row">
                     <p>Report a bug or request a feature</p>
