@@ -254,7 +254,7 @@ main.landing{
       display: none;
     }
 
-    img{
+    img, .skeleton{
       width: 80vw;
       max-width: 1100px;
       height: fit-content;
@@ -263,6 +263,10 @@ main.landing{
       display: block;
 
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .skeleton{
+      aspect-ratio: 2/1;
     }
   }
 

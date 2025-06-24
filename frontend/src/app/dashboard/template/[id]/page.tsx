@@ -107,7 +107,7 @@ export default function Template (){
                 }`,
             variables: {id: id},
             fetchPolicy: noCache ? "no-cache" : "cache-first"})
-        
+
         setTemplate({data: data.template, loading: loading, error: errors})
     }
 

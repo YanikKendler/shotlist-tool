@@ -20,6 +20,8 @@ import {
 import Image from "next/image"
 import {Popover, Separator, Tooltip} from "radix-ui"
 import AuthSwitcher from "@/components/authSwitcher/authSwitcher"
+import ThemeSwitcher from "@/components/themeSwitcher/themeSwitcher"
+import Skeleton from "@/components/skeleton/skeleton"
 
 export default function Landing() {
     const pageRef = useRef<HTMLDivElement>(null);
@@ -94,13 +96,30 @@ export default function Landing() {
             </section>
             <div className="coverHero">
                 <section className="image">
-                    <Image
-                        src={"/shotlist.jpg"}
-                        alt={"image of a shotlist with its scenes listet in the left sidebar and multiple shots listed on the right"}
-                        width={1681}
-                        height={1000}
-                        ref={imageRef}
+                    <ThemeSwitcher
+                        light={
+                            <Image
+                                src={"/shotlist-light.jpg"}
+                                alt={"image of a shotlist with its scenes listet in the left sidebar and multiple shots listed on the right"}
+                                width={1681}
+                                height={1000}
+                                ref={imageRef}
+                            />
+                        }
+                        dark={
+                            <Image
+                                src={"/shotlist-dark.jpg"}
+                                alt={"image of a shotlist with its scenes listet in the left sidebar and multiple shots listed on the right"}
+                                width={1643}
+                                height={1000}
+                                ref={imageRef}
+                            />
+                        }
+                        loader={
+                            <Skeleton/>
+                        }
                     />
+
                 </section>
                 <section className="features" id={"features"}>
                     <div className="content">
