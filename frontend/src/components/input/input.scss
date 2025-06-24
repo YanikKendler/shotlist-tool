@@ -64,5 +64,10 @@ div.customInput{
         border-color: var(--accent-40);
       }
     }
+
+    &[disabled]{
+      color: var(--text-50);
+      cursor: initial;
+    }
   }
 }

@@ -118,8 +118,6 @@ export default function ExportTab({shotlist}: { shotlist: ShotlistDto | null}) {
             return;
         }
 
-        console.log(data)
-
         switch (selectedFileType) {
             case "CSV-small":
                 let smallData: string[][] = []

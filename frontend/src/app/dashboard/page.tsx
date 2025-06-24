@@ -85,7 +85,7 @@ export default function Overview() {
             fetchPolicy: "no-cache"
         })
 
-        console.log(data)
+        //console.log(data)
 
         setQuery({error, loading})
 

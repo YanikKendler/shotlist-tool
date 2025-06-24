@@ -91,7 +91,6 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                 <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
                                     <Link href={`/dashboard`} onClick={e => {
                                         wuGeneral.onNthClick(() => {
-                                            console.log("forward")
                                             window.open("https://orteil.dashnet.org/cookieclicker", '_blank')?.focus()
                                         }, e.nativeEvent, 10)
                                     }}>

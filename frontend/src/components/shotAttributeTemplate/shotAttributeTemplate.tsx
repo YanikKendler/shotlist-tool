@@ -146,7 +146,6 @@ export default function ShotAttributeTemplate({attributeTemplate, onDelete}: { a
     }
 
     const updateOptionName = async (optionId: number, newName: string) => {
-        console.log(`Updating option ${optionId} to name "${newName}"`)
         const {data, errors} = await client.mutate({
             mutation : gql`
                 mutation updateShotSelectAttributeOptionTemplate($id: BigInteger!, $name: String!) {

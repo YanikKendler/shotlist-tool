@@ -13,11 +13,10 @@ import {onError} from "@apollo/client/link/error"
 import {Config} from "@/util/Utils"
 
 export function makeClient() {
-    console.log("backend url", Config.backendURL)
-
     const httpLink = new HttpLink({
         uri: Config.backendURL + "/graphql",
         fetchOptions: {
+            errorPolicy: "all"
             // you can pass additional options that should be passed to `fetch` here,
             // e.g. Next.js-related `fetch` options regarding caching and revalidation
             // see https://nextjs.org/docs/app/api-reference/functions/fetch#fetchurl-options

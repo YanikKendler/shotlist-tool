@@ -121,65 +121,59 @@ export default function Shotlist() {
     }, [shotlist]);
 
     const loadData = async (noCache: boolean = false) => {
-        try {
-            const {data, errors, loading} = await client.query({
-                query: gql`
-                    query shotlist($id: String!){
-                        shotlist(id: $id){
+        const {data, errors, loading} = await client.query({
+            query: gql`
+                query shotlist($id: String!){
+                    shotlist(id: $id){
+                        id
+                        name
+                        scenes{
                             id
-                            name
-                            scenes{
+                            position
+                            attributes{
                                 id
-                                position
-                                attributes{
-                                    id
-                                    definition{id, name, position}
+                                definition{id, name, position}
 
-                                    ... on SceneSingleSelectAttributeDTO{
-                                        singleSelectValue{id,name}
-                                    }
+                                ... on SceneSingleSelectAttributeDTO{
+                                    singleSelectValue{id,name}
+                                }
 
-                                    ... on SceneMultiSelectAttributeDTO{
-                                        multiSelectValue{id,name}
-                                    }
-                                    ... on SceneTextAttributeDTO{
-                                        textValue
-                                    }
+                                ... on SceneMultiSelectAttributeDTO{
+                                    multiSelectValue{id,name}
+                                }
+                                ... on SceneTextAttributeDTO{
+                                    textValue
                                 }
                             }
-                            sceneAttributeDefinitions{
-                                id
-                                name
-                                position
-                            }
-                            shotAttributeDefinitions{
-                                id
-                                name
-                                position
-                            }
-                            owner {
-                                id
-                                tier
-                                shotlistCount
-                            }
                         }
-                    }`,
-                variables: {id: id},
-                fetchPolicy: noCache ? "no-cache" : "cache-first"
-            })
+                        sceneAttributeDefinitions{
+                            id
+                            name
+                            position
+                        }
+                        shotAttributeDefinitions{
+                            id
+                            name
+                            position
+                        }
+                        owner {
+                            id
+                            tier
+                            shotlistCount
+                        }
+                    }
+                }`,
+            variables: {id: id},
+            fetchPolicy: noCache ? "no-cache" : "cache-first"
+        })
 
-            console.log(data.shotlist)
+        console.log("response", data, errors)
 
-            if(data.shotlist.owner.tier == "BASIC" && data.shotlist.owner.shotlistCount > 1) {
-                setIsReadOnly(true)
-            }
-
-            setShotlist({data: data.shotlist, loading: loading, error: errors})
+        if(data.shotlist && data.shotlist.owner && data.shotlist.owner.tier == "BASIC" && data.shotlist.owner.shotlistCount > 1) {
+            setIsReadOnly(true)
         }
-        catch (e) {
-            console.error(e)
-            setShotlist({data: {} as ShotlistDto, loading: false, error: e})
-        }
+
+        setShotlist({data: data.shotlist, loading: loading, error: errors})
     }
 
     const updateShotlistName = async (name: string) => {
@@ -311,8 +305,6 @@ export default function Shotlist() {
                         }
                     `,
                     variables: {id: active.id, position: newIndex},
-                }).then(result => {
-                    console.log(result)
                 })
 
                 let newData = {...shotlist.data}

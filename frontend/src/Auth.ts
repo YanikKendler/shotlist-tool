@@ -87,7 +87,7 @@ class Auth {
             this.auth0.parseHash({ hash: window.location.hash }, (error: Auth0ParseHashError | null, authResult: CustomAuthResult | null) => {
                 if (error) {
                     reject(error)
-                    console.log(error)
+                    console.error(error)
                 }
 
                 if(!authResult) {
@@ -101,7 +101,6 @@ class Auth {
                 }
 
                 this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
-                    console.log(user)
                     resolve(authResult.appState?.targetUrl || '/dashboard');
                 })
             })
@@ -125,7 +124,6 @@ class Auth {
             sub: authResult.idTokenPayload.sub,
             isSocial: authResult.idTokenPayload.sub.startsWith("google-oauth2|")
         }
-        console.log(authResult)
         localStorage.setItem(this.authFlag, JSON.stringify(true))
     }
 

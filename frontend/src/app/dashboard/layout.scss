@@ -57,6 +57,11 @@ main.home{
         font-size: .9rem;
         justify-content: center;
         color: var(--accent);
+
+        &:hover{
+          background-color: var(--hover-bg-accent-10);
+          color: var(--accent-55);
+        }
       }
 
       .empty{

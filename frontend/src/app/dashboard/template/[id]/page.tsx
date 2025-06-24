@@ -57,65 +57,58 @@ export default function Template (){
     }, []);
 
     const loadTemplate = async (noCache: boolean = false) => {
-        try{
-            const { data, errors, loading } = await client.query({query: gql`
-                    query template($id: String!){
-                        template(id: $id) {
+        const { data, errors, loading } = await client.query({query: gql`
+                query template($id: String!){
+                    template(id: $id) {
+                        id
+                        name
+                        shotAttributes {
                             id
                             name
-                            shotAttributes {
-                                id
-                                name
-                                position
-                                __typename
+                            position
+                            __typename
 
 
-                                ... on ShotSingleSelectAttributeTemplateDTO {
-                                    options {
-                                        id
-                                        name
-                                    }
-                                }
-
-                                ... on ShotMultiSelectAttributeTemplateDTO {
-                                    options {
-                                        id
-                                        name
-                                    }
+                            ... on ShotSingleSelectAttributeTemplateDTO {
+                                options {
+                                    id
+                                    name
                                 }
                             }
-                            sceneAttributes {
-                                id
-                                name
-                                position
-                                __typename
-                                
-                                ... on SceneSingleSelectAttributeTemplateDTO {
-                                    options {
-                                        id
-                                        name
-                                    }
-                                }
-                                
-                                ... on SceneMultiSelectAttributeTemplateDTO {
-                                    options {
-                                        id
-                                        name
-                                    }
+
+                            ... on ShotMultiSelectAttributeTemplateDTO {
+                                options {
+                                    id
+                                    name
                                 }
                             }
                         }
-                    }`,
-                variables: {id: id},
-                fetchPolicy: noCache ? "no-cache" : "cache-first"})
-
-            console.log(data.template)
-
-            setTemplate({data: data.template, loading: loading, error: errors})
-        }catch (e){
-            console.error(e)
-            setTemplate({data: {} as TemplateDto, loading: false, error: e})
-        }
+                        sceneAttributes {
+                            id
+                            name
+                            position
+                            __typename
+                            
+                            ... on SceneSingleSelectAttributeTemplateDTO {
+                                options {
+                                    id
+                                    name
+                                }
+                            }
+                            
+                            ... on SceneMultiSelectAttributeTemplateDTO {
+                                options {
+                                    id
+                                    name
+                                }
+                            }
+                        }
+                    }
+                }`,
+            variables: {id: id},
+            fetchPolicy: noCache ? "no-cache" : "cache-first"})
+        
+        setTemplate({data: data.template, loading: loading, error: errors})
     }
 
     const updateTemplateName = async (name: string) => {
@@ -221,8 +214,6 @@ export default function Template (){
             const oldIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === active.id);
             const newIndex = template.data.shotAttributes.findIndex((definition) => definition!.id === over.id);
 
-            console.log(oldIndex, newIndex)
-
             apolloClient.mutate({
                 mutation: gql`
                     mutation updateShotAttributeTemplatePosition($id: BigInteger!, $position: Int!) {
@@ -295,8 +286,6 @@ export default function Template (){
         if (active.id !== over.id && template.data.sceneAttributes) {
             const oldIndex = template.data.sceneAttributes.findIndex((definition) => definition!.id === active.id);
             const newIndex = template.data.sceneAttributes.findIndex((definition) => definition!.id === over.id);
-
-            console.log(oldIndex, newIndex)
 
             apolloClient.mutate({
                 mutation: gql`

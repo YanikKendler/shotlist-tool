@@ -61,8 +61,6 @@ export function useAccountDialog() {
             return;
         }
 
-        console.log(user)
-
         setUser(data.currentUser)
     }
 

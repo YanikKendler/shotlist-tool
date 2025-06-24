@@ -165,8 +165,6 @@ export default function AttributeTab(
                     }
                 `,
                 variables: {id: active.id, position: newIndex},
-            }).then(result => {
-                console.log(result)
             })
 
             setSceneAttributeDefinitions(arrayMove(sceneAttributeDefinitions, oldIndex, newIndex))
