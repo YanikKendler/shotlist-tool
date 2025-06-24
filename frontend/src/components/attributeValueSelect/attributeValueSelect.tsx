@@ -24,6 +24,7 @@ export const reactSelectBaseStyles: StylesConfig<SelectOption, boolean, GroupBas
         paddingInline: ".5rem",
         fontSize: ".9rem",
         backgroundColor: state.isFocused ? 'var(--hover-bg-accent-10)' : 'transparent',
+        color: "var(--text)",
     }),
     input: (baseStyles) => ({
         ...baseStyles,
@@ -111,6 +112,7 @@ export const selectSceneStyles: StylesConfig<SelectOption, boolean, GroupBase<Se
         paddingInline: ".5rem",
         fontSize: ".85rem",
         backgroundColor: state.isFocused ? 'var(--hover-bg-accent-10)' : 'transparent',
+        color: "var(--text)",
     }),
 }
 

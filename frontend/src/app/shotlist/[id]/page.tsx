@@ -164,10 +164,9 @@ export default function Shotlist() {
                     }
                 }`,
             variables: {id: id},
-            fetchPolicy: noCache ? "no-cache" : "cache-first"
+            fetchPolicy: noCache ? "no-cache" : "cache-first",
+            errorPolicy: "all",
         })
-
-        console.log("response", data, errors)
 
         if(data.shotlist && data.shotlist.owner && data.shotlist.owner.tier == "BASIC" && data.shotlist.owner.shotlistCount > 1) {
             setIsReadOnly(true)

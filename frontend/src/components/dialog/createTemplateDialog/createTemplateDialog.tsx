@@ -22,6 +22,7 @@ export function useCreateTemplateDialog() {
     function openCreateTemplateDialog(): Promise<boolean> {
         setIsOpen(true)
         setIsLoading(false)
+        setName("")
         return new Promise((resolve) => {
             setPromiseResolver(() => resolve);
         })
@@ -90,7 +91,7 @@ export function useCreateTemplateDialog() {
                                 <button disabled={name.length <= 2} onClick={e => {
                                     e.stopPropagation();
                                     handleConfirm();
-                                }} className={"accent"}>create
+                                }} className={"accent confirm"}>create
                                 </button>
                             </div>
                         </>

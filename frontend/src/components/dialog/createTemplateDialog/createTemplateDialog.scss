@@ -22,6 +22,16 @@
       &:where(:not([disabled]):hover){
         background-color: var(--hover-bg-10);
       }
+
+      &.confirm{
+        background-color: var(--accent);
+        color: var(--contrast);
+
+        &:not([disabled]):hover {
+          background-color: var(--accent-60);
+          color: var(--contrast);
+        }
+      }
     }
   }
 

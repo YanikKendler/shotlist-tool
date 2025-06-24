@@ -82,7 +82,8 @@ export default function Overview() {
                         }
                     }
                 }`,
-            fetchPolicy: "no-cache"
+            fetchPolicy: "no-cache",
+            errorPolicy: "all"
         })
 
         //console.log(data)

@@ -8,12 +8,13 @@ import me.kendler.yanik.dto.shot.ShotAttributeEditDTO;
 import me.kendler.yanik.model.shot.Shot;
 import me.kendler.yanik.model.shot.attributeDefinitions.ShotAttributeDefinitionBase;
 import me.kendler.yanik.repositories.shot.ShotAttributeRepository;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "shotattribute")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ShotAttributeBase extends PanacheEntity {
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     public ShotAttributeDefinitionBase definition;
 
     public ShotAttributeBase() { }

@@ -168,8 +168,6 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
 
             relevantShotlist.sceneAttributeDefinitions.remove(attributeDefinition);
 
-            delete(attributeDefinition);
-
             relevantShotlist.registerEdit();
 
             return attributeDefinition.toDTO();

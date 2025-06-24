@@ -105,12 +105,15 @@ export function useCreateShotlistDialog() {
             <Dialog.Title className={"title center"}>Sorry, you have reached the maximum number of Shotlists.</Dialog.Title>
             <p>Your account is on the basic tier, that means you are limited to a single shotlist. Please consider going Pro for 2.99€ / month.</p>
             <div className={"buttons"}>
-                <button onClick={e => {
-                    e.stopPropagation();
-                    handleCancel();
-                }}>cancel
+                <button
+                    onClick={e => {
+                        e.stopPropagation();
+                        handleCancel();
+                    }}
+                >
+                    cancel
                 </button>
-                <a className={"accent"} href="/pro">Choose Pro</a>
+                <a className={"accent confirm"} href="/pro">Choose Pro</a>
             </div>
         </>
     else if (isCreating)
@@ -138,14 +141,21 @@ export function useCreateShotlistDialog() {
             />
             <div className={"buttons"}>
                 <button onClick={e => {
-                    e.stopPropagation();
-                    handleCancel();
-                }}>cancel
+                        e.stopPropagation();
+                        handleCancel();
+                    }}
+                >
+                    cancel
                 </button>
-                <button disabled={name.length <= 2} onClick={e => {
-                    e.stopPropagation();
-                    handleConfirm();
-                }} className={"accent"}>create
+                <button
+                    disabled={name.length <= 2}
+                    onClick={e => {
+                        e.stopPropagation();
+                        handleConfirm();
+                    }}
+                    className={"confirm"}
+                >
+                    create
                 </button>
             </div>
         </>

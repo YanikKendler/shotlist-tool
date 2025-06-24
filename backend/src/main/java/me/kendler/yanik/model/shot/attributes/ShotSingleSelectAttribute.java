@@ -10,7 +10,7 @@ import me.kendler.yanik.model.shot.attributeDefinitions.ShotSingleSelectAttribut
 
 @Entity
 public class ShotSingleSelectAttribute extends ShotAttributeBase {
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     public ShotSelectAttributeOptionDefinition value;
 
     public ShotSingleSelectAttribute() { }

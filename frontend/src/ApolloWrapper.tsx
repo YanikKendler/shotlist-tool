@@ -1,6 +1,6 @@
 "use client";
 
-import {from, HttpLink} from "@apollo/client";
+import {ApolloLink, from, HttpLink} from "@apollo/client";
 import {
     ApolloNextAppProvider,
     ApolloClient,
@@ -8,7 +8,6 @@ import {
 } from "@apollo/client-integration-nextjs";
 import auth from "@/Auth"
 import {setContext} from "@apollo/client/link/context"
-import {useRouter} from "next/navigation"
 import {onError} from "@apollo/client/link/error"
 import {Config} from "@/util/Utils"
 
@@ -16,7 +15,6 @@ export function makeClient() {
     const httpLink = new HttpLink({
         uri: Config.backendURL + "/graphql",
         fetchOptions: {
-            errorPolicy: "all"
             // you can pass additional options that should be passed to `fetch` here,
             // e.g. Next.js-related `fetch` options regarding caching and revalidation
             // see https://nextjs.org/docs/app/api-reference/functions/fetch#fetchurl-options
