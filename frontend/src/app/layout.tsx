@@ -6,7 +6,7 @@ import SelectRefreshProvider from "@/context/SelectRefreshContext"
 
 export const metadata: Metadata = {
     title: "Shotly | Shotlist creation made easy",
-    description: "A free and open source, no-ai, clean and simple shotlist creation tool for filmmakers"
+    description: "A freemium, open source, no-ai, clean and simple shotlist creation tool for filmmakers"
 }
 
 import {Inter} from 'next/font/google'

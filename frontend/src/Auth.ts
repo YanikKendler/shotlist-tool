@@ -47,6 +47,12 @@ class Auth {
         this.auth0.authorize()
     }
 
+    register() {
+        this.auth0.authorize({
+            screen_hint: "signup"
+        });
+    }
+
     loginForPro(){
         this.auth0.authorize({
             appState: { targetUrl: '/pro' }

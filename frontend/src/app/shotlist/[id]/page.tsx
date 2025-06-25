@@ -75,6 +75,7 @@ export default function Shotlist() {
 
     const driverObj = driver({
         showProgress: true,
+        allowClose: true,
         steps: [
             { popover: { title: 'Your first Shotlist', description: 'This is where the fun beginns!' } },
             { element: '#sceneList', popover: { title: 'Scenes', description: 'Each scene has a number and a displayname, the latter is simply a combination of all its attributes. Every scene has the same attributes which are defined via the shotlist options.', side: "right", align: 'center' }},

@@ -67,8 +67,15 @@ export default function Landing() {
                 </div>
                 <div className="right">
                     <AuthSwitcher
-                        authenticated={<Link href={"/dashboard"}>Your Dashboard</Link>}
-                        unauthenticated={<button onClick={() => Auth.login()}>Log in</button>}
+                        authenticated={
+                            <Link className={"filled"} href={"/dashboard"}>Your Dashboard</Link>
+                        }
+                        unauthenticated={
+                            <>
+                                <button className={"outlined"} onClick={() => Auth.register()}>Sign up</button>
+                                <button className={"filled"} onClick={() => Auth.login()}>Log in</button>
+                            </>
+                        }
                     />
                 </div>
             </nav>
@@ -236,10 +243,10 @@ export default function Landing() {
                     </div>
                     <div>
                         <h3>Legal</h3>
-                        <Link className={"noPadding"} href={"./legal/cookies"}>cookies</Link>
-                        <Link className={"noPadding"} href={"./legal/privacy"}>privacy</Link>
-                        <Link className={"noPadding"} href={"./legal/legalNotice"}>legal notice</Link>
-                        <Link className={"noPadding"} href={"./legal/termsOfUse"}>terms of use</Link>
+                        <Link className={"noPadding"} href={"./legal/cookies"}>Cookies</Link>
+                        <Link className={"noPadding"} href={"./legal/privacy"}>Privacy</Link>
+                        <Link className={"noPadding"} href={"./legal/legalNotice"}>Legal notice</Link>
+                        <Link className={"noPadding"} href={"./legal/termsOfUse"}>Terms of use</Link>
                     </div>
 
                     <div>

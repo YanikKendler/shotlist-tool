@@ -702,3 +702,41 @@ span.wrap{
     color: var(--text);
   }
 }
+
+// style driver js popover
+
+body .driver-popover {
+  background-color: var(--contrast);
+  color: var(--text);
+
+  footer button{
+    text-shadow: none;
+    font-weight: 600;
+    padding: .3rem .8rem;
+    font-size: .8rem;
+    transition: border .2s, color .2s, background-color .2s;
+    border-radius: .3rem;
+
+    &.driver-popover-prev-btn{
+      border: .15rem solid var(--accent);
+      background-color: transparent;
+      color: var(--accent);
+
+      &:not([disabled]):hover{
+        background-color: var(--hover-bg-accent-10);
+        color: var(--accent-44);
+        border-color: var(--accent-55);
+      }
+    }
+
+    &.driver-popover-next-btn{
+      background-color: var(--accent);
+      border: none;
+      color: var(--contrast);
+
+      &:hover{
+        background-color: var(--accent-60);
+      }
+    }
+  }
+}
