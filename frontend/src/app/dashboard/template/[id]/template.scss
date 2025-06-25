@@ -15,6 +15,12 @@ main.template{
       font-size: .9rem;
       translate: -.3rem 0;
       color: var(--text-40);
+
+      @media screen and (max-width: 600px){
+        span{
+          display: none;
+        }
+      }
     }
   }
 
@@ -171,6 +177,7 @@ main.template{
   font-size: .9rem;
   color: var(--text-30);
   max-width: min(50ch, 95vw);
+  background-color: var(--sidebar-bg);
 
   .dark{
     color: var(--text-20);

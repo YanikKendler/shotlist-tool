@@ -8,18 +8,18 @@ import LoadingPage from "@/pages/loadingPage/loadingPage"
 import React, {useEffect, useState} from "react"
 import ErrorPage from "@/pages/errorPage/errorPage"
 import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels"
-import {ChevronDown, House, NotepadText, NotepadTextDashed, Plus, User} from "lucide-react"
+import {ChevronDown, House, Menu, NotepadText, NotepadTextDashed, Plus, User} from "lucide-react"
 import {ShotlistDto, TemplateDto} from "../../../lib/graphql/generated"
 import {Collapsible, Separator, Tooltip} from "radix-ui"
 import {wuGeneral, wuTime} from "@yanikkendler/web-utils/dist"
 import auth from "@/Auth"
-import {useRouter} from "next/navigation"
+import {usePathname, useRouter} from "next/navigation"
 import {useCreateShotlistDialog} from "@/components/dialog/createShotlistDialog/createShotlistDialog"
 import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import Utils from "@/util/Utils"
-import Image from "next/image"
 import Iconmark from "@/components/iconmark"
 import {useCreateTemplateDialog} from "@/components/dialog/createTemplateDialog/createTemplateDialog"
+import {Page} from "@react-pdf/renderer"
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
     const [query, setQuery] = useState<{ error: any, loading: boolean }>({error: null, loading: true})
@@ -27,8 +27,11 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     const [shotlists, setShotlists] = useState<ShotlistDto[] | null>(null)
     const [templates, setTemplates] = useState<TemplateDto[] | null>(null)
 
+    const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+
     const client = useApolloClient()
     const router = useRouter()
+    const pathname = usePathname()
 
     const { openCreateShotlistDialog, CreateShotlistDialog } = useCreateShotlistDialog()
     const { openCreateTemplateDialog, CreateTemplateDialog } = useCreateTemplateDialog()
@@ -82,9 +85,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
 
     return (
         <main className="home">
-            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a beta test. An acceptable mobile version will be available in the full release.</p>
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
-                <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
+                <Panel defaultSize={20} maxSize={30} minSize={12} className={`sidebar ${pathname?.includes("template") ? "collapse" : ""} ${sidebarOpen ? "open" : "closed"}`}>
                     <div className="content">
                         <div className="top">
                             <Tooltip.Root>
@@ -108,7 +110,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                             <h1>Dashboard</h1>
                         </div>
                         <div className="list">
-                            <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} id={"yourShotlists"} defaultOpen={true}>
+                            <Collapsible.Root className={"CollapsibleRoot dashboardSidebar"} id={"yourShotlists"}
+                                              defaultOpen={true}>
                                 <Collapsible.Trigger className={"noClickFx"}>
                                     My Shotlists <ChevronDown size={18} className={"chevron"}/>
                                 </Collapsible.Trigger>
@@ -175,6 +178,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                             </Collapsible.Root>
 
                             <div className="bottom">
+                                <button className="shotlist new" onClick={openCreateShotlistDialog}>New Shotlist <NotepadText size={18}/></button>
+                                <button className="template new" onClick={openCreateTemplateDialog}>New Template <NotepadTextDashed size={18}/></button>
                                 <button onClick={openAccountDialog}>Account <User size={18}/></button>
                             </div>
                         </div>
@@ -182,10 +187,12 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                     <div className="bottom">
                         <Link className="shotlistTool" href={"/"}><Iconmark/>shotly.at</Link>
                     </div>
+                    <button className="closearea" onClick={() => setSidebarOpen(false)}/>
                 </Panel>
                 <PanelResizeHandle className="PanelResizeHandle"/>
-                <Panel className="headerContainer">
+                <Panel className={`headerContainer ${pathname?.includes("template") ? "template" : ""}`}>
                     <div className="header">
+                        <button className="openSidebar" onClick={() => setSidebarOpen(true)}><Menu/></button>
                         <button className="template" onClick={openCreateTemplateDialog}>New Template</button>
                         <button className="shotlist" onClick={openCreateShotlistDialog}>New Shotlist</button>
                     </div>

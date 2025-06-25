@@ -42,6 +42,10 @@ main.shotlist{
       align-items: center;
       padding-inline: 1.5rem 2.5rem;
 
+      @media screen and (max-width: 600px){
+        padding-inline: 1.5rem .5rem;
+      }
+
       div{
         width: 100%;
         padding: .5rem .3rem;
@@ -62,6 +66,16 @@ main.shotlist{
         margin-inline: auto;
       }
     }
+  }
+
+  .openSidebar{
+    position: absolute;
+    background-color: var(--contrast);
+    border: .15rem solid var(--default-interactable-border);
+    border-radius: 100%;
+    bottom: 1rem;
+    right: 1rem;
+    padding: .6rem;
   }
 }
 

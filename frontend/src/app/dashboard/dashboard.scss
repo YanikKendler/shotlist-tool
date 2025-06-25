@@ -1,3 +1,9 @@
+@media screen and (max-width: 600px){
+  .headerContainer:not(.template){
+    display: none !important;
+  }
+}
+
 main.overview{
   h2{
     font-size: .95rem;
@@ -15,6 +21,10 @@ main.overview{
 
     @media (max-width: 1200px){
       grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 850px){
+      grid-template-columns: 1fr 1fr;
     }
 
     .gridItem{

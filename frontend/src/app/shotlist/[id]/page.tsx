@@ -11,7 +11,7 @@ import {
 } from "../../../../lib/graphql/generated"
 import { useParams, useRouter, useSearchParams} from "next/navigation"
 import ShotTable, {ShotTableRef} from "@/components/shotTable/shotTable"
-import {FileSliders, House, Plus, User} from "lucide-react"
+import {FileSliders, House, Menu, Plus, User} from "lucide-react"
 import Link from "next/link"
 import './shotlist.scss'
 import { Tooltip } from "radix-ui"
@@ -55,6 +55,8 @@ export default function Shotlist() {
     const [elementIsBeingDragged, setElementIsBeingDragged] = useState(false)
     const [reloadKey, setReloadKey] = useState(0)
     const [isReadOnly, setIsReadOnly] = useState(false)
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const shotTableRef = useRef<ShotTableRef>(null);
 
@@ -348,7 +350,6 @@ export default function Shotlist() {
             elementIsBeingDragged: elementIsBeingDragged,
             setElementIsBeingDragged: setElementIsBeingDragged
         }}>
-            <p className="noMobile">Sorry, mobile mode is not supported yet since this is a beta test. An acceptable mobile version will be available in the full release.</p>
             {
                 isReadOnly &&
                 <p className="readonly">This Shotlist is in <span className={"bold"}>read-only</span> mode because the shotlists owner has exceeded the maximum number of Shotlist available with the basic tier.</p>
@@ -356,7 +357,7 @@ export default function Shotlist() {
             <main className="shotlist" key={reloadKey}>
                 <PanelGroup autoSaveId={"shotly-shotlist-sidebar-width"} direction="horizontal"
                             className={"PanelGroup"}>
-                    <Panel defaultSize={20} maxSize={30} minSize={12} className="sidebar">
+                    <Panel defaultSize={20} maxSize={30} minSize={12} className={`sidebar collapse ${sidebarOpen ? "open" : "closed"}`}>
                         <div className="content">
                             <div className="top">
                                 <Tooltip.Root>
@@ -405,13 +406,14 @@ export default function Shotlist() {
                                                     expanded={selectedSceneId == scene.id}
                                                     onSelect={selectScene}
                                                     onDelete={removeScene}
-                                                    readOnly={ isReadOnly }
+                                                    readOnly={isReadOnly}
                                                 />
                                             ))}
                                         </SortableContext>
                                     </DndContext>
                                 }
-                                <button className={"create"} disabled={isReadOnly} onClick={createScene}>Add scene <Plus/></button>
+                                <button className={"create"} disabled={isReadOnly} onClick={createScene}>Add
+                                    scene <Plus/></button>
                                 <div className="bottom">
                                     <button onClick={() => {
                                         setOptionsDialogOpen(true)
@@ -424,6 +426,7 @@ export default function Shotlist() {
                         <div className="bottom">
                             <Link className="shotlistTool" href={"/"}><Iconmark/>shotly.at</Link>
                         </div>
+                        <button className="closearea" onClick={() => setSidebarOpen(false)}/>
                     </Panel>
                     <PanelResizeHandle className="PanelResizeHandle"/>
                     <Panel className="content" id={"shotTable"}>
@@ -444,6 +447,7 @@ export default function Shotlist() {
                         />
                     </Panel>
                 </PanelGroup>
+                <button className="openSidebar" onClick={() => setSidebarOpen(true)}><Menu/></button>
             </main>
             <ShotlistOptionsDialog
                 isOpen={optionsDialogOpen}

@@ -366,8 +366,10 @@ export default function Template (){
                 </h2>
 
                 <Popover.Root defaultOpen={false}>
-                    <Popover.Trigger className={"noClickFx default infoTrigger"}>More on Templates <Info
-                        size={18}/></Popover.Trigger>
+                    <Popover.Trigger className={"noClickFx default infoTrigger"}>
+                        <span>More on Templates</span>
+                        <Info size={18}/>
+                    </Popover.Trigger>
                     <Popover.Portal>
                         <Popover.Content className="PopoverContent templateInfo" sideOffset={5}>
                             <p>
@@ -382,7 +384,7 @@ export default function Template (){
                 </Popover.Root>
 
                 <button className="delete bad" onClick={deleteTemplate}>
-                    Delete Template
+                    <span>Delete Template</span>
                     <Trash size={18}/>
                 </button>
             </div>
