@@ -93,14 +93,13 @@ main.home{
       padding: .3rem .5rem;
       gap: .5rem;
 
+      @media screen and (max-width: 600px){
+        display: none;
+      }
+
       button{
         padding: .4rem .8rem;
         font-size: .95rem;
-
-        @media screen and (max-width: 600px){
-          padding: .3rem .4rem;
-          font-size: .9rem;
-        }
 
         &.shotlist{
           background-color: var(--accent);
@@ -131,11 +130,6 @@ main.home{
         padding: .3rem;
       }
     }
-    @media screen and (max-width: 600px){
-      &.template .header .openSidebar {
-          display: block;
-      }
-    }
 
     .dashboardContent{
       background-color: var(--contrast);
@@ -144,6 +138,21 @@ main.home{
       border-top-left-radius: 1rem;
       padding: 1.5rem;
       padding-bottom: 5rem;
+    }
+  }
+
+  .openSidebar{
+    position: absolute;
+    background-color: var(--contrast);
+    border: .15rem solid var(--default-interactable-border);
+    border-radius: 100%;
+    bottom: 1rem;
+    right: 1rem;
+    padding: .6rem;
+    display: none;
+
+    @media screen and (max-width: 600px){
+      display: flex;
     }
   }
 }

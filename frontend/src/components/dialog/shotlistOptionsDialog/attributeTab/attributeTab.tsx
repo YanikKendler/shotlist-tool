@@ -6,7 +6,15 @@ import {useApolloClient} from "@apollo/client"
 import {useRouter} from "next/navigation"
 import "./attributeTab.scss"
 import Image from "next/image"
-import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
+import {
+    closestCenter,
+    DndContext,
+    KeyboardSensor,
+    PointerSensor,
+    TouchSensor,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
 import {ChevronDown, List, Plus, Type} from "lucide-react"
@@ -36,7 +44,8 @@ export default function AttributeTab(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
-        })
+        }),
+        useSensor(TouchSensor)
     );
 
     const updateUrl = (page?: ShotlistOptionsDialogSubPage) => {

@@ -12,9 +12,34 @@ div.shot{
   display: flex;
   background-color: var(--shot-background);
   position: relative;
+  width: fit-content;
+  min-width: 100%;
 
   &:nth-of-type(even){
     --shot-background: var(--second-cell-bg);
+  }
+
+  .number{
+    width: 5ch;
+    text-align: center;
+    flex-shrink: 0;
+    justify-content: center;
+    z-index: 50;
+    position: sticky;
+    left: 0;
+
+    @media screen and (max-width: 600px){
+      left: -1.3rem;
+    }
+
+    &:not(.create){
+      background-color: var(--shot-background);
+    }
+
+    p{
+      font-weight: 700;
+      transition: color .2s;
+    }
   }
 
   .grip{
@@ -30,9 +55,8 @@ div.shot{
     display: grid;
     place-items: center;
     transition: color .3s, opacity .1s;
-    /*left: 0;
-    position: sticky;*/
-    /*padding-block: .3rem;*/
+    background-color: var(--shot-background);
+    translate: -.1rem 0;
 
     &:hover{
       color: var(--grip-hover-color);
@@ -59,23 +83,6 @@ div.shot{
       opacity: 1;
     }
   }
-
-  .number{
-    width: 5ch;
-    text-align: center;
-    flex-shrink: 0;
-    justify-content: center;
-    position: sticky;
-    left: 0;
-    z-index: 100;
-    background-color: var(--shot-background);
-
-    p{
-      font-weight: 700;
-      transition: color .2s;
-    }
-  }
-
 
   &:hover, &:has(*:focus-visible), &.active{
     .grip {

@@ -41,6 +41,15 @@ main.shotlist{
       display: flex;
       align-items: center;
       padding-inline: 1.5rem 2.5rem;
+      overflow-x: auto;
+      position: relative;
+
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+
+      &::-webkit-scrollbar {
+        display: none; /*Chrome, Safari and Opera */
+      }
 
       @media screen and (max-width: 600px){
         padding-inline: 1.5rem .5rem;
@@ -57,6 +66,17 @@ main.shotlist{
           flex-shrink: 0;
           text-align: center;
           color: var(--text-40);
+          position: sticky;
+          left: 0;
+          background-color: var(--sidebar-bg);
+
+          @media screen and (max-width: 600px){
+            left: -1.3rem;
+          }
+        }
+
+        &.attribute{
+          min-width: var(--shotAttribute-width);
         }
       }
 
@@ -76,6 +96,11 @@ main.shotlist{
     bottom: 1rem;
     right: 1rem;
     padding: .6rem;
+    display: none;
+
+    @media screen and (max-width: 600px){
+      display: flex;
+    }
   }
 }
 

@@ -67,6 +67,7 @@
   --default-interactable-hover-border: hsl(0, 0%, 25%);
 
   --sidebar-width: 400px;
+  --shotAttribute-width: 12rem;
 }
 
 [data-theme="dark"] {
@@ -122,10 +123,7 @@
   --default-interactable-border: hsl(0, 0%, 18%);
   --default-interactable-hover-border: hsl(0, 0%, 70%);
 
-  html {
-    color-scheme: dark;
-    background-color: red !important;
-  }
+  color-scheme: dark;
 }
 
 html,
@@ -310,9 +308,13 @@ span.wrap{
       background-color: var(--hover-bg-10);
       backdrop-filter: blur(10px);
       width: 100vw;
+      opacity: 1;
+      transition: opacity .2s ease-in, translate .1s ease-in-out;
 
       &.closed{
-        display: none;
+        translate: -100vw 0;
+        pointer-events: none;
+        opacity: 0;
       }
 
       .content{

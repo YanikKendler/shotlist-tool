@@ -53,41 +53,40 @@ export default function Shot({shot, position, onDelete, readOnly}: {shot: ShotDt
 
     return (
         <div className={`shot ${isBeingEdited && "active"}`} ref={setNodeRef} style={style}>
-            {
-                !readOnly &&
-                <Popover.Root onOpenChange={setIsBeingEdited}>
-                    <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}} delayDuration={500}>
-                        <Popover.Trigger
-                            className="grip"
-                            ref={setActivatorNodeRef}
-                            {...listeners}
-                            {...attributes}
-                        >
-                            <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
-                                <GripVertical/>
-                            </Tooltip.Trigger>
-                        </Popover.Trigger>
-                        <Tooltip.Portal>
-                            <Tooltip.Content className={"TooltipContent"}>
-                                <Tooltip.Arrow/>
-                                <p><span className="bold">Click</span> to edit</p>
-                                <p><span className="bold">Drag</span> to reorder</p>
-                            </Tooltip.Content>
-                        </Tooltip.Portal>
-                    </Tooltip.Root>
-                    <Popover.Portal>
-                        <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
-                            <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
-                            <button disabled={true}><NotepadText size={18}/> Notes</button>
-                            <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
-                            <Separator.Root className="Separator"/>
-                            <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
-                        </Popover.Content>
-                    </Popover.Portal>
-                </Popover.Root>
-            }
-
             <div className="shotAttribute first number">
+                {
+                    !readOnly &&
+                    <Popover.Root onOpenChange={setIsBeingEdited}>
+                        <Tooltip.Root open={tooltipVisible} onOpenChange={(newOpen) => {if(!shotlistContext.elementIsBeingDragged) setTooltipVisible(newOpen)}} delayDuration={500}>
+                            <Popover.Trigger
+                                className="grip"
+                                ref={setActivatorNodeRef}
+                                {...listeners}
+                                {...attributes}
+                            >
+                                <Tooltip.Trigger className={"noPadding gripTooltipTrigger"} asChild>
+                                    <GripVertical/>
+                                </Tooltip.Trigger>
+                            </Popover.Trigger>
+                            <Tooltip.Portal>
+                                <Tooltip.Content className={"TooltipContent"}>
+                                    <Tooltip.Arrow/>
+                                    <p><span className="bold">Click</span> to edit</p>
+                                    <p><span className="bold">Drag</span> to reorder</p>
+                                </Tooltip.Content>
+                            </Tooltip.Portal>
+                        </Tooltip.Root>
+                        <Popover.Portal>
+                            <Popover.Content className="PopoverContent shotContextOptionsPopup" align={"start"}>
+                                <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
+                                <button disabled={true}><NotepadText size={18}/> Notes</button>
+                                <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
+                                <Separator.Root className="Separator"/>
+                                <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
+                            </Popover.Content>
+                        </Popover.Portal>
+                    </Popover.Root>
+                }
                 <p>{Utils.numberToShotLetter(position)}</p>
             </div>
             {(shot.attributes as [AnyShotAttribute])?.map((attr, index) => (

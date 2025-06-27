@@ -16,9 +16,17 @@ import {
 } from "../../../../../lib/graphql/generated"
 import gql from "graphql-tag"
 import {wuGeneral} from "@yanikkendler/web-utils/dist"
-import {ChevronDown, Info, List, NotepadText, Pen, Pencil, Plus, Trash, Type} from "lucide-react"
+import {ChevronDown, Info, List, Menu, NotepadText, Pen, Pencil, Plus, Trash, Type} from "lucide-react"
 import Input from "@/components/input/input"
-import {closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors} from "@dnd-kit/core"
+import {
+    closestCenter,
+    DndContext,
+    KeyboardSensor,
+    PointerSensor,
+    TouchSensor,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core"
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from "@dnd-kit/sortable"
 import ShotAttributeDefinition from "@/components/shotAttributeDefinition/shotAttributeDefinition"
 import {Collapsible, Popover} from "radix-ui"
@@ -46,7 +54,8 @@ export default function Template (){
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
-        })
+        }),
+        useSensor(TouchSensor)
     );
 
     useEffect(() => {
@@ -402,7 +411,8 @@ export default function Template (){
                         template.data.shotAttributes && template.data.shotAttributes.length > 0 &&
                         (<div className="attributeTemplates">
                             {(template.data.shotAttributes as ShotAttributeTemplateBase[]).map(attr =>
-                                <ShotAttributeTemplate attributeTemplate={attr} onDelete={removeShotAttributeTemplate} key={attr.id}/>
+                                <ShotAttributeTemplate attributeTemplate={attr} onDelete={removeShotAttributeTemplate}
+                                                       key={attr.id}/>
                             )}
                         </div>)
                     }
@@ -411,10 +421,19 @@ export default function Template (){
             <Popover.Root>
                 <Popover.Trigger className={"add"}>Add Shot Attribute <Plus size={20}/></Popover.Trigger>
                 <Popover.Portal>
-                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5} align={"start"}>
-                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotTextAttribute)}><Type size={16} strokeWidth={3}/>Text</button>
-                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotSingleSelectAttribute)}><ChevronDown size={16} strokeWidth={3}/>Single select</button>
-                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotMultiSelectAttribute)}><List size={16} strokeWidth={3}/>Multi select</button>
+                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5}
+                                     align={"start"}>
+                        <button onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotTextAttribute)}><Type
+                            size={16} strokeWidth={3}/>Text
+                        </button>
+                        <button
+                            onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotSingleSelectAttribute)}>
+                            <ChevronDown size={16} strokeWidth={3}/>Single select
+                        </button>
+                        <button
+                            onClick={() => createShotAttributeDefinition(ShotAttributeType.ShotMultiSelectAttribute)}>
+                            <List size={16} strokeWidth={3}/>Multi select
+                        </button>
                     </Popover.Content>
                 </Popover.Portal>
             </Popover.Root>
@@ -432,7 +451,8 @@ export default function Template (){
                         template.data.sceneAttributes && template.data.sceneAttributes.length > 0 &&
                         (<div className="attributeTemplates">
                             {(template.data.sceneAttributes as SceneAttributeTemplateBase[]).map(attr =>
-                                <SceneAttributeTemplate attributeTemplate={attr} onDelete={removeSceneAttributeTemplate} key={attr.id}/>
+                                <SceneAttributeTemplate attributeTemplate={attr} onDelete={removeSceneAttributeTemplate}
+                                                        key={attr.id}/>
                             )}
                         </div>)
                     }
@@ -441,10 +461,19 @@ export default function Template (){
             <Popover.Root>
                 <Popover.Trigger className={"add"}>Add Scene Attribute <Plus size={20}/></Popover.Trigger>
                 <Popover.Portal>
-                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5} align={"start"}>
-                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneTextAttribute)}><Type size={16} strokeWidth={3}/>Text</button>
-                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneSingleSelectAttribute)}><ChevronDown size={16} strokeWidth={3}/>Single select</button>
-                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneMultiSelectAttribute)}><List size={16} strokeWidth={3}/>Multi select</button>
+                    <Popover.Content className="PopoverContent addAttributeTemplatePopup" sideOffset={5}
+                                     align={"start"}>
+                        <button onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneTextAttribute)}>
+                            <Type size={16} strokeWidth={3}/>Text
+                        </button>
+                        <button
+                            onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneSingleSelectAttribute)}>
+                            <ChevronDown size={16} strokeWidth={3}/>Single select
+                        </button>
+                        <button
+                            onClick={() => createSceneAttributeDefinition(SceneAttributeType.SceneMultiSelectAttribute)}>
+                            <List size={16} strokeWidth={3}/>Multi select
+                        </button>
                     </Popover.Content>
                 </Popover.Portal>
             </Popover.Root>

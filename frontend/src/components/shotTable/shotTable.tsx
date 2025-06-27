@@ -5,14 +5,14 @@ import gql from "graphql-tag"
 import Shot from "@/components/shot/shot"
 import "./shotTable.scss"
 import {SceneDto, ShotAttributeDefinitionBase} from "../../../lib/graphql/generated"
-import React, {forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState} from "react"
+import React, {forwardRef, RefObject, useContext, useEffect, useImperativeHandle, useRef, useState} from "react"
 import {ScrollArea} from "radix-ui"
 import {
     closestCenter,
     DndContext,
     DragOverlay,
     KeyboardSensor,
-    PointerSensor, rectIntersection,
+    PointerSensor, rectIntersection, TouchSensor,
     useSensor,
     useSensors
 } from "@dnd-kit/core"
@@ -27,10 +27,14 @@ export type ShotTableRef = {
     refresh: () => void;
 };
 
-const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[], readOnly: boolean}, ref) => {
+const ShotTable = forwardRef((
+    {sceneId, shotAttributeDefinitions, readOnly, shotlistHeaderRef}:
+    {sceneId: string, shotAttributeDefinitions: ShotAttributeDefinitionBase[], readOnly: boolean, shotlistHeaderRef: RefObject<HTMLDivElement | null> }, ref
+) => {
     const shotTableElement = useRef<HTMLDivElement | null>(null)
     const [shots, setShots] = useState<{data: any[], loading: boolean, error: any}>({data: [], loading: true, error: null})
     const [focusAttributeAt, setFocusAttributeAt] = useState<number>(-1)
+    const isSyncingScroll = useRef(false);
 
     const client = useApolloClient()
 
@@ -49,6 +53,11 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sc
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                distance: 4,
+            }
         })
     )
 
@@ -171,6 +180,22 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sc
         }
     }
 
+    const handleScroll = () => {
+        const table = shotTableElement.current;
+        const header = shotlistHeaderRef.current;
+
+        if (!table || !header) return;
+
+        if (isSyncingScroll.current) {
+            isSyncingScroll.current = false;
+            return;
+        }
+
+        isSyncingScroll.current = true;
+        header.scrollLeft = table.scrollLeft;
+    };
+
+
     if(!sceneId || sceneId == "") return <div className="shotTable"><p className={"error"}>No Scene selected</p></div>
     if(shots.loading) return <div className="shotTable"><p className={"error"}>loading...</p></div>
     if (shots.error) {
@@ -179,58 +204,61 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sc
     }
 
     return (
-        <div className="shotTable" ref={shotTableElement}>
-            {/*<div className="scrollArea">*/}
-                {
-                    shotAttributeDefinitions.length == 0 ?
-                    <div className={"empty"}>
-                        No shots to display. Start by:
-                        <button disabled={readOnly} onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
-                    </div> :
-                    <>
-                        <DndContext
-                            sensors={sensors}
-                            collisionDetection={closestCenter}
-                            onDragEnd={handleDragEnd}
-                            onDragStart={() => {
-                                shotlistContext.setElementIsBeingDragged(true)
-                            }}
-                            modifiers={[restrictToVerticalAxis]}
+        <div
+            className="shotTable"
+            ref={shotTableElement}
+            onScroll={handleScroll}
+            onScrollEnd={handleScroll}
+        >
+            {
+                shotAttributeDefinitions.length == 0 ?
+                <div className={"empty"}>
+                    No shots to display. Start by:
+                    <button disabled={readOnly} onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
+                </div> :
+                <>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                        onDragStart={() => {
+                            shotlistContext.setElementIsBeingDragged(true)
+                        }}
+                        modifiers={[restrictToVerticalAxis]}
+                    >
+                        <SortableContext
+                            items={shots.data.map(shot => shot.id)}
+                            strategy={verticalListSortingStrategy}
                         >
-                            <SortableContext
-                                items={shots.data.map(shot => shot.id)}
-                                strategy={verticalListSortingStrategy}
-                            >
-                                {shots.data.map((shot: any, index) => (
-                                    <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
-                                ))}
-                            </SortableContext>
-                        </DndContext>
-                        {
-                            !readOnly &&
-                            <div className="shot new">
-                                <div className="shotAttribute number first">
-                                    <span>#</span>
-                                </div>
-                                {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
-                                    let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
-                                    return (
-                                        <div
-                                            className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
-                                            key={shotAttributeDefinition.id}
-                                            onClick={() => createShot(index)}>
-                                            <p>{shotAttributeDefinition.name || "Unnamed"}</p>
-                                            <div className="icon">
-                                                <Icon size={18}/>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                            {shots.data.map((shot: any, index) => (
+                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
+                            ))}
+                        </SortableContext>
+                    </DndContext>
+                    {
+                        !readOnly &&
+                        <div className="shot new">
+                            <div className="shotAttribute number first create">
+                                <span>#</span>
                             </div>
-                        }
-                    </>
-                }
-            {/*</div>*/}
+                            {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                                let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                                return (
+                                    <div
+                                        className={`shotAttribute create ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
+                                        key={shotAttributeDefinition.id}
+                                        onClick={() => createShot(index)}>
+                                        <p>{shotAttributeDefinition.name || "Unnamed"}</p>
+                                        <div className="icon">
+                                            <Icon size={18}/>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    }
+                </>
+            }
         </div>
     )
 })

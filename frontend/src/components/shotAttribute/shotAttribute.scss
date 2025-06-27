@@ -9,7 +9,7 @@ div.shotAttribute{
   position: relative;
 
   &:not(.number){
-    min-width: 15ch;
+    min-width: var(--shotAttribute-width);
   }
 
   &.first{

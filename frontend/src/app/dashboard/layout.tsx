@@ -86,7 +86,8 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
     return (
         <main className="home">
             <PanelGroup autoSaveId={"shotly-dashboard-sidebar-width"} direction="horizontal" className={"PanelGroup"}>
-                <Panel defaultSize={20} maxSize={30} minSize={12} className={`sidebar ${pathname?.includes("template") ? "collapse" : ""} ${sidebarOpen ? "open" : "closed"}`}>
+                <Panel defaultSize={20} maxSize={30} minSize={12}
+                       className={`sidebar ${pathname?.includes("template") ? "collapse" : ""} ${sidebarOpen ? "open" : "closed"}`}>
                     <div className="content">
                         <div className="top">
                             <Tooltip.Root>
@@ -120,13 +121,14 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                 >
                                     {
                                         !shotlists || shotlists.length === 0 ? (
-                                            <button onClick={openCreateShotlistDialog} className={"create"}>
-                                                create new <Plus size={16}/>
-                                            </button>) :
+                                                <button onClick={openCreateShotlistDialog} className={"create"}>
+                                                    create new <Plus size={16}/>
+                                                </button>) :
                                             shotlists.sort(Utils.orderShotlistsOrTemplatesByName).map((shotlist) => (
                                                 <Link key={shotlist.id} href={`/shotlist/${shotlist.id}`}>
                                                     <NotepadText size={18}/>
-                                                    {shotlist.name ? <span className={"wrap"}>{shotlist.name}</span> : (<span className={"italic"}>Unnamed</span>)}
+                                                    {shotlist.name ? <span className={"wrap"}>{shotlist.name}</span> : (
+                                                        <span className={"italic"}>Unnamed</span>)}
                                                 </Link>
                                             ))
                                     }
@@ -155,12 +157,14 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                                 >
                                     {
                                         !templates || templates.length === 0 ? (
-                                            <p className="empty">Nothing here yet</p>)
+                                                <p className="empty">Nothing here yet</p>)
                                             :
                                             templates.sort(Utils.orderShotlistsOrTemplatesByName).map((template) => (
-                                                <Link key={template.id} href={`/dashboard/template/${template.id}`} className={"template"}>
+                                                <Link key={template.id} href={`/dashboard/template/${template.id}`}
+                                                      className={"template"}>
                                                     <NotepadTextDashed size={18}/>
-                                                    {template.name ? <span className={"wrap"}>{template.name}</span> : (<span className={"italic"}>Unnamed</span>)}
+                                                    {template.name ? <span className={"wrap"}>{template.name}</span> : (
+                                                        <span className={"italic"}>Unnamed</span>)}
                                                 </Link>
                                             ))
                                     }
@@ -178,8 +182,10 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                             </Collapsible.Root>
 
                             <div className="bottom">
-                                <button className="shotlist new" onClick={openCreateShotlistDialog}>New Shotlist <NotepadText size={18}/></button>
-                                <button className="template new" onClick={openCreateTemplateDialog}>New Template <NotepadTextDashed size={18}/></button>
+                                <button className="shotlist new" onClick={openCreateShotlistDialog}>New
+                                    Shotlist <NotepadText size={18}/></button>
+                                <button className="template new" onClick={openCreateTemplateDialog}>New
+                                    Template <NotepadTextDashed size={18}/></button>
                                 <button onClick={openAccountDialog}>Account <User size={18}/></button>
                             </div>
                         </div>
@@ -192,13 +198,17 @@ export default function DashboardLayout({children}: { children: React.ReactNode 
                 <PanelResizeHandle className="PanelResizeHandle"/>
                 <Panel className={`headerContainer ${pathname?.includes("template") ? "template" : ""}`}>
                     <div className="header">
-                        <button className="openSidebar" onClick={() => setSidebarOpen(true)}><Menu/></button>
                         <button className="template" onClick={openCreateTemplateDialog}>New Template</button>
                         <button className="shotlist" onClick={openCreateShotlistDialog}>New Shotlist</button>
                     </div>
                     {children}
                 </Panel>
             </PanelGroup>
+            {
+                /*Yeah i know this is ugly*/
+                pathname?.includes("template") &&
+                <button className="openSidebar" onClick={() => setSidebarOpen(true)}><Menu/></button>
+            }
 
             {CreateShotlistDialog}
             {CreateTemplateDialog}

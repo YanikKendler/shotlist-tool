@@ -27,7 +27,7 @@ import {
     closestCenter,
     DndContext,
     KeyboardSensor,
-    PointerSensor,
+    PointerSensor, TouchSensor,
     useSensor,
     useSensors
 } from "@dnd-kit/core"
@@ -59,6 +59,7 @@ export default function Shotlist() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const shotTableRef = useRef<ShotTableRef>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
 
     const client = useApolloClient()
     const router = useRouter()
@@ -72,6 +73,11 @@ export default function Shotlist() {
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                distance: 4,
+            }
         })
     )
 
@@ -428,14 +434,14 @@ export default function Shotlist() {
                         </div>
                         <button className="closearea" onClick={() => setSidebarOpen(false)}/>
                     </Panel>
-                    <PanelResizeHandle className="PanelResizeHandle"/>
+                    <PanelResizeHandle className="PanelResizeHandle" hitAreaMargins={{fine: 3, coarse: 10}}/>
                     <Panel className="content" id={"shotTable"}>
-                        <div className="header">
+                        <div className="header" ref={headerRef}>
                             <div className="number"><p>#</p></div>
                             {!shotlist.data.shotAttributeDefinitions || shotlist.data.shotAttributeDefinitions.length == 0 ?
                                 <p className={"empty"}>No shot attributes defined</p> :
                                 (shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]).map((attr: any) => (
-                                    <div key={attr.id}><p>{attr.name || "Unnamed"}</p></div>
+                                    <div className={"attribute"} key={attr.id}><p>{attr.name || "Unnamed"}</p></div>
                                 ))
                             }
                         </div>
@@ -444,6 +450,7 @@ export default function Shotlist() {
                             sceneId={selectedSceneId}
                             shotAttributeDefinitions={shotlist.data.shotAttributeDefinitions as ShotAttributeDefinitionBase[]}
                             readOnly={ isReadOnly }
+                            shotlistHeaderRef={headerRef}
                         />
                     </Panel>
                 </PanelGroup>

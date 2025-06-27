@@ -45,9 +45,13 @@
       color: var(--text-60);
       transition: color .1s, border-color .1s;
 
-      &:not(:first-of-type):hover{
+      &:not(.number):hover{
         cursor: text;
         color: var(--text-40);
+      }
+
+      &.number{
+        background-color: var(--contrast);
       }
     }
   }
