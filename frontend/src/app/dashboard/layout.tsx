@@ -19,7 +19,6 @@ import {useAccountDialog} from "@/components/dialog/accountDialog/accountDialog"
 import Utils from "@/util/Utils"
 import Iconmark from "@/components/iconmark"
 import {useCreateTemplateDialog} from "@/components/dialog/createTemplateDialog/createTemplateDialog"
-import {Page} from "@react-pdf/renderer"
 
 export default function DashboardLayout({children}: { children: React.ReactNode }) {
     const [query, setQuery] = useState<{ error: any, loading: boolean }>({error: null, loading: true})
