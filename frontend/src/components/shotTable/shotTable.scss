@@ -14,13 +14,17 @@
   --preview-cell-hover-border: hsl(0, 0%, 70%);
 
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   height: 100%;
   width: 100%;
   background-color: var(--contrast);
   border-top-left-radius: 1rem;
   padding: 1.5rem;
   padding-bottom: 5rem;
+
+  .scrollArea{
+    min-width: 600px;
+  }
 
   @media screen and (max-width: 600px){
     padding: .5rem;

@@ -6,7 +6,7 @@ import {
     SceneSingleOrMultiSelectAttributeDefinition
 } from "@/util/Types"
 import './sceneAttributeDefinition.scss'
-import {GripVertical, Pencil, Plus, Trash} from "lucide-react"
+import {GripVertical, ListCollapse, Pencil, Plus, Trash} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 import {SceneAttributeDefinitionParser} from "@/util/AttributeParser"
@@ -202,9 +202,9 @@ export default function SceneAttributeDefinition({attributeDefinition, onDelete,
             <input type="text" defaultValue={definition.name || ""} placeholder={"Attribute name"} onInput={(e) => debouncedUpdateDefinition(e.currentTarget.value)}/>
             {(definition.__typename == "SceneMultiSelectAttributeDefinitionDTO" || definition.__typename == "SceneSingleSelectAttributeDefinitionDTO") && (
                 <Popover.Root>
-                    <Popover.Trigger>Edit options <Pencil size={16}/></Popover.Trigger>
+                    <Popover.Trigger><span>Edit options</span> <ListCollapse size={18}/></Popover.Trigger>
                     <Popover.Portal>
-                        <Popover.Content className="PopoverContent editAttributeOptionsPopup" sideOffset={5} align={"start"}>
+                        <Popover.Content className="PopoverContent editSceneAttributeOptionsPopup" sideOffset={5} align={"start"}>
                             {(definition.options as SceneSelectAttributeOptionDefinition[])?.map((option, index) => (
                                 <div className="option" key={option.id}>
                                     <p>{index + 1}</p>

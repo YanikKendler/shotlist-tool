@@ -30,10 +30,16 @@ div.sceneAttributeDefinition{
     }
   }
 
+  svg{
+    flex-shrink: 0;
+  }
+
   input{
     padding: .5rem;
     border: 1px solid var(--input-border);
     border-radius: .3rem;
+    flex-shrink: 1;
+    min-width: 10ch;
 
     &:hover{
       border-color: var(--input-hover-border);
@@ -60,10 +66,16 @@ div.sceneAttributeDefinition{
     &.delete{
       margin-left: auto;
     }
+
+    @media screen and (max-width: 600px){
+      span{
+        display: none;
+      }
+    }
   }
 }
 
-.editAttributeOptionsPopup{
+.editSceneAttributeOptionsPopup{
   --input-border: hsl(0, 0%, 82%);
 
   display: flex;
@@ -116,6 +128,12 @@ div.sceneAttributeDefinition{
     }
 
     &:hover{
+      button{
+        display: flex;
+      }
+    }
+
+    @media screen and (max-width: 600px){
       button{
         display: flex;
       }

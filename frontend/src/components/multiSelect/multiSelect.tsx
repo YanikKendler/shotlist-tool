@@ -6,7 +6,7 @@ import Select, {
     MultiValueProps
 } from "react-select"
 import {reactSelectTheme} from "@/util/Utils"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {ChevronDown, X} from "lucide-react"
 import {SelectOption} from "@/util/Types"
 
@@ -24,6 +24,7 @@ const CustomClearIndicator = (
 
 export default function MultiSelect({name, placeholder = "Select...", options, onChange, minWidth = '8rem', sorted = false}: {name: string, placeholder?: string, options: SelectOption[], onChange: (newValue: MultiValue<SelectOption>)=>void, minWidth?: string, sorted?: boolean}) {
     const [selectedOptions, setSelectedOptions] = useState<MultiValue<SelectOption>>([]);
+    const [actualMinWidth, setActualMinWidth] = useState<string>(minWidth);
 
     const handleChange = (selectedOptions: MultiValue<SelectOption>) => {
         let newOptions= selectedOptions.values().toArray()
@@ -34,6 +35,14 @@ export default function MultiSelect({name, placeholder = "Select...", options, o
         setSelectedOptions(newOptions);
         onChange(newOptions);
     };
+
+    useEffect(() => {
+        console.log("minWidth changed to: ", minWidth, "window.innerWidth: ", window.innerWidth);
+        if(window.innerWidth < 600)
+            setActualMinWidth("0")
+        else
+            setActualMinWidth(minWidth);
+    }, [minWidth]);
 
     return (
         <Select
@@ -62,7 +71,7 @@ export default function MultiSelect({name, placeholder = "Select...", options, o
                 control: (base, state) => ({
                     ...base,
                     borderRadius: '0.4rem',
-                    minWidth: minWidth,
+                    minWidth: actualMinWidth,
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s ease',
                     borderWidth: '.15rem',

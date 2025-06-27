@@ -17,6 +17,8 @@ export default function Pro(){
     const client = useApolloClient();
     const router = useRouter();
 
+    const [action, setAction] = useState({name: "Continue to Checkout", action: PaymentService.subscribeToPro})
+
     useEffect(() => {
         client.query({
             query: gql`
@@ -33,17 +35,15 @@ export default function Pro(){
                 console.error("Error fetching current user:", error);
                 Auth.logout();
             }
+
             if(data.currentUser.tier !== "BASIC"){
-                if(data.currentUser.hasCancelled) {
-                    PaymentService.manageSubscription()
-                }
-                else{
-                    router.push("/dashboard");
-                }
+                setAction({
+                    name: "Manage Subscription",
+                    action: PaymentService.manageSubscription
+                })
             }
-            else{
-                setIsLoading(false);
-            }
+
+            setIsLoading(false);
         })
     }, []);
 
@@ -55,8 +55,8 @@ export default function Pro(){
                 <h1>Thank you for choosing Shotly Pro!</h1>
                 <p>You will get access to unlimited Shotlists and Collaborators.</p>
                 <div className="buttons">
-                    <a className={"outlined"} href={"/dashboard"}>To your dashboard</a>
-                    <button className={"filled"} onClick={PaymentService.subscribeToPro}>Continue to checkout</button>
+                    <a className={"outlined"} href={"/dashboard"}>To your Dashboard</a>
+                    <button className={"filled"} onClick={action.action}>{action.name}</button>
                 </div>
             </div>
         </main>

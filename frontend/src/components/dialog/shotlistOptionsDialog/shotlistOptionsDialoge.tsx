@@ -180,18 +180,22 @@ export default function ShotlistOptionsDialog({isOpen, setIsOpen, selectedPage, 
                                     <List size={18} strokeWidth={2}/>
                                     Attributes
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value={"collaborators"}>
+                                {/*<Tabs.Trigger value={"collaborators"}>
                                     <Users size={18} strokeWidth={2}/>
                                     Collaborators
-                                </Tabs.Trigger>
+                                </Tabs.Trigger>*/}
                                 <Tabs.Trigger value={"export"}>
                                     <FileDown size={18} strokeWidth={2}/>
                                     Export
                                 </Tabs.Trigger>
                             </Tabs.List>
                             <Separator.Root
-                                className="Separator"
+                                className="Separator vertical"
                                 orientation="vertical"
+                            />
+                            <Separator.Root
+                                className="Separator horizontal"
+                                orientation="horizontal"
                             />
                             <Tabs.Content value={"general"} className={"content"}>
                                 <GeneralTab

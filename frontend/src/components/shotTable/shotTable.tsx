@@ -180,55 +180,57 @@ const ShotTable = forwardRef(({sceneId, shotAttributeDefinitions, readOnly}: {sc
 
     return (
         <div className="shotTable" ref={shotTableElement}>
-            {
-                shotAttributeDefinitions.length == 0 ?
-                <div className={"empty"}>
-                    No shots to display. Start by:
-                    <button disabled={readOnly} onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
-                </div> :
-                <>
-                    <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={handleDragEnd}
-                        onDragStart={() => {
-                            shotlistContext.setElementIsBeingDragged(true)
-                        }}
-                        modifiers={[restrictToVerticalAxis]}
-                    >
-                        <SortableContext
-                            items={shots.data.map(shot => shot.id)}
-                            strategy={verticalListSortingStrategy}
+            {/*<div className="scrollArea">*/}
+                {
+                    shotAttributeDefinitions.length == 0 ?
+                    <div className={"empty"}>
+                        No shots to display. Start by:
+                        <button disabled={readOnly} onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}>defining a shot attribute</button>
+                    </div> :
+                    <>
+                        <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                            onDragStart={() => {
+                                shotlistContext.setElementIsBeingDragged(true)
+                            }}
+                            modifiers={[restrictToVerticalAxis]}
                         >
-                            {shots.data.map((shot: any, index) => (
-                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
-                            ))}
-                        </SortableContext>
-                    </DndContext>
-                    {
-                        !readOnly &&
-                        <div className="shot new">
-                            <div className="shotAttribute number first">
-                                <span>#</span>
-                            </div>
-                            {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
-                                let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
-                                return (
-                                    <div
-                                        className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
-                                        key={shotAttributeDefinition.id}
-                                        onClick={() => createShot(index)}>
-                                        <p>{shotAttributeDefinition.name || "Unnamed"}</p>
-                                        <div className="icon">
-                                            <Icon size={18}/>
+                            <SortableContext
+                                items={shots.data.map(shot => shot.id)}
+                                strategy={verticalListSortingStrategy}
+                            >
+                                {shots.data.map((shot: any, index) => (
+                                    <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
+                                ))}
+                            </SortableContext>
+                        </DndContext>
+                        {
+                            !readOnly &&
+                            <div className="shot new">
+                                <div className="shotAttribute number first">
+                                    <span>#</span>
+                                </div>
+                                {shotAttributeDefinitions.map((shotAttributeDefinition, index) => {
+                                    let Icon = ShotAttributeDefinitionParser.toIcon(shotAttributeDefinition as AnyShotAttributeDefinition)
+                                    return (
+                                        <div
+                                            className={`shotAttribute ${index == shotAttributeDefinitions.length - 1 ? "last" : ""}`}
+                                            key={shotAttributeDefinition.id}
+                                            onClick={() => createShot(index)}>
+                                            <p>{shotAttributeDefinition.name || "Unnamed"}</p>
+                                            <div className="icon">
+                                                <Icon size={18}/>
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    }
-                </>
-            }
+                                    )
+                                })}
+                            </div>
+                        }
+                    </>
+                }
+            {/*</div>*/}
         </div>
     )
 })

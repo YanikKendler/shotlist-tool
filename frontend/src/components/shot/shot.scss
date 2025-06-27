@@ -30,6 +30,8 @@ div.shot{
     display: grid;
     place-items: center;
     transition: color .3s, opacity .1s;
+    /*left: 0;
+    position: sticky;*/
     /*padding-block: .3rem;*/
 
     &:hover{
@@ -52,6 +54,10 @@ div.shot{
     *{
       grid-area: 1/1/2/2;
     }
+
+    @media screen and (max-width: 600px){
+      opacity: 1;
+    }
   }
 
   .number{
@@ -59,6 +65,10 @@ div.shot{
     text-align: center;
     flex-shrink: 0;
     justify-content: center;
+    position: sticky;
+    left: 0;
+    z-index: 100;
+    background-color: var(--shot-background);
 
     p{
       font-weight: 700;

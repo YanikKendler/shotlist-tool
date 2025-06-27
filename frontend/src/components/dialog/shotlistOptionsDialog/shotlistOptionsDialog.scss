@@ -34,11 +34,21 @@
       height: 100%;
       width: 100%;
 
+      @media screen and (max-width: 600px){
+        flex-direction: column;
+      }
+
       > .tabs{
         display: flex;
         flex-direction: column;
         padding-top: 2rem;
         gap: .5rem;
+
+        @media screen and (max-width: 600px){
+          flex-direction: row;
+          overflow-x: auto;
+          height: fit-content;
+        }
 
         button {
           justify-content: left;
@@ -56,6 +66,20 @@
 
       >.Separator{
         margin-inline: 1rem;
+
+        &.horizontal{
+          display: none;
+        }
+
+        @media screen and (max-width: 600px){
+          &.horizontal{
+            display: block;
+          }
+
+          &.vertical{
+            display: none;
+          }
+        }
       }
 
       > .content{

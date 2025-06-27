@@ -8,6 +8,10 @@ div.shotAttribute{
   flex-grow: 0;
   position: relative;
 
+  &:not(.number){
+    min-width: 15ch;
+  }
+
   &.first{
     border-top-left-radius: .3rem;
     border-bottom-left-radius: .3rem;
