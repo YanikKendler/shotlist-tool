@@ -74,6 +74,11 @@ public class SceneAttributeTemplateRepository implements PanacheRepository<Scene
             attribute.name = editDTO.name();
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
+
+            if(editDTO.position() < 0 || editDTO.position() >= attribute.template.sceneAttributes.size()) {
+                throw new IllegalArgumentException("Position must be between 0 and " + (attribute.template.sceneAttributes.size() - 1));
+            }
+
             //attr was moved back
             //0 1 2 3 New 5 6 Old
             attribute.template.sceneAttributes.stream()

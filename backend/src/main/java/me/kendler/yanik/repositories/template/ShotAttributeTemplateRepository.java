@@ -74,6 +74,11 @@ public class ShotAttributeTemplateRepository implements PanacheRepository<ShotAt
             attribute.name = editDTO.name();
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
+
+            if(editDTO.position() < 0 || editDTO.position() >= attribute.template.shotAttributes.size()) {
+                throw new IllegalArgumentException("Position must be between 0 and " + (attribute.template.shotAttributes.size() - 1));
+            }
+
             //attr was moved back
             //0 1 2 3 New 5 6 Old
             attribute.template.shotAttributes.stream()

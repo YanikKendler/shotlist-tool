@@ -106,6 +106,8 @@ const ShotTable = forwardRef((
         })
         console.timeEnd("loadShots-"+sceneId)
 
+        shotlistContext.setShotCount(data.shots.length || 0)
+
         setShots({data: data.shots, loading: loading, error: errors})
     }
 
@@ -146,6 +148,8 @@ const ShotTable = forwardRef((
 
         setFocusAttributeAt(attributePosition+1)
 
+        shotlistContext.setShotCount(shots.data.length + 1)
+
         setShots({data: [...shots.data, data.createShot], error: shots.error, loading: shots.loading})
     }
 
@@ -159,6 +163,8 @@ const ShotTable = forwardRef((
             ...shots,
             data: newShots
         })
+
+        shotlistContext.setShotCount(newShots.length)
     }
 
     function handleDragEnd(event: any) {
@@ -167,17 +173,21 @@ const ShotTable = forwardRef((
         const {active, over} = event;
 
         if (active.id !== over.id) {
-            setShots((shots) => {
-                const oldIndex = shots.data.findIndex((shot) => shot.id === active.id);
-                const newIndex = shots.data.findIndex((shot) => shot.id === over.id);
+            const oldIndex = shots.data.findIndex((shot) => shot.id === active.id)
+            const newIndex = shots.data.findIndex((shot) => shot.id === over.id)
 
-                ShotService.updateShot(active.id, newIndex).then(response => {
-                    if(response.errors) console.error(response.errors)
-                })
-
-                return {data: arrayMove(shots.data, oldIndex, newIndex), error: shots.error, loading: shots.loading};
-            });
+            moveShot(active.id, oldIndex, newIndex)
         }
+    }
+
+    function moveShot(shotId: string, from: number, to: number) {
+        ShotService.updateShot(shotId, to).then(response => {
+            if(response.errors) console.error(response.errors)
+        })
+
+        setShots((shots) => {
+            return {data: arrayMove(shots.data, from, to), error: shots.error, loading: shots.loading}
+        })
     }
 
     const handleScroll = () => {
@@ -231,7 +241,7 @@ const ShotTable = forwardRef((
                             strategy={verticalListSortingStrategy}
                         >
                             {shots.data.map((shot: any, index) => (
-                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} readOnly={readOnly}/>
+                                <Shot shot={shot} key={shot.id} position={index} onDelete={removeShot} moveShot={moveShot} readOnly={readOnly}/>
                             ))}
                         </SortableContext>
                     </DndContext>

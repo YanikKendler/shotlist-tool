@@ -3,7 +3,7 @@ import gql from "graphql-tag"
 import {apolloClient, makeClient} from "@/ApolloWrapper"
 
 export default class ShotService {
-    static async updateShot(shotId: number, position: number) {
+    static async updateShot(shotId: string, position: number) {
         const {data, errors} = await apolloClient.mutate({
             mutation : gql`
                 mutation updateShot($id: String!, $position: Int!) {

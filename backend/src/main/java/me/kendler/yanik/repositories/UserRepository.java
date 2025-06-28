@@ -128,7 +128,12 @@ public class UserRepository implements PanacheRepositoryBase<User, UUID> {
     @Transactional
     public boolean shotlistIsEditable(Shotlist shotlist) {
         //refetch owner to prevent lazy loading issues
-        User owner = findById(shotlist.owner.id);
+        User owner;
+        try{
+            owner = findById(shotlist.owner.id);
+        }catch (Exception e) {
+            return false;
+        }
 
         if(owner.tier == UserTier.BASIC && owner.shotlists.size() > 1){
             return false;

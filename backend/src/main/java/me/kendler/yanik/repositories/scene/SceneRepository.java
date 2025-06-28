@@ -42,6 +42,10 @@ public class SceneRepository implements PanacheRepositoryBase<Scene, UUID> {
     public SceneDTO update(SceneEditDTO editDTO) {
         Scene scene = findById(editDTO.id());
 
+        if(editDTO.position() < 0 || editDTO.position() >= scene.shotlist.scenes.size()) {
+            throw new IllegalArgumentException("Position must be between 0 and " + (scene.shotlist.scenes.size() - 1));
+        }
+
         if(scene.position != editDTO.position()){
             //scene was moved back
             //0 1 2 3 New 5 6 Old

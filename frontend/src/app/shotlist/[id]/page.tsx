@@ -57,6 +57,8 @@ export default function Shotlist() {
     const [isReadOnly, setIsReadOnly] = useState(false)
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [shotCount, setShotCount] = useState(0);
+    const [sceneCount, setSceneCount] = useState(0);
 
     const shotTableRef = useRef<ShotTableRef>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -181,6 +183,8 @@ export default function Shotlist() {
             setIsReadOnly(true)
         }
 
+        setSceneCount(data.shotlist.scenes.length || 0)
+
         setShotlist({data: data.shotlist, loading: loading, error: errors})
     }
 
@@ -238,6 +242,8 @@ export default function Shotlist() {
             }
         })
 
+        setSceneCount(newScenes.length)
+
         setSelectedSceneId("")
     }
 
@@ -287,6 +293,8 @@ export default function Shotlist() {
             }
         })
 
+        setSceneCount(newScenes.length)
+
         selectScene(data.createScene.id)
     }
 
@@ -296,31 +304,35 @@ export default function Shotlist() {
         const {active, over} = event;
 
         if (active.id !== over.id && shotlist && shotlist.data.scenes && shotlist.data.scenes.length > 0) {
-            setShotlist(() => {
-                const oldIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === active.id);
-                const newIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === over.id);
+            const oldIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === active.id);
+            const newIndex = shotlist.data.scenes!.findIndex((scene) => scene!.id === over.id);
 
-                apolloClient.mutate({
-                    mutation: gql`
-                        mutation updateScene($id: String!, $position: Int!) {
-                            updateScene(editDTO:{
-                                id: $id,
-                                position: $position
-                            }){
-                                id
-                                position
-                            }
-                        }
-                    `,
-                    variables: {id: active.id, position: newIndex},
-                })
-
-                let newData = {...shotlist.data}
-                newData.scenes = arrayMove(newData.scenes || [], oldIndex, newIndex)
-
-                return {data: newData, error: shotlist.error, loading: shotlist.loading}
-            })
+            moveScene(active.id, oldIndex, newIndex);
         }
+    }
+
+    const moveScene = (sceneId: string, from: number, to: number) => {
+        apolloClient.mutate({
+            mutation: gql`
+                mutation updateScene($id: String!, $position: Int!) {
+                    updateScene(editDTO:{
+                        id: $id,
+                        position: $position
+                    }){
+                        id
+                        position
+                    }
+                }
+            `,
+            variables: {id: sceneId, position: to},
+        })
+
+        setShotlist(() => {
+            let newData = {...shotlist.data}
+            newData.scenes = arrayMove(newData.scenes || [], from, to)
+
+            return {data: newData, error: shotlist.error, loading: shotlist.loading}
+        })
     }
 
     const openShotlistOptionsDialog = (page: { main: ShotlistOptionsDialogPage, sub?: ShotlistOptionsDialogSubPage }) => {
@@ -354,7 +366,11 @@ export default function Shotlist() {
         <ShotlistContext.Provider value={{
             openShotlistOptionsDialog: openShotlistOptionsDialog,
             elementIsBeingDragged: elementIsBeingDragged,
-            setElementIsBeingDragged: setElementIsBeingDragged
+            setElementIsBeingDragged: setElementIsBeingDragged,
+            shotCount: shotCount,
+            setShotCount: setShotCount,
+            sceneCount: sceneCount,
+            setSceneCount: setSceneCount
         }}>
             {
                 isReadOnly &&
@@ -412,6 +428,7 @@ export default function Shotlist() {
                                                     expanded={selectedSceneId == scene.id}
                                                     onSelect={selectScene}
                                                     onDelete={removeScene}
+                                                    moveScene={moveScene}
                                                     readOnly={isReadOnly}
                                                 />
                                             ))}

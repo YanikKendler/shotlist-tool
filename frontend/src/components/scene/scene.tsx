@@ -7,7 +7,7 @@ import React, {useContext, useEffect, useState} from "react"
 import {Collapsible, Popover, Separator, Tooltip} from "radix-ui"
 import SceneAttribute from "@/components/sceneAttribute/sceneAttribute"
 import {AnySceneAttribute, AnyShotAttribute} from "@/util/Types"
-import {CornerDownRight, GripVertical, List, NotepadText, Trash} from "lucide-react"
+import {ArrowBigDown, ArrowBigUp, CornerDownRight, GripVertical, List, NotepadText, Trash} from "lucide-react"
 import gql from "graphql-tag"
 import {useApolloClient} from "@apollo/client"
 import {useConfirmDialog} from "@/components/dialog/confirmDialog/confirmDialoge"
@@ -15,7 +15,10 @@ import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 import {ShotlistContext} from "@/context/ShotlistContext"
 
-export default function Scene({scene, position, expanded, onSelect, onDelete, readOnly}: {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void, readOnly: boolean}) {
+export default function Scene(
+    {scene, position, expanded, onSelect, onDelete, moveScene, readOnly}:
+    {scene: SceneDto, position:number, expanded: boolean, onSelect: ( id: string) => void, onDelete: ( id: string) => void, moveScene: (sceneId: string, from: number, to: number) => void, readOnly: boolean}
+) {
     const [overflowVisible, setOverflowVisible] = useState(false);
     const [sceneAttributes, setSceneAttributes] = useState<AnySceneAttribute[]>(scene.attributes as AnySceneAttribute[]);
     const [isBeingEdited, setIsBeingEdited] = useState(false);
@@ -45,10 +48,6 @@ export default function Scene({scene, position, expanded, onSelect, onDelete, re
             },300)
         }
     }, [expanded]);
-
-    useEffect(()=>{
-        setSceneAttributes(scene.attributes as AnySceneAttribute[])
-    }, [scene.attributes]);
 
     const deleteScene = async () => {
         if(!await confirm({message: `Scene #${position+1} and all of its shots will be lost forever. You cannot undo this.`, buttons: {confirm: {className: "bad"}}})) return
@@ -125,6 +124,19 @@ export default function Scene({scene, position, expanded, onSelect, onDelete, re
                                 }}><Trash size={18}/> delete
                                 </button>
                                 <Separator.Root className="Separator"/>
+                                <button
+                                    disabled={position == 0}
+                                    onClick={() => moveScene(scene.id as string, position, position - 1)}
+                                >
+                                    <ArrowBigUp size={18}/>Move up
+                                </button>
+                                <button
+                                    disabled={position >= shotlistContext.sceneCount - 1}
+                                    onClick={() => moveScene(scene.id as string, position, position + 1)}
+                                >
+                                    <ArrowBigDown size={18}/>Move down
+                                </button>
+                                <Separator.Root className="Separator"/>
                                 <button onClick={() => shotlistContext.openShotlistOptionsDialog({
                                     main: "attributes",
                                     sub: "scene"
@@ -142,15 +154,17 @@ export default function Scene({scene, position, expanded, onSelect, onDelete, re
                     style={{overflow: overflowVisible ? "visible" : "hidden",}}
                 >
                     <div className="attributes">
-                        {sceneAttributes.length == 0 ? <p className={"empty"}>No attributes defined</p> :sceneAttributes.map((attr, index) => (
-                            <SceneAttribute
-                                key={attr.id}
-                                attribute={attr}
-                                attributeUpdated={(attribute: AnySceneAttribute) => {
-                                    let newAttributes = [...sceneAttributes]
-                                    newAttributes[index] = attribute
-                                    setSceneAttributes(newAttributes)
-                                }}
+                        {sceneAttributes.length == 0 ?
+                            <p className={"empty"}>No attributes defined</p> : sceneAttributes.map((attr, index) => (
+                                <SceneAttribute
+                                    key={attr.id}
+                                    attribute={attr}
+                                    attributeUpdated={(attribute: AnySceneAttribute) => {
+                                        let newAttributes = [...sceneAttributes]
+                                        newAttributes[index] = attribute
+                                        setSceneAttributes(newAttributes)
+                                    }
+                                }
                                 readOnly={readOnly}
                             ></SceneAttribute>
                         ))}

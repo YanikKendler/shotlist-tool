@@ -141,6 +141,10 @@ public class ShotAttributeDefinitionRepository implements PanacheRepository<Shot
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){
 
+            if(editDTO.position() < 0 || editDTO.position() >= shotlist.shotAttributeDefinitions.size()) {
+                throw new IllegalArgumentException("Position must be between 0 and " + (shotlist.shotAttributeDefinitions.size() - 1));
+            }
+
             //attr was moved back
             //0 1 2 3 New 5 6 Old
             shotlist.shotAttributeDefinitions.stream()

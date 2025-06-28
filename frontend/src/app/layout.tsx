@@ -1,4 +1,3 @@
-import type {Metadata} from "next"
 import "./globals.scss"
 import React from "react"
 import {ApolloWrapper} from "@/ApolloWrapper"
@@ -96,7 +95,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={inter.className} suppressHydrationWarning>
-        <Head>
+        <head>{/*has to be native "head" not nextJS "Head" or the darkmode query won't be run*/}
             {/*set the theme attribute (dark or light) based on the user preference (dark light or system)*/}
             <script dangerouslySetInnerHTML={{__html: `(() => {
                 let userPreference = localStorage.getItem('shotly-theme') || 'system';
@@ -107,7 +106,7 @@ export default function RootLayout({
                     document.documentElement.setAttribute('data-theme', userPreference);
                 }
             })()`}}/>
-        </Head>
+        </head>
         <body>
         <Toast.Provider>
             <div className="root">

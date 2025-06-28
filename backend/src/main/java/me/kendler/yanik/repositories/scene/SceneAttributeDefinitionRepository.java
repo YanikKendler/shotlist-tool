@@ -127,6 +127,11 @@ public class SceneAttributeDefinitionRepository implements PanacheRepository<Sce
             attribute.name = editDTO.name();
         }
         if(editDTO.position() != null && attribute.position != editDTO.position()){ //update position
+
+            if(editDTO.position() < 0 || editDTO.position() >= shotlist.sceneAttributeDefinitions.size()) {
+                throw new IllegalArgumentException("Position must be between 0 and " + (shotlist.sceneAttributeDefinitions.size() - 1));
+            }
+
             //attr was moved back
             //0 1 2 3 New 5 6 Old
             shotlist.sceneAttributeDefinitions.stream()

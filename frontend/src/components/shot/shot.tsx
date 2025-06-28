@@ -5,7 +5,16 @@ import ShotAttribute from "@/components/shotAttribute/shotAttribute"
 import {AnyShotAttribute} from "@/util/Types"
 import {wuText} from "@yanikkendler/web-utils/dist"
 import './shot.scss'
-import {ArrowDownRight, CornerDownRight, GripVertical, List, NotepadText, Trash} from "lucide-react"
+import {
+    ArrowBigDown,
+    ArrowBigUp,
+    ArrowDownRight,
+    CornerDownRight,
+    GripVertical,
+    List,
+    NotepadText,
+    Trash
+} from "lucide-react"
 import {useSortable} from "@dnd-kit/sortable"
 import {CSS} from '@dnd-kit/utilities';
 import {Popover, Separator, Tooltip} from "radix-ui"
@@ -15,7 +24,10 @@ import {useApolloClient} from "@apollo/client"
 import {ShotlistContext} from "@/context/ShotlistContext"
 import Utils from "@/util/Utils"
 
-export default function Shot({shot, position, onDelete, readOnly}: {shot: ShotDto, position: number, onDelete: (shotId: string) => void, readOnly: boolean}) {
+export default function Shot(
+    {shot, position, onDelete, moveShot, readOnly}:
+    {shot: ShotDto, position: number, onDelete: (shotId: string) => void, moveShot: (shotId: string, from: number, to: number) => void, readOnly: boolean}
+) {
     const [isBeingEdited, setIsBeingEdited] = useState(false)
     const [tooltipVisible, setTooltipVisible] = useState(false)
 
@@ -81,6 +93,19 @@ export default function Shot({shot, position, onDelete, readOnly}: {shot: ShotDt
                                 <button disabled={true}><CornerDownRight size={18}/> Make Subshot</button>
                                 <button disabled={true}><NotepadText size={18}/> Notes</button>
                                 <button className={"bad"} onClick={deleteShot}><Trash size={18}/> Delete</button>
+                                <Separator.Root className="Separator"/>
+                                <button
+                                    disabled={position == 0}
+                                    onClick={() => moveShot(shot.id as string, position, position-1)}
+                                >
+                                    <ArrowBigUp size={18}/>Move up
+                                </button>
+                                <button
+                                    disabled={position >= shotlistContext.shotCount - 1}
+                                    onClick={() => moveShot(shot.id as string, position, position+1)}
+                                >
+                                    <ArrowBigDown size={18}/>Move down
+                                </button>
                                 <Separator.Root className="Separator"/>
                                 <button onClick={() => shotlistContext.openShotlistOptionsDialog({main: "attributes", sub: "shot"})}><List size={18}/> Edit shot attributes</button>
                             </Popover.Content>

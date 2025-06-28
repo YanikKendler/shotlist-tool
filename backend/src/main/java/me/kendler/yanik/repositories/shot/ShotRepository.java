@@ -43,6 +43,10 @@ public class ShotRepository implements PanacheRepositoryBase<Shot, UUID> {
     public ShotDTO update(ShotEditDTO editDTO) {
         Shot shot = findById(editDTO.id());
 
+        if(editDTO.position() < 0 || editDTO.position() >= shot.scene.shots.size()) {
+            throw new IllegalArgumentException("Position must be between 0 and " + (shot.scene.shots.size() - 1));
+        }
+
         if(shot.position != editDTO.position()){
             //shot was moved back
             //0 1 2 3 New 5 6 Old
